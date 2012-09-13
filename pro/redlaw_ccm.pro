@@ -15,6 +15,9 @@ function redlaw_ccm, wave, rv=rv
 ;     rv - The ratio of extinction to reddening defined as R_V = A_V/E(B-V)
 ; RETURN: extl[] -  extinction evaluation array
 ;
+;     Based on Formulae by Cardelli, Clayton & Mathis 1989, ApJ 345, 245-256.
+;     1989ApJ...345..245C
+;     Originally from IRAF STSDAS SYNPHOT redlaw.x
 ;     Converted to IDL code by A. Danehkar, 31/08/2012
 ;-
 
