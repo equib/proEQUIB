@@ -1,5 +1,25 @@
 function redlaw_jbk, wave
-
+;+
+; NAME:
+;     redlaw_smc
+; PURPOSE:
+;    reddening law function for Galactic Whitford1958 + Seaton1977 + Kaler1976
+; 
+; EXPLANATION:
+;
+; CALLING SEQUENCE:
+;     fl = redlaw_jbk(wave)
+;
+; INPUTS:
+;     wave[] -  wavelength of emission line, Angstroms
+; RETURN: extl[] -  extinction evaluation array
+;
+; REVISION HISTORY:
+;     Based on Whitford (1958), extended to the UV by Seaton (1977), 
+;     adapted by Kaler (1976).
+;     Originally from IRAF STSDAS SYNPHOT redlaw.x
+;     Initial IRAF implementation, R. A. Shaw, 13/05/1993
+;     Converted to IDL code by A. Danehkar, 31/08/2012
 ;-
   ; Tabulated wavelengths, Angstroms:
 
