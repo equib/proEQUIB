@@ -2,6 +2,32 @@ function he_i_emissivity_smits, temp, dens, line
 ;+
 ; NAME:
 ;     he_i_emissivity_smits
+; PURPOSE:
+;     return helium emissivity for
+;     given electron temperature and density
+;     Smits D. P., 1996, MNRAS, 278, 683
+;     1996MNRAS.278..683S
+; EXPLANATION:
+;
+; CALLING SEQUENCE:
+;     helium_emissivity = he_i_emissivity_smits(temp, dens, line)
+;
+; INPUTS:
+;     temp -     electron temperature in K
+;     dens -     electron density in cm-3
+;     line -     Balmer line number
+;        1 : He I 3889
+;        2 : He I 4026
+;        3 : He I 4387
+;        4 : He I 4471
+;        5 : He I 4922
+;        6 : He I 5876
+;        7 : He I 6678
+;        8 : He I 7065
+;        9 : He I 7281
+;        10 : He I 10830
+
+; RETURN:  Hydrogen Case B Balmer line ratio
 ;
 ; REVISION HISTORY:
 ;     Tables 1 and 2 in Smits 1996, MNRAS, 278, 683
