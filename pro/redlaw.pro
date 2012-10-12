@@ -37,6 +37,7 @@ function redlaw, wavelength, ext_law=ext_law, rv=rv, fmlaw=fmlaw
      'CCM': fl = redlaw_ccm(wavelength,rv=rv)
      'JBK': fl = redlaw_jbk(wavelegth)
      'SMC': fl = redlaw_smc(wavelength)
+     'LMC': fl = redlaw_lmc(wavelength)
      else: print, 'ext_law cannnot find'
   endcase
   return, fl
