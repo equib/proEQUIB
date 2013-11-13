@@ -47,7 +47,7 @@ function recomb_c_ii, temp, dens, abund
   orl_f=double(0.0)
   
   ; read CII data from file
-  ion1='Rcii'
+  ion1='R_c_ii'
   atomic_filename = Atomic_Data_Path+'/'+ion1+'.dat'
   openr, lun1, atomic_filename, /get_lun
   for i=0, NLINES-1 do begin 
