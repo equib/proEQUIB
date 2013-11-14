@@ -1,4 +1,29 @@
 function recomb_ne_ii, temp, dens, abund
+;+
+; NAME:
+;     recomb_ne_ii
+; PURPOSE:
+;     return the recombination coefficients of Ne II line
+;     from Kisielius et al. (1998) & Storey (unpublished)
+; EXPLANATION:
+;
+; CALLING SEQUENCE:
+;     neiiRLs=recomb_ne_ii(tempi, densi, Abund)
+;
+; INPUTS:
+;     temp  - electron temperature in K
+;     dens  - electron density in cm-3
+;     abund - abundance coefficient
+; RETURN:  recombination coefficients of Ne II
+;          neiiRLstructure
+;          { Wave:0.0, 
+;            a:0.0, b:0.0, c:0.0, d:0.0, f:0.0, Br: 0.0, aeff:0.0, 
+;            Int:0.0, Obs:0.0, 
+;            Abundance:0.0}
+; REVISION HISTORY:
+; REVISION HISTORY:
+;     from Kisielius et al. 1998A&AS..133..257K
+;     & Storey (unpublished)
 ;     Adopted from MOCASSIN, Ercolano et al. 2005MNRAS.362.1038E
 ;     scripts added by Yong Zhang to MOCASSIN, 2003/02
 ;     Converted to IDL code by A. Danehkar, 10/05/2013
