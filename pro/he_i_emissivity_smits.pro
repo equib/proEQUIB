@@ -116,13 +116,16 @@ function he_i_emissivity_smits, temp, dens, line
   endif
   
   ; Linearly interpolate density
-  hr_tmp0=lin_interp(emiss_grid[*,0], temp_grid, temp)
-  hr_tmp1=lin_interp(emiss_grid[*,1], temp_grid, temp)
-  hr_tmp2=lin_interp(emiss_grid[*,2], temp_grid, temp)
+  ;hr_tmp0=lin_interp(emiss_grid[*,0], temp_grid, temp)
+  ;hr_tmp1=lin_interp(emiss_grid[*,1], temp_grid, temp)
+  ;hr_tmp2=lin_interp(emiss_grid[*,2], temp_grid, temp)
   
   ; Linearly interpolate temperature
-  hr_tmp_grid=[hr_tmp0, hr_tmp1, hr_tmp2]  
-  hr_tmp=lin_interp(hr_tmp_grid, dens_grid, dens)
+  ;hr_tmp_grid=[hr_tmp0, hr_tmp1, hr_tmp2]  
+  ;result=lin_interp(hr_tmp_grid, dens_grid, dens)
   
-  return, hr_tmp
+  ; Bilinearly interpolate density & temperature
+  result = equib_interp2d(emiss_grid, temp_grid, dens_grid, temp, dens, [101,101], /cubic, /quintic)
+  
+  return, result
 end
