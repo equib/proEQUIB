@@ -48,5 +48,7 @@ function hb_emissivity, temp, dens
   hr_dns_grid=[hr_dns0, hr_dns1, hr_dns2]  
   hr_tmp=lin_interp(hr_dns_grid, temp_grid, temp)
   
-  return, hr_tmp
+  logems = alog10(hr_tmp/double(4861.33/1.98648E-08))
+  hb_ems = 10.0^logems
+  return, hb_ems
 end
