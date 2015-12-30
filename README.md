@@ -4,10 +4,13 @@
 **proEQUIB** - IDL/GDL library for atomic level populations and line emissivities in statistical equilibrium
 
 ### Description
-The **proEQUIB** library is a collection of Interactive Data Language (IDL)/GNU Data Language (GDL) programs developed to calculate atomic level populations and line emissivities in statistical equilibrium in multi-level atoms for different physical conditions of the stratification layers where the chemical elements are ionized. This library includes the IDL/GDL version of the program EQUIB, which was originally written in FORTRAN by [Howarth & Adams (1981)](http://adsabs.harvard.edu/abs/1981ucl..rept.....H), and was recently converted to IDL/GDL.
+The **proEQUIB** library is a collection of [Interactive Data Language](http://www.harrisgeospatial.com/ProductsandSolutions/GeospatialProducts/IDL.aspx) (IDL)/[GNU Data Language](http://gnudatalanguage.sourceforge.net/) (GDL) programs developed to calculate atomic level populations and line emissivities in statistical equilibrium in multi-level atoms for different physical conditions of the stratification layers where the chemical elements are ionized. This library includes the IDL/GDL version of the program EQUIB, which was originally written in FORTRAN by [Howarth & Adams (1981)](http://adsabs.harvard.edu/abs/1981ucl..rept.....H), and was recently converted to IDL/GDL.
+
+Website: [physics.mq.edu.au/~ashkbiz/proequib](http://physics.mq.edu.au/~ashkbiz/proequib/)
 
 ### References
 * A. Danehkar, H. Todt, B. Ercolano & A.Y. Kniazev, [MNRAS, 439, 3605, 2014](http://adsabs.harvard.edu/abs/2014MNRAS.439.3605D)
 
 * A. Danehkar, Q.A. Parker & B. Ercolano, [MNRAS, 434, 1513, 2013](http://adsabs.harvard.edu/abs/2013MNRAS.434.1513D)
 
+* A. Danehkar, Ph.D. Thesis, [Macquarie University, 2014](http://adsabs.harvard.edu/abs/2014PhDT........76D)
