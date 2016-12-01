@@ -30,6 +30,21 @@ function calc_emissivity, ion, levels, tempi, densi
 ;
 ; REVISION HISTORY:
 ;     Converted from FORTRAN to IDL code by A. Danehkar, 15/09/2013
+;     Replaced str2int with strnumber, A. Danehkar, 20/10/2016
+;     Replaced CFY, SPLMAT, and CFD with
+;          IDL function INTERPOL( /SPLINE), A. Danehkar, 20/10/2016
+;     Replaced LUSLV with IDL LAPACK function 
+;                       LA_LINEAR_EQUATION, A. Danehkar, 20/10/2016
+;     Replaced LA_LINEAR_EQUATION (not work in GDL)
+;           with IDL function LUDC & LUSOL, A. Danehkar, 15/11/2016
+;     Replaced INTERPOL (not accurate) with 
+;                    SPL_INIT & SPL_INTERP, A. Danehkar, 19/11/2016
+;     Made a new function calc_populations() for solving atomic 
+;       level populations and separated it from
+;       calc_abundance(), calc_temp_dens(), A. Danehkar, 20/11/2016
+;     Made a new function calc_emissivity() for calculating 
+;                      line emissivities and separated it 
+;                      from calc_abundance(), A. Danehkar, 21/11/2016
 ; 
 ; FORTRAN EQUIB HISTORY (F77/F90):
 ; 1981-05-03 I.D.Howarth  Version 1
@@ -55,9 +70,8 @@ function calc_emissivity, ion, levels, tempi, densi
 ;                         and the 0 0 0 data end is excluded for these c
 ;                         The A values have a different format for IBIG=
 ; 2006       B.Ercolano   Converted to F90
-; 2009-05    R.Wesson     Converted to F90. Version written only for
-;                         calculating ionic abundances. Takes arguments
-;                         from the command line.
+; 2009-05    R.Wesson     Misc updates and improvements, inputs from cmd line, 
+;                         written only for calculating ionic abundances.
 ;- 
   common share1, Atomic_Data_Path
 
@@ -234,7 +248,7 @@ function calc_emissivity, ion, levels, tempi, densi
       return, 0
   endif
 
-  Nlj=getpopulations(TEMP, DENS, Telist, Omij, Aij, Elj, Glj, NLEV, NTEMP, IRATS)
+  Nlj=calc_populations(TEMP, DENS, Telist, Omij, Aij, Elj, Glj, NLEV, NTEMP, IRATS)
   
   emissivity_all=double(0.0)
   ; Search ITRANC for transitions & sum up
