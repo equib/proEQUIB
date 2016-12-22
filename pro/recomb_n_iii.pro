@@ -33,7 +33,7 @@ function recomb_n_iii, temp, dens, abund
                   Int:double(0.0), Obs:double(0.0), abundance:double(0.0), Ion:''}
 
   nlines = 6 
-  getaeffhb, temp, dens, aeff_hb, em_hb
+  get_aeff_hb, temp, dens, aeff_hb, em_hb
   
   niii_rc=REPLICATE(niii_rc_structure, nlines)
   
