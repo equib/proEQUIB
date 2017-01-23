@@ -9,8 +9,6 @@ The **proEQUIB** library is a collection of [Interactive Data Language](http://w
 Website: [physics.mq.edu.au/~ashkbiz/proequib](http://physics.mq.edu.au/~ashkbiz/proequib/)
 
 ### References
-* A. Danehkar, [Astrophysics Source Code Library, ascl:1611.022, 2016](http://adsabs.harvard.edu/abs/2016ascl.soft11022D)
-
 * A. Danehkar, Q.A. Parker & W. Steffen, [AJ, 151, 38, 2016](http://adsabs.harvard.edu/abs/2016AJ....151...38D)
 
 * A. Danehkar, H. Todt, B. Ercolano & A.Y. Kniazev, [MNRAS, 439, 3605, 2014](http://adsabs.harvard.edu/abs/2014MNRAS.439.3605D)
