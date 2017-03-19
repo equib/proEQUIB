@@ -1,0 +1,6 @@
+[submodule "externals/astron"]
+	path = externals/astron
+	url = git://github.com/wlandsman/IDLAstro.git
+[submodule "externals/atomneb"]
+	path = externals/atomneb
+	url = git://github.com/atomneb/AtomNeb-idl.git
