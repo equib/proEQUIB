@@ -1,4 +1,4 @@
-function recomb_ne_ii, temp, dens, abund
+function recomb_ne_ii, neii_rc_data, h_i_aeff_data, temp, dens, wavelength, iobs
 ;+
 ; NAME:
 ;     recomb_ne_ii
@@ -17,60 +17,63 @@ function recomb_ne_ii, temp, dens, abund
 ; RETURN:  recombination coefficients of Ne II
 ;          neiiRLstructure
 ;          { Wave:0.0, 
-;            a:0.0, b:0.0, c:0.0, d:0.0, f:0.0, Br: 0.0, aeff:0.0, 
 ;            Int:0.0, Obs:0.0, 
 ;            Abundance:0.0}
-; REVISION HISTORY:
 ; REVISION HISTORY:
 ;     from Kisielius et al. 1998A&AS..133..257K
 ;     & Storey (unpublished)
 ;     Adopted from MOCASSIN, Ercolano et al. 2005MNRAS.362.1038E
-;     scripts added by Yong Zhang to MOCASSIN, 2003/02
-;     Converted to IDL code by A. Danehkar, 10/05/2013
+;     scripts added by Zhang Yong to MOCASSIN, 2003/02
+;     IDL code by A. Danehkar, 10/05/2013
+;     Integration with AtomNeb, A. Danehkar, 10/04/2017
 ;- 
   common share1, Atomic_Data_Path
   
-  ne_ii_orl_structure ={Wave:double(0.0), $
-                  a:double(0.0), b:double(0.0), c:double(0.0), d:double(0.0), $
-                  f:double(0.0), Br:double(0.0), aeff:double(0.0), $
-                  Int:double(0.0), Obs:double(0.0), abundance:double(0.0)}
+  ; neiiRLstructure ={Wave:double(0.0), Int:double(0.0), Obs:double(0.0), Abundance:double(0.0)}
 
-  nlines = 38 
-  get_aeff_hb, temp, dens, aeff_hb, em_hb
+  h_Planck = 6.62606957e-27 ; erg s
+  c_Speed = 2.99792458e10 ; cm/s 
   
-  ne_ii_orl=REPLICATE(ne_ii_orl_structure, nlines)
+  TEh2=double(temp)
+  NEh2=double(dens)
+  abund=1.0
+
+  nlines = 38
+  hbeta_aeff= (10.0^gamma4861(h_i_aeff_data,TEh2,NEh2))*double(4861.33/(h_Planck*c_Speed*1.e8)) 
   
-  orl_Wave=double(0.0)
-  orl_a=double(0.0)
-  orl_b=double(0.0)
-  orl_c=double(0.0)
-  orl_d=double(0.0)
-  orl_f=double(0.0)
-  orl_Br=double(0.0)
+  ; neiiRLs=REPLICATE(neiiRLstructure, nlines)
+
+  lamb=double(0.0)
+  a=double(0.0)
+  b=double(0.0)
+  c=double(0.0)
+  d=double(0.0)
+  f=double(0.0)
+  br=double(0.0)
+  aeff=double(0.0)
+  Ion=''
   
-  ; read Ne II data from file
-  ion1='R_ne_ii'
-  atomic_filename = Atomic_Data_Path+'/'+ion1+'.dat'
-  openr, lun1, atomic_filename, /get_lun
-  for i=0, NLINES-1 do begin 
-    readf,lun1,orl_Wave, orl_a, orl_b, orl_c, orl_d, orl_f, orl_Br
-    ne_ii_orl[i].Wave = orl_Wave
-    ne_ii_orl[i].a = orl_a
-    ne_ii_orl[i].b = orl_b
-    ne_ii_orl[i].c = orl_c
-    ne_ii_orl[i].d = orl_d
-    ne_ii_orl[i].f = orl_f
-    ne_ii_orl[i].Br = orl_Br
-  endfor
-  free_lun, lun1
-  
+  z = 3.0 ; ion level c^3+
+  ; equation (1) in 1991A&A...251..680P
   temp4 = temp/10000.0
-  for i = 0, NLINES-1 do begin 
-    ne_ii_orl[i].aeff = ne_ii_orl[i].Br * 1.0e-14 * (ne_ii_orl[i].a*(temp4^ne_ii_orl[i].f)) * $
-                    (1.0 + (ne_ii_orl[i].b*(1.0-temp4)) + (ne_ii_orl[i].c * ((1.0-temp4)^2) ) $
-                     + (ne_ii_orl[i].d * ((1.0-temp4)^3) ) )
-    ne_ii_orl[i].Int = 100.0 * (ne_ii_orl[i].aeff/aeff_hb) * (4861.33/ne_ii_orl[i].Wave) * abund 
-  endfor
+  loc1=where(abs(neii_rc_data.Wavelength-wavelength) le 0.01)
+  temp2=size(loc1,/DIMENSIONS)
+  if temp2[0] ne 1 then begin
+    Wavelength_min=min(neii_rc_data[loc1].Wavelength)
+    loc1=where(neii_rc_data.Wavelength eq  Wavelength_min)
+  endif
+  lamb=neii_rc_data[loc1].Wavelength
+  a=neii_rc_data[loc1].a
+  b=neii_rc_data[loc1].b
+  c=neii_rc_data[loc1].c
+  d=neii_rc_data[loc1].d
+  f=neii_rc_data[loc1].f
+  br=neii_rc_data[loc1].br
+  ; equation (1) in 1991A&A...251..680P
+  aeff=1.0e-14 * (a*(temp4^f)) * br
+  aeff=aeff*(1.+b*(1.0-temp4)+c*(1.0-temp4)^2+d*(1.0-temp4)^3)
+  neiiRLs_Int = 100.0 * (aeff/hbeta_aeff) * (4861.33/lamb) * abund
   
-  return,ne_ii_orl
+  abund=iobs/neiiRLs_Int
+  return,abund
 end

@@ -1,4 +1,4 @@
-function calc_emissivity, ion, levels, tempi, densi
+function calc_emissivity, elj_data, omij_data, aij_data, levels, tempi, densi
 ;+
 ; NAME:
 ;     calc_emissivity
@@ -45,6 +45,7 @@ function calc_emissivity, ion, levels, tempi, densi
 ;     Made a new function calc_emissivity() for calculating 
 ;                      line emissivities and separated it 
 ;                      from calc_abundance(), A. Danehkar, 21/11/2016
+;     Integration with AtomNeb, A. Danehkar, 10/03/2017
 ; 
 ; FORTRAN EQUIB HISTORY (F77/F90):
 ; 1981-05-03 I.D.Howarth  Version 1
@@ -121,23 +122,20 @@ function calc_emissivity, ion, levels, tempi, densi
   K= long(0)
   IP1= long(0)
   
-  ion1=strtrim(ion,1)
-  atomic_filename = Atomic_Data_Path+'/'+ion1+'.dat'
-  openr, lun1, atomic_filename, /get_lun
-  readf,lun1,NLINES
-  for i=1, NLINES do begin 
-    readf,lun1,LTEXT
-  endfor
-  ; Read no. of levels = NLEV,
-  readf,lun1,NLEV, NTEMP
+  temp=size(elj_data,/DIMENSIONS)
+  NLEV=temp[0]
+  temp=size(omij_data[0].strength,/DIMENSIONS)
+  NTEMP=temp[0]
+  temp=size(omij_data,/DIMENSIONS)
+  omij_num=temp[0]
   
-  Glj=lonarr(NLEV+1)
+  Glj=lonarr(NLEV)
   
   Nlj=dblarr(NLEV+1)
-  Omij=dblarr(NTEMP+1,NLEV+1,NLEV+1)   
+  Omij=dblarr(NTEMP,NLEV,NLEV)   
   Aij=dblarr(NLEV+1,NLEV+1)   
-  Elj=dblarr(NLEV+1)   
-  Telist=dblarr(NTEMP+1)
+  Elj=dblarr(NLEV)   
+  Telist=dblarr(NTEMP)
   
   LABEL1=STRARR(NLEV+1) 
   
@@ -156,84 +154,19 @@ function calc_emissivity, ion, levels, tempi, densi
     levels_i = levels_i + 2
     ;if levels_i ge 2*levels_num then break
   endfor
-  
-  ; no. of Te = NTEMP and the
-  for i=1, NLEV do begin 
-    ; input format (cf Readme)
-    readf,lun1,LTEXT
-    LABEL1[I]=LTEXT
+  IRATS=0
+  Telist = omij_data[0].strength
+  Telist = alog10(Telist)
+  for k = 1, omij_num-1 do begin
+    I = omij_data[k].level1
+    J = omij_data[k].level2
+    if I le NLEV and J le NLEV then begin
+      Omij[0:NTEMP-1,I-1,J-1] = omij_data[k].strength
+    endif
   endfor
-  ; be
-  ibig=0 
-  ; Read in Te's where coll. strengths are tabulated
-  for i=1, NTEMP do begin 
-    ddtemp=double(0.0)
-    readf,lun1,ddtemp
-    Telist[i] = ddtemp
-    Telist[i] = alog10(Telist[i])
-  endfor 
-  ; If IRATS=0, what tabulated are collision strengths
-  readf,lun1,IRATS
-  ; Else Coll. rates = tabulated values * 10 ** IRATS
- 
-  if (IBIG eq 0) then begin
-    QX = 1.0
-    while (QX ne 0.D0) do begin 
-      lontemp1=long(0)
-      lontemp2=long(0)
-      ddtemp=double(0)
-      readf,lun1,lontemp1, lontemp2, ddtemp
-      ID[2]=lontemp1
-      JD[2]=lontemp2
-      QX = ddtemp
-      if QX eq 0 then break
-      if (ID[2] eq 0) then begin
-        ID[2] = ID[1]
-        K = K + 1
-      endif else begin
-        ID[1]= ID[2]
-        K = 1
-      endelse
-      if (JD[2] eq 0) then begin
-        JD[2] = JD[1]
-      endif else begin
-        JD[1] = JD[2]
-      endelse
-      I = ID[2]
-      J = JD[2]
-      Omij[K,I,J] = QX
-    endwhile
-  endif
-  
-  if(IBIG eq 1) or (IBIG eq 2) then begin
-    readf,lun1,NTRA
-    for IN = 1, NTRA do begin
-      readf,lun1,I,J,Omij[1:NTEMP,I,J]
-      ;READ(1,*) I,J,(Omij(ITEMP,I,J),ITEMP=1,NTEMP)
-    endfor
-  endif
-  ; Read transition probabilities
-  if (IBIG eq 1) then begin
-    readf,lun1,I,J,Aij[J,I];,L=K+1,NLEV),K=1,NLEV1
-    ;READ(1,7000) ((I,J,A(J,I),L=K+1,NLEV),K=1,NLEV1)
-  endif else begin
-    for K = 1, NLEV - 1 do begin
-      KP1 = K + 1
-      for L = KP1, NLEV do begin
-        readf,lun1, I, J, AX
-        Aij[J,I] = AX
-      endfor
-    endfor
-  endelse
-  ; Read statistical weights, energy levels (cm-1)
-  for J = 1, NLEV do begin
-    readf,lun1,  I, GX, EX
-    Glj[I] = GX
-    Elj[I] = EX
-  endfor
-      
-  free_lun, lun1
-  
+  Aij =aij_data.AIJ
+  Elj =elj_data.Ej
+  Glj =long(elj_data.J_v*2.+1.)
   ; Get levels for ratio 
   ; 150 large enough
   ; 
@@ -256,10 +189,10 @@ function calc_emissivity, ion, levels, tempi, densi
     I=ITRANC[1,IKT]
     J=ITRANC[2,IKT]
     emissivity_line=double(0.0)
-    if (Aij[J,I] ne 0.D0) then begin
-      EJI = Elj[J] - Elj[I]
+    if (Aij[J-1,I-1] ne 0.D0) then begin
+      EJI = Elj[J-1] - Elj[I-1]
       WAV = 1.D8 / EJI
-      emissivity_line=Nlj[J]*Aij[J,I]*h_Planck*c_Speed*1.e8/(WAV*DENS)
+      emissivity_line=Nlj[J]*Aij[J-1,I-1]*h_Planck*c_Speed*1.e8/(WAV*DENS)
       emissivity_all=emissivity_all+emissivity_line
     endif
   endfor

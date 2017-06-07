@@ -1,7 +1,7 @@
-function calc_abundance, ion, levels, tempi, densi, iobs
+function calc_abundance, elj_data, omij_data, aij_data, h_i_aeff_data, levels, tempi, densi, iobs
 ;+
 ; NAME:
-;     getabundance
+;     calc_abundance
 ; PURPOSE:
 ;     determine ionic abundance from observed 
 ;     flux intensity for specified ion with level(s)
@@ -21,7 +21,7 @@ function calc_abundance, ion, levels, tempi, densi, iobs
 ;     levels5007='3,4/'
 ;     iobs5007=double(1200.0)
 ;     Abb5007=double(0.0) 
-;     Abb5007=getabundance(ion, levels5007, tempi, densi, iobs5007)
+;     Abb5007=calc_abundance(ion, levels5007, tempi, densi, iobs5007)
 ;     print, Abb5007
 ;
 ; INPUTS:
@@ -49,6 +49,7 @@ function calc_abundance, ion, levels, tempi, densi, iobs
 ;     Made a new function calc_emissivity() for calculating 
 ;                      line emissivities and separated it 
 ;                      from calc_abundance(), A. Danehkar, 21/11/2016
+;     Integration with AtomNeb, A. Danehkar, 02/03/2017
 ; 
 ; FORTRAN EQUIB HISTORY (F77/F90):
 ; 1981-05-03 I.D.Howarth  Version 1
@@ -93,15 +94,19 @@ function calc_abundance, ion, levels, tempi, densi, iobs
   
   ; Output data
   ; Eff. recombination coef. of Hb
-  T4=TEMP*1.0D-4
-  AHB=3.036D-14*T4^(-0.87D0) ; Brocklehurt 1971; Aller (1984), Physics of Thermal Gaseous Nebulae, p. 76
-  WAVHB=4861.33D ;4861.D0
-  emissivity_Hbeta=AHB*h_Planck*c_Speed*1.e8/WAVHB ; N(H+) * N(e-) (erg/s) 
+;  T4=TEMP*1.0D-4
+;  AHB=3.036D-14*T4^(-0.87D0) ; Brocklehurt 1971; Aller (1984), Physics of Thermal Gaseous Nebulae, p. 76
+;  WAVHB=4861.33D ;4861.D0
+;  emissivity_Hbeta=AHB*h_Planck*c_Speed*1.e8/WAVHB ; N(H+) * N(e-) (erg/s) 
   ; emissivity_Hbeta=1.387D-25*T4^(-0.983D0)* 10.D0^(-0.0424D0/T4) ;  Brocklehurst (1971); Aller (1984)
+  emissivity_Hbeta=10.0^gamma4861(h_i_aeff_data,TEMP,DENS)
   
   emissivity_all=double(0.0)
-  emissivity_all=calc_emissivity(ion, levels, tempi, densi)
-  
+  emissivity_all=calc_emissivity(elj_data, omij_data, aij_data, levels, tempi, densi)
+  if emissivity_all eq 0 then begin
+    print,"cannot calculate emissivity" 
+    return, 0
+  endif
   abund = (emissivity_Hbeta/emissivity_all)*(iobs/100.0)
   return, abund
 end

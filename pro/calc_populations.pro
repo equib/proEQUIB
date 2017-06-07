@@ -37,6 +37,7 @@ function calc_populations, TEMP, DENS, Telist, Omij, Aij, Elj, Glj, NLEV, NTEMP,
 ;                    SPL_INIT & SPL_INTERP, A. Danehkar, 19/11/2016
 ;     Make a new function calc_populations() separated from 
 ;       calc_abundance(), calc_temp_dens(), A. Danehkar, 20/11/2016
+;     Integration with AtomNeb, A. Danehkar, 02/03/2017
 ; 
 ; FORTRAN EQUIB HISTORY (F77/F90):
 ; 1981-05-03 I.D.Howarth  Version 1
@@ -106,14 +107,14 @@ function calc_populations, TEMP, DENS, Telist, Omij, Aij, Elj, Glj, NLEV, NTEMP,
   for I = 2, NLEV do begin
     for J = I, NLEV do begin
       ;Negative!
-      DELTEK = (Elj[I-1]-Elj[J])*1.4388463D0
+      DELTEK = (Elj[I-2]-Elj[J-1])*1.4388463D0
       EXPE = exp(DELTEK/TEMP)
       for IT = 1, NTEMP do begin
         if (IRATS eq 0.D+00) then begin
-          QQ[IT] = Omij[IT,I-1,J]
+          QQ[IT] = Omij[IT-1,I-2,J-1]
         endif else begin
           ;Take out the exp. depend.
-          QQ[IT] = Omij[IT,I-1,J] / EXPE
+          QQ[IT] = Omij[IT-1,I-2,J-1] / EXPE
           ; before interpolation
         endelse
       endfor
@@ -121,11 +122,11 @@ function calc_populations, TEMP, DENS, Telist, Omij, Aij, Elj, Glj, NLEV, NTEMP,
         DD = QQ[1]
       endif else begin
         if (NTEMP eq 2) then begin
-          DD = QQ[1] +  (QQ[2] - QQ[1])/(Telist[2] - Telist[1]) * (TLOGT - Telist[1])
+          DD = QQ[1] +  (QQ[2] - QQ[1])/(Telist[2-1] - Telist[1-1]) * (TLOGT - Telist[1-1])
         endif else begin
           ;DD=interpol(QQ[1:NTEMP], T[1:NTEMP], TLOGT,/SPLINE)
-          deriv1 = spl_init(Telist[1:NTEMP], QQ[1:NTEMP])
-          DD=spl_interp(Telist[1:NTEMP], QQ[1:NTEMP], deriv1, TLOGT)
+          deriv1 = spl_init(Telist[0:NTEMP-1], QQ[1:NTEMP])
+          DD=spl_interp(Telist[0:NTEMP-1], QQ[1:NTEMP], deriv1, TLOGT)
         endelse
       endelse
       if (IRATS eq 0.D+00) then begin
@@ -134,12 +135,12 @@ function calc_populations, TEMP, DENS, Telist, Omij, Aij, Elj, Glj, NLEV, NTEMP,
         CS[I-1,J] = DD * EXPE
       endelse
       if (IRATS eq 0.D+00) then begin
-        QEFF[I-1,J] = 8.63D-06*CS[I-1,J] * EXPE / (Glj[I-1]*TEMP2)
-        QEFF[J,I-1] = 8.63D-06 * CS[I-1,J] / (Glj[J]*TEMP2)
+        QEFF[I-1,J] = 8.63D-06*CS[I-1,J] * EXPE / (Glj[I-2]*TEMP2)
+        QEFF[J,I-1] = 8.63D-06 * CS[I-1,J] / (Glj[J-1]*TEMP2)
       endif else begin
         QEFF[I-1,J] = CS[I-1,J] * 10.^IRATS
         ; Be careful
-        QEFF[J,I-1] = Glj[I-1] * QEFF[I-1,J] / (EXPE * Glj[J])
+        QEFF[J,I-1] = Glj[I-2] * QEFF[I-1,J] / (EXPE * Glj[J-1])
         ; G integer!
       endelse
     endfor
@@ -150,9 +151,9 @@ function calc_populations, TEMP, DENS, Telist, Omij, Aij, Elj, Glj, NLEV, NTEMP,
         X[I,J] = X[I,J] + DENS * QEFF[J,I]
         X[I,I] = X[I,I] - DENS * QEFF[I,J]
         if (J gt I) then begin
-          X[I,J] = X[I,J] + Aij[J,I]
+          X[I,J] = X[I,J] + Aij[J-1,I-1]
         endif else begin 
-          X[I,I] = X[I,I] - Aij[I,J]
+          X[I,I] = X[I,I] - Aij[I-1,J-1]
         endelse
       endif
     endfor

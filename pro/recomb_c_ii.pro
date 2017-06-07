@@ -1,4 +1,4 @@
-function recomb_c_ii, temp, dens, abund
+function recomb_c_ii, cii_rc_data, h_i_aeff_data, temp, dens, wavelength, iobs
 ;+
 ; NAME:
 ;     recomb_c_ii
@@ -8,16 +8,15 @@ function recomb_c_ii, temp, dens, abund
 ; EXPLANATION:
 ;
 ; CALLING SEQUENCE:
-;     c_ii_orl=recomb_c_ii(tempi, densi, Abund)
+;     ciiRLs=recomb_c_ii(tempi, densi, Abund)
 ;
 ; INPUTS:
 ;     temp  - electron temperature in K
 ;     dens  - electron density in cm-3
 ;     abund - abundance coefficient
 ; RETURN:  recombination coefficients of C II
-;          c_ii_orl_structure
+;          ciiRLstructure
 ;          { Wave:0.0, 
-;            a:0.0, b:0.0, c:0.0, d:0.0, f:0.0, aeff:0.0, 
 ;            Int:0.0, Obs:0.0, 
 ;            Abundance:0.0}
 ; REVISION HISTORY:
@@ -26,48 +25,47 @@ function recomb_c_ii, temp, dens, abund
 ;     Adopted from MOCASSIN, Ercolano et al. 2005MNRAS.362.1038E
 ;     Originally added by Yong Zhang to MOCASSIN, 2003/02
 ;     Converted to IDL code by A. Danehkar, 10/05/2013
+;     Integration with AtomNeb, A. Danehkar, 15/04/2017
 ;- 
-  common share1, Atomic_Data_Path
-  
-  c_ii_orl_structure ={Wave:double(0.0), $
-                  a:double(0.0), b:double(0.0), c:double(0.0), d:double(0.0), $
-                  f:double(0.0), aeff:double(0.0), $
-                  Int:double(0.0), Obs:double(0.0), Abundance:double(0.0)}
 
+  ; ciiRLstructure ={Wave:double(0.0), Int:double(0.0), Obs:double(0.0), Abundance:double(0.0)}
+
+  h_Planck = 6.62606957e-27 ; erg s
+  c_Speed = 2.99792458e10 ; cm/s 
+  
+  TEh2=double(temp)
+  NEh2=double(dens)
+  abund=1.0
   nlines = 57 
-  get_aeff_hb, temp, dens, aeff_hb, em_hb
+  hbeta_aeff= (10.0^gamma4861(h_i_aeff_data,TEh2,NEh2))*double(4861.33/(h_Planck*c_Speed*1.e8)) 
   
-  c_ii_orl=REPLICATE(c_ii_orl_structure, nlines)
+  ; ciiRLs=REPLICATE(ciiRLstructure, nlines)
   
-  orl_Wave=double(0.0)
-  orl_a=double(0.0)
-  orl_b=double(0.0)
-  orl_c=double(0.0)
-  orl_d=double(0.0)
-  orl_f=double(0.0)
-  
-  ; read CII data from file
-  ion1='R_c_ii'
-  atomic_filename = Atomic_Data_Path+'/'+ion1+'.dat'
-  openr, lun1, atomic_filename, /get_lun
-  for i=0, NLINES-1 do begin 
-    readf,lun1,orl_Wave, orl_a, orl_b, orl_c, orl_d, orl_f
-    c_ii_orl[i].Wave = orl_Wave
-    c_ii_orl[i].a = orl_a
-    c_ii_orl[i].b = orl_b
-    c_ii_orl[i].c = orl_c
-    c_ii_orl[i].d = orl_d
-    c_ii_orl[i].f = orl_f
-  endfor
-  free_lun, lun1
-  
+  lamb=double(0.0)
+  a=double(0.0)
+  b=double(0.0)
+  c=double(0.0)
+  d=double(0.0)
+  f=double(0.0)
+  aeff=double(0.0)
+  br=double(1.0)
   temp4 = temp/10000.0
-  for i = 0, NLINES-1 do begin 
-    c_ii_orl[i].aeff = 1.0e-14 * (c_ii_orl[i].a*(temp4^c_ii_orl[i].f)) * $
-                    (1.0 + (c_ii_orl[i].b*(1.0-temp4)) + (c_ii_orl[i].c * $
-                    ((1.0-temp4)^2) ) + (c_ii_orl[i].d * ((1.0-temp4)^3) ) ) 
-    c_ii_orl[i].Int = 100.0 * (c_ii_orl[i].aeff/aeff_hb) * (4861.33/c_ii_orl[i].Wave) * abund 
-  endfor
+  loc1=where(abs(cii_rc_data.Wavelength-wavelength) le 0.01)
+  temp2=size(loc1,/DIMENSIONS)
+  if temp2[0] ne 1 then begin
+    Wavelength_min=min(cii_rc_data[loc1].Wavelength)
+    loc1=where(cii_rc_data.Wavelength eq  Wavelength_min)
+  endif
+  lamb=cii_rc_data[loc1].Wavelength
+  a=cii_rc_data[loc1].a
+  b=cii_rc_data[loc1].b
+  c=cii_rc_data[loc1].c
+  d=cii_rc_data[loc1].d
+  f=cii_rc_data[loc1].f
+  aeff = 1.0e-14 * (a*(temp4^f)) 
+  aeff=aeff*(1. + (b*(1.-temp4)) + (c*((1.-temp4)^2) ) + (d * ((1.-temp4)^3) ) ) 
+  ciiRLs_Int = 100.0*(aeff/hbeta_aeff)*br*(4861.33/lamb)*abund 
   
-  return,c_ii_orl
+  abund=iobs/ciiRLs_Int
+  return,abund
 end

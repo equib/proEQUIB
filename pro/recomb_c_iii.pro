@@ -1,76 +1,75 @@
-function recomb_c_iii, temp, dens, abund
+function recomb_c_iii, ciii_rc_data, h_i_aeff_data, temp, dens, wavelength, iobs
 ;+
 ; NAME:
 ;     recomb_c_iii
 ; PURPOSE:
-;     return the recombination coefficients of C III and N III
+;     return the recombination coefficients of C III
 ;     lines from Pequignot et al. 1991A&A...251..680P
 ; EXPLANATION:
 ;
 ; CALLING SEQUENCE:
-;     c_iii_rc=recomb_c_iii(tempi, densi, Abund)
+;     xiiiRLs=recomb_c_iii(tempi, densi, Abund)
 ;
 ; INPUTS:
 ;     temp  - electron temperature in K
 ;     dens  - electron density in cm-3
 ;     abund - abundance coefficient
-; RETURN:  recombination coefficients of C III and N III
-;          c_iii_rc_structure
+; RETURN:  recombination coefficients of C III
+;          ciiiRLstructure
 ;          { Wave:0.0, 
-;            a:0.0, b:0.0, c:0.0, d:0.0, Br:0.0, aeff:0.0, 
 ;            Int:0.0, Obs:0.0, 
 ;            abundance:0.0, Ion:''}
 ; REVISION HISTORY:
 ;     Total and effective radiative recombination coefficients
 ;     Pequignot, Petitjean, Boisson, C. 1991A&A...251..680P
 ;     IDL code by A. Danehkar, 10/05/2013
+;     Integration with AtomNeb, A. Danehkar, 06/04/2017
 ;- 
   common share1, Atomic_Data_Path
   
-  c_iii_rc_structure ={Wave:double(0.0), $
-                  a:double(0.0), b:double(0.0), c:double(0.0), d:double(0.0), $
-                  Br:double(0.0), aeff:double(0.0), $
-                  Int:double(0.0), Obs:double(0.0), abundance:double(0.0), Ion:''}
+  ; ciiiRLstructure ={Wave:double(0.0), Int:double(0.0), Obs:double(0.0), Abundance:double(0.0)}
 
-  nlines = 6 
-  get_aeff_hb, temp, dens, aeff_hb, em_hb
+  h_Planck = 6.62606957e-27 ; erg s
+  c_Speed = 2.99792458e10 ; cm/s 
   
-  c_iii_rc=REPLICATE(c_iii_rc_structure, nlines)
+  TEh2=double(temp)
+  NEh2=double(dens)
+  abund=1.0
+
+  nlines = 4
+  hbeta_aeff= (10.0^gamma4861(h_i_aeff_data,TEh2,NEh2))*double(4861.33/(h_Planck*c_Speed*1.e8)) 
   
-  orl_Wave=double(0.0)
-  orl_a=double(0.0)
-  orl_b=double(0.0)
-  orl_c=double(0.0)
-  orl_d=double(0.0)
-  orl_Br=double(0.0)
-  orl_Ion=''
-    
-  ; read C III atomic data
-  ion1='R_c_iii'
-  atomic_filename = Atomic_Data_Path+'/'+ion1+'.dat'
-  openr, lun1, atomic_filename, /get_lun
-  for i=0, NLINES-1 do begin 
-    readf,lun1,orl_Ion,orl_Wave, orl_a, orl_b, orl_c, orl_d, orl_Br, Format='(A3, F8.2, F6.3, F7.3, F6.3, F6.3, F6.3)'
-    c_iii_rc[i].Ion = orl_Ion
-    c_iii_rc[i].Wave = orl_Wave
-    c_iii_rc[i].a = orl_a
-    c_iii_rc[i].b = orl_b
-    c_iii_rc[i].c = orl_c
-    c_iii_rc[i].d = orl_d
-    c_iii_rc[i].Br = orl_Br
-  endfor
-  free_lun, lun1
+  ;ciiiRLs=REPLICATE(ciiiRLstructure, nlines)
+
+  lamb=double(0.0)
+  a=double(0.0)
+  b=double(0.0)
+  c=double(0.0)
+  d=double(0.0)
+  br=double(0.0)
+  aeff=double(0.0)
+  Ion=''
   
   z = 3.0 ; ion level c^3+
   ; equation (1) in 1991A&A...251..680P
-  temp4 = 1.0e-4 * temperature /z^2
-  for i = 0, 3 do begin 
-    ; equation (1) in 1991A&A...251..680P
-    c_iii_rc[i].aeff = c_iii_rc[i].Br * 1.0e-13 * z * $
-                      (c_iii_rc[i].a*(temp4^c_iii_rc[i].b)) / $
-                      (1.0 + (c_iii_rc[i].c * (temp4^c_iii_rc[i].d))) 
-    c_iii_rc[i].Int = 100.0 * (c_iii_rc[i].aeff/aeff_hb) * (4861.33/c_iii_rc[i].Wave) * abund 
-  endfor
+  temp4 = 1.0e-4 * temp /z^2
+  loc1=where(abs(ciii_rc_data.Wavelength-wavelength) le 0.01)
+  temp2=size(loc1,/DIMENSIONS)
+  if temp2[0] ne 1 then begin
+    Wavelength_min=min(ciii_rc_data[loc1].Wavelength)
+    loc1=where(ciii_rc_data.Wavelength eq  Wavelength_min)
+  endif
+  lamb=ciii_rc_data[loc1].Wavelength
+  a=ciii_rc_data[loc1].a
+  b=ciii_rc_data[loc1].b
+  c=ciii_rc_data[loc1].c
+  d=ciii_rc_data[loc1].d
+  br=ciii_rc_data[loc1].br
+  ; equation (1) in 1991A&A...251..680P
+  aeff = 1.0e-13 * z * br
+  aeff=aeff*(a*(temp4^b))/(1.+c*(temp4^d)) 
+  ciiiRLs_Int = 100.0 * (aeff/hbeta_aeff) * (4861.33/lamb) * abund 
   
-  return,c_iii_rc
+  abund=iobs/ciiiRLs_Int
+  return,abund
 end
