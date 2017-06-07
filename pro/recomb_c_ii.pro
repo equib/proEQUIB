@@ -23,7 +23,7 @@ function recomb_c_ii, cii_rc_data, h_i_aeff_data, temp, dens, wavelength, iobs
 ;     Recombination coefficients for C Ii lines from
 ;     Davey et al. 2000A&AS..142...85D
 ;     Adopted from MOCASSIN, Ercolano et al. 2005MNRAS.362.1038E
-;     Originally added by Yong Zhang to MOCASSIN, 2003/02
+;     Originally added by Zhang Yong to MOCASSIN, 2003/02
 ;     Converted to IDL code by A. Danehkar, 10/05/2013
 ;     Integration with AtomNeb, A. Danehkar, 15/04/2017
 ;- 

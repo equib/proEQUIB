@@ -3,8 +3,9 @@ function recomb_n_ii, nii_rc_data_br, nii_rc_data, h_i_aeff_data, temp, dens, wa
 ; NAME:
 ;     recomb_n_ii
 ; PURPOSE:
-;     return the recombination coefficients of N II lines
-;     from Escalante & Victor 1990ApJS...73..513E
+;     return the recombination coefficients of O II lines
+;     from Storey 1994A&A...282..999S 
+;     and Liu et al. 1995MNRAS.272..369L
 ; EXPLANATION:
 ;
 ; CALLING SEQUENCE:
@@ -21,11 +22,14 @@ function recomb_n_ii, nii_rc_data_br, nii_rc_data, h_i_aeff_data, temp, dens, wa
 ;            gf1:0.0, gf2:0.0, Obs:0.0, abundance:0.0,
 ;            Mult1:'', Term1:'', Term2:''} 
 ; REVISION HISTORY:
-;     Effective recombination coefficients of neutral carbon 
-;     and singly ionized nitrogen from
-;     Escalante & Victor 1990ApJS...73..513E
+;     Recombination coefficients for O II lines at nebular 
+;     temperatures and densities
+;     Storey 1994A&A...282..999S 
+;     The rich O II recombination spectrum of the planetary 
+;     nebula NGC 7009: new observations and atomic data
+;     Liu et al. 1995MNRAS.272..369L
 ;     Adopted from MIDAS script Rnii.prg written by X.W.Liu
-;     Revised based on scripts by Yong Zhang added to MOCASSIN, 2003/02
+;     Revised based on scripts by Zhang Yong added to MOCASSIN, 2003/02
 ;                       Ercolano et al. 2005MNRAS.362.1038E
 ;     IDL code by A. Danehkar, 10/05/2013
 ;     Integration with AtomNeb, A. Danehkar, 15/04/2017
