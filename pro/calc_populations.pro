@@ -1,4 +1,8 @@
-function calc_populations, TEMP, DENS, Telist, Omij, Aij, Elj, Glj, NLEV, NTEMP, IRATS
+function calc_populations, temperature=temperature, density=density, $
+                           temp_list=temp_list, $ 
+                           Omij=Omij, Aij=Aij, Elj=Elj, $
+                           Glj=Glj, level_num=level_num, $
+                           temp_num=temp_num, irats=irats
 ;+
 ; NAME:
 ;     calc_populations
@@ -9,19 +13,24 @@ function calc_populations, TEMP, DENS, Telist, Omij, Aij, Elj, Glj, NLEV, NTEMP,
 ; EXPLANATION:
 ;
 ; CALLING SEQUENCE:
-;     Nlj=calc_populations(TEMP, DENS, Telist, Omij, Aij, Elj, Glj, NLEV, NTEMP, IRATS)
+;     Nlj=calc_populations(temperature=temperature, density=density, $
+;                        temp_list=temp_list, $ 
+;                        Omij=Omij, Aij=Aij, Elj=Elj, Glj=Glj, $
+;                        level_num=level_num, temp_num=temp_num, 
+;                        irats=irats)
 ;
 ; INPUTS:
-;     TEMP -     electron temperature
-;     DENS -     electron density
-;     Telist -   temperature intervals (array)
+;     temperature -     electron temperature
+;     density -     electron density
+;     temp_list -   temperature intervals (array)
 ;     Omij - Collision Strengths (Omega_ij)
 ;     Aij - Transition Probabilities (A_ij)
 ;     Elj - Energy Levels (E_j)
 ;     Glj - Ground Levels (G_j)
-;     NLEV -Number of levels
-;     NTEMP - Number of temperature intervals
-;     IRATS - Else Coll. rates = tabulated values * 10 ** IRATS
+;     level_num -Number of levels
+;     temp_num - Number of temperature intervals
+;     irats - Else Coll. rates = tabulated values * 10 ** irats
+;     
 ; RETURN:  N_j (array): atomic level populations
 ;
 ; REVISION HISTORY:
@@ -35,9 +44,12 @@ function calc_populations, TEMP, DENS, Telist, Omij, Aij, Elj, Glj, NLEV, NTEMP,
 ;                             LUDC & LUSOL, A. Danehkar, 15/11/2016
 ;     Replaced INTERPOL (not accurate) with 
 ;                    SPL_INIT & SPL_INTERP, A. Danehkar, 19/11/2016
-;     Make a new function calc_populations() separated from 
-;       calc_abundance(), calc_temp_dens(), A. Danehkar, 20/11/2016
-;     Integration with AtomNeb, A. Danehkar, 02/03/2017
+;     Make a new function calc_populations() and separated from 
+;       calc_abundance() and do_diagnostic(), A. Danehkar, 20/11/2016
+;     Integration with AtomNeb, now uses atomic data input elj_data,
+;                      omij_data, aij_data, A. Danehkar, 10/03/2017
+;     Cleaning the function, and remove unused varibales
+;                        calc_emissivity(), A. Danehkar, 12/06/2017   
 ; 
 ; FORTRAN EQUIB HISTORY (F77/F90):
 ; 1981-05-03 I.D.Howarth  Version 1
@@ -63,8 +75,6 @@ function calc_populations, TEMP, DENS, Telist, Omij, Aij, Elj, Glj, NLEV, NTEMP,
 ;                         and the 0 0 0 data end is excluded for these c
 ;                         The A values have a different format for IBIG=
 ; 2006       B.Ercolano   Converted to F90
-; 2009-05    R.Wesson     Misc updates and improvements, inputs from cmd line, 
-;                         written only for calculating ionic abundances.
 ;- 
   
   DD=double(0)
@@ -75,42 +85,42 @@ function calc_populations, TEMP, DENS, Telist, Omij, Aij, Elj, Glj, NLEV, NTEMP,
   JM1= long(0) 
   DELTEK=double(0)
   EXPE=double(0)
-  SUMN=double(0)
+  pop_sum=double(0)
   VALUE=double(0)
   
-  CS=dblarr(NLEV+1,NLEV+1)
-  QQ=dblarr(NTEMP+1)   
-  QEFF=dblarr(NLEV+1,NLEV+1) 
-  X=dblarr(NLEV+1,NLEV+1)  
-  Y=dblarr(NLEV+1)
-  Nlj=dblarr(NLEV+1)
+  CS=dblarr(level_num+1,level_num+1)
+  QQ=dblarr(temp_num+1)   
+  QEFF=dblarr(level_num+1,level_num+1) 
+  X=dblarr(level_num+1,level_num+1)  
+  Y=dblarr(level_num+1)
+  Nlj=dblarr(level_num+1)
   
   X[*,*]=double(0.0)
   CS[*,*]=double(0.0)
   QEFF[*,*]=double(0.0)
   Y[*]=double(0.0)
     
-  NLEV1 = NLEV - 1
+  level_num1 = level_num - 1
   
-  TLOGT = alog10(TEMP)
-  TEMP2= sqrt(TEMP)
+  TLOGT = alog10(temperature)
+  TEMP2= sqrt(temperature)
   
   ;IOPT=0
-  if (NTEMP eq 1) then begin
+  if (temp_num eq 1) then begin
     print, 'Coll. strengths available for 1 Te only - assuming const'
   endif else begin
-    if (NTEMP eq 2) then begin
+    if (temp_num eq 2) then begin
       print, 'Coll. strengths available for 2 Te only - linear interp'
     endif
   endelse
   
-  for I = 2, NLEV do begin
-    for J = I, NLEV do begin
+  for I = 2, level_num do begin
+    for J = I, level_num do begin
       ;Negative!
       DELTEK = (Elj[I-2]-Elj[J-1])*1.4388463D0
-      EXPE = exp(DELTEK/TEMP)
-      for IT = 1, NTEMP do begin
-        if (IRATS eq 0.D+00) then begin
+      EXPE = exp(DELTEK/temperature)
+      for IT = 1, temp_num do begin
+        if (irats eq 0.D+00) then begin
           QQ[IT] = Omij[IT-1,I-2,J-1]
         endif else begin
           ;Take out the exp. depend.
@@ -118,38 +128,38 @@ function calc_populations, TEMP, DENS, Telist, Omij, Aij, Elj, Glj, NLEV, NTEMP,
           ; before interpolation
         endelse
       endfor
-      if (NTEMP eq 1) then begin
+      if (temp_num eq 1) then begin
         DD = QQ[1]
       endif else begin
-        if (NTEMP eq 2) then begin
-          DD = QQ[1] +  (QQ[2] - QQ[1])/(Telist[2-1] - Telist[1-1]) * (TLOGT - Telist[1-1])
+        if (temp_num eq 2) then begin
+          DD = QQ[1] +  (QQ[2] - QQ[1])/(temp_list[2-1] - temp_list[1-1]) * (TLOGT - temp_list[1-1])
         endif else begin
-          ;DD=interpol(QQ[1:NTEMP], T[1:NTEMP], TLOGT,/SPLINE)
-          deriv1 = spl_init(Telist[0:NTEMP-1], QQ[1:NTEMP])
-          DD=spl_interp(Telist[0:NTEMP-1], QQ[1:NTEMP], deriv1, TLOGT)
+          ;DD=interpol(QQ[1:temp_num], T[1:temp_num], TLOGT,/SPLINE)
+          deriv1 = spl_init(temp_list[0:temp_num-1], QQ[1:temp_num])
+          DD=spl_interp(temp_list[0:temp_num-1], QQ[1:temp_num], deriv1, TLOGT)
         endelse
       endelse
-      if (IRATS eq 0.D+00) then begin
+      if (irats eq 0.D+00) then begin
         CS[I-1,J] = DD
       endif else begin
         CS[I-1,J] = DD * EXPE
       endelse
-      if (IRATS eq 0.D+00) then begin
+      if (irats eq 0.D+00) then begin
         QEFF[I-1,J] = 8.63D-06*CS[I-1,J] * EXPE / (Glj[I-2]*TEMP2)
         QEFF[J,I-1] = 8.63D-06 * CS[I-1,J] / (Glj[J-1]*TEMP2)
       endif else begin
-        QEFF[I-1,J] = CS[I-1,J] * 10.^IRATS
+        QEFF[I-1,J] = CS[I-1,J] * 10.^irats
         ; Be careful
         QEFF[J,I-1] = Glj[I-2] * QEFF[I-1,J] / (EXPE * Glj[J-1])
         ; G integer!
       endelse
     endfor
   endfor
-  for I = 2, NLEV do begin
-    for J = 1, NLEV do begin
+  for I = 2, level_num do begin
+    for J = 1, level_num do begin
       if (J ne I) then begin
-        X[I,J] = X[I,J] + DENS * QEFF[J,I]
-        X[I,I] = X[I,I] - DENS * QEFF[I,J]
+        X[I,J] = X[I,J] + density * QEFF[J,I]
+        X[I,I] = X[I,I] - density * QEFF[I,J]
         if (J gt I) then begin
           X[I,J] = X[I,J] + Aij[J-1,I-1]
         endif else begin 
@@ -158,32 +168,32 @@ function calc_populations, TEMP, DENS, Telist, Omij, Aij, Elj, Glj, NLEV, NTEMP,
       endif
     endfor
   endfor
-  for I = 2, NLEV do begin
+  for I = 2, level_num do begin
     IM1 = I - 1
     VALUE = 0.D0 - X[I,1]
     Y[IM1] = VALUE
-    for J = 2, NLEV do begin
+    for J = 2, level_num do begin
       JM1 = J - 1
       VALUE = X[I,J]
       X[IM1,JM1] = VALUE
     endfor
   endfor
   ; Solve matrices for populations
-  ; YY=la_linear_equation(transpose(X[1:NLEV1,1:NLEV1]), Y[1:NLEV1]); not work in GDL
-  XX=transpose(X[1:NLEV1,1:NLEV1])
+  ; YY=la_linear_equation(transpose(X[1:level_num1,1:level_num1]), Y[1:level_num1]); not work in GDL
+  XX=transpose(X[1:level_num1,1:level_num1])
   ludc, XX, INDEX  ; supported by GDL
-  YY = lusol(XX, INDEX, Y[1:NLEV1]) ; supported by GDL
-  Y[1:NLEV1]=YY[0:NLEV1-1]
-  for I = NLEV, 2, -1 do begin
+  YY = lusol(XX, INDEX, Y[1:level_num1]) ; supported by GDL
+  Y[1:level_num1]=YY[0:level_num1-1]
+  for I = level_num, 2, -1 do begin
     Nlj[I] = Y[I-1]
   endfor
-  SUMN = 1.D0
-  for I = 2, NLEV do begin
-    SUMN = SUMN + Nlj[I]
+  pop_sum = 1.D0
+  for I = 2, level_num do begin
+    pop_sum = pop_sum + Nlj[I]
   endfor
-  for I = 2, NLEV do begin
-    Nlj[I] = Nlj[I] / SUMN
+  for I = 2, level_num do begin
+    Nlj[I] = Nlj[I] / pop_sum
   endfor
-  Nlj[1] = 1.D0 / SUMN
+  Nlj[1] = 1.D0 / pop_sum
   return, Nlj
 end

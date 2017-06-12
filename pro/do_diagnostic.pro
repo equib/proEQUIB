@@ -1,7 +1,7 @@
-function calc_temp_dens, elj_data, omij_data, aij_data, levu, levl, inratio, diagtype, fixedq
+function do_diagnostic, elj_data, omij_data, aij_data, levu, levl, inratio, diagtype, fixedq
 ;+
 ; NAME:
-;     calc_temp_dens
+;     getdiagnostic
 ; PURPOSE:
 ;     determine electron density or temperature from given 
 ;     flux intensity ratio for specified ion with upper level(s)
@@ -21,7 +21,7 @@ function calc_temp_dens, elj_data, omij_data, aij_data, levu, levl, inratio, dia
 ;     diagtype='T'
 ;     dens = double(2550)
 ;     niiTratio=double(10.753)
-;     temp=calc_temp_dens(ion, levu, levl, niiTratio, diagtype, dens) 
+;     temp=do_diagnostic(ion, levu, levl, niiTratio, diagtype, dens) 
 ;     print, temp
 ;
 ;     ion='sii'
@@ -30,7 +30,7 @@ function calc_temp_dens, elj_data, omij_data, aij_data, levu, levl, inratio, dia
 ;     diagtype='D'
 ;     temp=double(7000.0)
 ;     siiNratio=double(1.506)
-;     dens=calc_temp_dens(ion, levu, levl, siiNratio, diagtype, temp)
+;     dens=do_diagnostic(ion, levu, levl, siiNratio, diagtype, temp)
 ;     print, dens
 ;
 ; INPUTS:
@@ -60,11 +60,7 @@ function calc_temp_dens, elj_data, omij_data, aij_data, levu, levl, inratio, dia
 ;                    SPL_INIT & SPL_INTERP, A. Danehkar, 19/11/2016
 ;     Made a new function calc_populations() for solving atomic 
 ;       level populations and separated it from
-;       calc_abundance(), calc_temp_dens(), A. Danehkar, 20/11/2016
-;     Integration with AtomNeb, now uses atomic data input elj_data,
-;                      omij_data, aij_data, A. Danehkar, 10/03/2017
-;     Cleaning the function, and remove unused varibales
-;                           calc_temp_dens(), A. Danehkar, 12/06/2017
+;       calc_abundance() and do_diagnostic(), A. Danehkar, 20/11/2016
 ;     Integration with AtomNeb, A. Danehkar, 10/03/2017
 ; 
 ; FORTRAN EQUIB HISTORY (F77/F90):
@@ -227,7 +223,7 @@ function calc_temp_dens, elj_data, omij_data, aij_data, levu, levl, inratio, dia
   Aij =aij_data.AIJ
   Elj =elj_data.Ej
   Glj =long(elj_data.J_v*2.+1.)
-  
+
   ; start of iterations
   for iteration = 1, 9 do begin
     if (diagtype eq 't') or (diagtype eq 'T') then begin

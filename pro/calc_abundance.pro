@@ -1,4 +1,8 @@
-function calc_abundance, elj_data, omij_data, aij_data, h_i_aeff_data, levels, tempi, densi, iobs
+function calc_abundance, temperature=temperature, density=density, $
+                         line_flux=line_flux, atomic_levels=atomic_levels, $
+                         elj_data=elj_data, omij_data=omij_data, $
+                         aij_data=aij_data, h_i_aeff_data=h_i_aeff_data
+                        
 ;+
 ; NAME:
 ;     calc_abundance
@@ -25,11 +29,15 @@ function calc_abundance, elj_data, omij_data, aij_data, h_i_aeff_data, levels, t
 ;     print, Abb5007
 ;
 ; INPUTS:
-;     ion -       ion name e.g. 'oii', 'oiii'
-;     levels -    level(s) e.g '1,2/', '1,2,1,3/'
-;     tempi -     electron temperature
-;     densi -     electron density
-;     iobs -      observed flux intensity
+;     temperature   -     electron temperature
+;     density       -     electron density
+;     line_flux     -     line flux intensity
+;     atomic_levels -     level(s) e.g '1,2/', '1,2,1,3/'
+;     elj_data      -     energy levels (Ej) data
+;     omij_data     -     collision strengths (omega_ij) data
+;     aij_data      -     transition probabilities (Aij) data
+;     h_i_aeff_data -     H I recombination coefficients
+;     
 ; RETURN:  ionic abundance
 ;
 ; REVISION HISTORY:
@@ -43,13 +51,16 @@ function calc_abundance, elj_data, omij_data, aij_data, h_i_aeff_data, levels, t
 ;           with IDL function LUDC & LUSOL, A. Danehkar, 15/11/2016
 ;     Replaced INTERPOL (not accurate) with 
 ;                    SPL_INIT & SPL_INTERP, A. Danehkar, 19/11/2016
-;     Made a new function calc_populations() for solving atomic 
+;     Made a new function getpopulations() for solving atomic 
 ;       level populations and separated it from
-;       calc_abundance(), calc_temp_dens(), A. Danehkar, 20/11/2016
+;       calc_abundance() and do_diagnostic(), A. Danehkar, 20/11/2016
 ;     Made a new function calc_emissivity() for calculating 
 ;                      line emissivities and separated it 
 ;                      from calc_abundance(), A. Danehkar, 21/11/2016
-;     Integration with AtomNeb, A. Danehkar, 02/03/2017
+;     Integration with AtomNeb, now uses atomic data input elj_data,
+;                      omij_data, aij_data, A. Danehkar, 10/03/2017
+;     Cleaning the function, and remove unused varibales
+;                        calc_emissivity(), A. Danehkar, 12/06/2017
 ; 
 ; FORTRAN EQUIB HISTORY (F77/F90):
 ; 1981-05-03 I.D.Howarth  Version 1
@@ -75,8 +86,6 @@ function calc_abundance, elj_data, omij_data, aij_data, h_i_aeff_data, levels, t
 ;                         and the 0 0 0 data end is excluded for these c
 ;                         The A values have a different format for IBIG=
 ; 2006       B.Ercolano   Converted to F90
-; 2009-05    R.Wesson     Misc updates and improvements, inputs from cmd line, 
-;                         written only for calculating ionic abundances.
 ;- 
 
   AHB=double(0)
@@ -84,29 +93,60 @@ function calc_abundance, elj_data, omij_data, aij_data, h_i_aeff_data, levels, t
   h_Planck = 6.62606957e-27 ; erg s
   c_Speed = 2.99792458e10 ; cm/s 
   
-  TEMP=TEMPI
-  ; Set Ne
-  DENS=DENSI
-  if (TEMP le 0.D0) or (DENS le 0.D0) then begin
-      print,'Temp = ', TEMP, ', Dens = ', DENS
+  if keyword_set(temperature) eq 0 then begin 
+    print,'Temperature is not set'
+    return, 0
+  endif
+  if keyword_set(density) eq 0 then begin 
+    print,'Density is not set'
+    return, 0
+  endif
+  if keyword_set(elj_data) eq 0 then begin 
+    print,'Energy Levels data (elj_data) are not set'
+    return, 0
+  endif
+  if keyword_set(omij_data) eq 0 then begin 
+    print,'Collision Strengths (omij_data) are not set'
+    return, 0
+  endif
+  if keyword_set(aij_data) eq 0 then begin 
+    print,'Transition Probabilities (aij_data) are not set'
+    return, 0
+  endif
+  if keyword_set(h_i_aeff_data) eq 0 then begin 
+    print,'H I recombination coefficients (h_i_aeff_data) are not set'
+    return, 0
+  endif
+  if keyword_set(atomic_levels) eq 0 then begin 
+    print,'Atomic levels (atomic_levels) are not given'
+    return, 0
+  endif
+  if keyword_set(line_flux) eq 0 then begin 
+    print,'Line flux intensity (line_flux) is not given'
+    return, 0
+  endif  
+  if (temperature le 0.D0) or (density le 0.D0) then begin
+      print,'temperature = ', temperature, ', density = ', density
       return, 0
   endif
   
-  ; Output data
-  ; Eff. recombination coef. of Hb
-;  T4=TEMP*1.0D-4
-;  AHB=3.036D-14*T4^(-0.87D0) ; Brocklehurt 1971; Aller (1984), Physics of Thermal Gaseous Nebulae, p. 76
-;  WAVHB=4861.33D ;4861.D0
-;  emissivity_Hbeta=AHB*h_Planck*c_Speed*1.e8/WAVHB ; N(H+) * N(e-) (erg/s) 
+  ; T4=TEMP*1.0D-4
+  ; AHB=3.036D-14*T4^(-0.87D0) ; Brocklehurt 1971; Aller (1984), Physics of Thermal Gaseous Nebulae, p. 76
+  ; WAVHB=4861.33D ;4861.D0
+  ; emissivity_Hbeta=AHB*h_Planck*c_Speed*1.e8/WAVHB ; N(H+) * N(e-) (erg/s) 
   ; emissivity_Hbeta=1.387D-25*T4^(-0.983D0)* 10.D0^(-0.0424D0/T4) ;  Brocklehurst (1971); Aller (1984)
-  emissivity_Hbeta=10.0^gamma4861(h_i_aeff_data,TEMP,DENS)
+  emissivity_Hbeta=10.0^gamma4861(h_i_aeff_data, temperature, density)
   
   emissivity_all=double(0.0)
-  emissivity_all=calc_emissivity(elj_data, omij_data, aij_data, levels, tempi, densi)
+  emissivity_all=calc_emissivity(temperature=temperature, density=density, $
+                         atomic_levels=atomic_levels, $
+                         elj_data=elj_data, omij_data=omij_data, $
+                         aij_data=aij_data)
+  
   if emissivity_all eq 0 then begin
     print,"cannot calculate emissivity" 
     return, 0
   endif
-  abund = (emissivity_Hbeta/emissivity_all)*(iobs/100.0)
+  abund = (emissivity_Hbeta/emissivity_all)*(line_flux/100.0)
   return, abund
 end

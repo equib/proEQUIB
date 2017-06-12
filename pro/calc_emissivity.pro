@@ -1,4 +1,7 @@
-function calc_emissivity, elj_data, omij_data, aij_data, levels, tempi, densi
+function calc_emissivity, temperature=temperature, density=density, $
+                         atomic_levels=atomic_levels, $
+                         elj_data=elj_data, omij_data=omij_data, $
+                         aij_data=aij_data
 ;+
 ; NAME:
 ;     calc_emissivity
@@ -12,20 +15,32 @@ function calc_emissivity, elj_data, omij_data, aij_data, levels, tempi, densi
 ; CALLING SEQUENCE:
 ;     path='proEQUIB/atomic-data/'
 ;     set_atomic_data_path, path
-;
-;     ion='oiii'
-;     tempi=double(10000.0)
-;     densi=double(5000.0)
-;     levels5007='3,4/'
+;     Atom_Elj_file='idllib/AtomNeb/atomic-data/chianti70/AtomElj.fits'
+;     Atom_Omij_file='idllib/AtomNeb/atomic-data/chianti70/AtomOmij.fits'
+;     Atom_Aij_file='idllib/AtomNeb/atomic-data/chianti70/AtomAij.fits'
+;     atom='o'
+;     ion='iii'
+;     o_iii_elj=atomneb_read_elj(Atom_Elj_file, atom, ion, level_num=5) ; read Energy Levels (Ej) 
+;     o_iii_omij=atomneb_read_omij(Atom_Omij_file, atom, ion) ; read Collision Strengths (Omegaij)
+;     o_iii_aij=atomneb_read_aij(Atom_Aij_file, atom, ion) ; read Transition Probabilities (Aij)
+;     temperature=double(10000.0)
+;     density=double(5000.0)
+;     atomic_levels='3,4/'
 ;     emiss5007=double(0.0) 
-;     emiss5007=calc_emissivity(ion, levels5007, tempi, densi)
+;     emiss5007=calc_emissivity(temperature=temperature, density=density, $
+;                         atomic_levels=atomic_levels, $
+;                         elj_data=o_iii_elj, omij_data=o_iii_omij, $
+;                         aij_data=o_iii_aij
 ;     print, emiss5007
 ;
 ; INPUTS:
-;     ion -       ion name e.g. 'oii', 'oiii'
-;     levels -    level(s) e.g '1,2/', '1,2,1,3/'
-;     tempi -     electron temperature
-;     densi -     electron density
+;     temperature   -     electron temperature
+;     density       -     electron density
+;     atomic_levels -     level(s) e.g '1,2/', '1,2,1,3/'
+;     elj_data      -     energy levels (Ej) data
+;     omij_data     -     collision strengths (omega_ij) data
+;     aij_data      -     transition probabilities (Aij) data
+;     
 ; RETURN:  ionic abundance
 ;
 ; REVISION HISTORY:
@@ -41,11 +56,14 @@ function calc_emissivity, elj_data, omij_data, aij_data, levels, tempi, densi
 ;                    SPL_INIT & SPL_INTERP, A. Danehkar, 19/11/2016
 ;     Made a new function calc_populations() for solving atomic 
 ;       level populations and separated it from
-;       calc_abundance(), calc_temp_dens(), A. Danehkar, 20/11/2016
+;       calc_abundance() and do_diagnostic(), A. Danehkar, 20/11/2016
 ;     Made a new function calc_emissivity() for calculating 
 ;                      line emissivities and separated it 
 ;                      from calc_abundance(), A. Danehkar, 21/11/2016
-;     Integration with AtomNeb, A. Danehkar, 10/03/2017
+;     Integration with AtomNeb, now uses atomic data input elj_data,
+;                      omij_data, aij_data, A. Danehkar, 10/03/2017
+;     Cleaning the function, and remove unused varibales
+;                        calc_emissivity(), A. Danehkar, 12/06/2017
 ; 
 ; FORTRAN EQUIB HISTORY (F77/F90):
 ; 1981-05-03 I.D.Howarth  Version 1
@@ -71,76 +89,40 @@ function calc_emissivity, elj_data, omij_data, aij_data, levels, tempi, densi
 ;                         and the 0 0 0 data end is excluded for these c
 ;                         The A values have a different format for IBIG=
 ; 2006       B.Ercolano   Converted to F90
-; 2009-05    R.Wesson     Misc updates and improvements, inputs from cmd line, 
-;                         written only for calculating ionic abundances.
 ;- 
   common share1, Atomic_Data_Path
 
   h_Planck = 6.62606957e-27 ; erg s
   c_Speed = 2.99792458e10 ; cm/s 
-    
-  GX= long(0)
-  ID=lonarr(2+1)
-  JD=lonarr(2+1)
   
-  I= long(0)
-  J= long(0) 
-  K= long(0) 
-  L= long(0)
-  NLINES= long(0) 
-  NLEV= long(0) 
-  NTEMP= long(0) 
-  IBIG= long(0) 
+  level_num= long(0) 
+  temp_num= long(0) 
   IRATS= long(0) 
-  NTRA= long(0) 
   ITEMP= long(0) 
-  IN= long(0) 
-  KP1= long(0)
-  IT= long(0) 
-  IP1= long(0)
   IKT= long(0) 
-  IC= long(0) 
-  IC1= long(0) 
-  IC2= long(0) 
-  
-  DENS=double(0)
-  TEMP=double(0)
   
   EJI=double(0)
   WAV=double(0)
-  SUMC=double(0)
-  
-  QX=double(0)
-  AX=double(0)
-  EX=double(0)
-  LTEXT = '';
-
-  abund=double(0)
-     
-  I= long(0)
-  J= long(0)
-  K= long(0)
-  IP1= long(0)
   
   temp=size(elj_data,/DIMENSIONS)
-  NLEV=temp[0]
+  level_num=temp[0]
   temp=size(omij_data[0].strength,/DIMENSIONS)
-  NTEMP=temp[0]
+  temp_num=temp[0]
   temp=size(omij_data,/DIMENSIONS)
   omij_num=temp[0]
   
-  Glj=lonarr(NLEV)
+  Glj=lonarr(level_num)
   
-  Nlj=dblarr(NLEV+1)
-  Omij=dblarr(NTEMP,NLEV,NLEV)   
-  Aij=dblarr(NLEV+1,NLEV+1)   
-  Elj=dblarr(NLEV)   
-  Telist=dblarr(NTEMP)
+  Nlj=dblarr(level_num+1)
+  Omij=dblarr(temp_num,level_num,level_num)   
+  Aij=dblarr(level_num+1,level_num+1)   
+  Elj=dblarr(level_num)   
+  Temp_List=dblarr(temp_num)
   
-  LABEL1=STRARR(NLEV+1) 
+  LABEL1=STRARR(level_num+1) 
   
   Glj[*]=0
-  levels_str=strsplit(levels, ',', ESCAPE='/', /EXTRACT)
+  levels_str=strsplit(atomic_levels, ',', ESCAPE='/', /EXTRACT)
   temp=size(levels_str, /N_ELEMENTS)
   levels_num=long(temp[0]/2)
   ITRANC=lonarr(2+1,levels_num+1)
@@ -154,37 +136,30 @@ function calc_emissivity, elj_data, omij_data, aij_data, levels, tempi, densi
     levels_i = levels_i + 2
     ;if levels_i ge 2*levels_num then break
   endfor
-  IRATS=0
-  Telist = omij_data[0].strength
-  Telist = alog10(Telist)
+  irats=0
+  Temp_List = omij_data[0].strength
+  Temp_List = alog10(Temp_List)
   for k = 1, omij_num-1 do begin
     I = omij_data[k].level1
     J = omij_data[k].level2
-    if I le NLEV and J le NLEV then begin
-      Omij[0:NTEMP-1,I-1,J-1] = omij_data[k].strength
+    if I le level_num and J le level_num then begin
+      Omij[0:temp_num-1,I-1,J-1] = omij_data[k].strength
     endif
   endfor
   Aij =aij_data.AIJ
   Elj =elj_data.Ej
   Glj =long(elj_data.J_v*2.+1.)
-  ; Get levels for ratio 
-  ; 150 large enough
-  ; 
-  ; Read in Te and Ne where the line 
-  ; ratio is to be calculated
-  ; Set Te
-  TEMP=TEMPI
-  ; Set Ne
-  DENS=DENSI
-  if (TEMP le 0.D0) or (DENS le 0.D0) then begin
-      print,'Temp = ', TEMP, ', Dens = ', DENS
+  
+  if (temperature le 0.D0) or (density le 0.D0) then begin
+      print,'temperature = ', temperature, ', density = ', density
       return, 0
   endif
 
-  Nlj=calc_populations(TEMP, DENS, Telist, Omij, Aij, Elj, Glj, NLEV, NTEMP, IRATS)
+  Nlj=calc_populations(temperature=temperature, density=density, temp_list=temp_list, $
+                       Omij=Omij, Aij=Aij, Elj=Elj, Glj=Glj, $
+                       level_num=level_num, temp_num=temp_num, irats=irats)
   
   emissivity_all=double(0.0)
-  ; Search ITRANC for transitions & sum up
   for IKT=1, levels_num do begin 
     I=ITRANC[1,IKT]
     J=ITRANC[2,IKT]
@@ -192,7 +167,7 @@ function calc_emissivity, elj_data, omij_data, aij_data, levels, tempi, densi
     if (Aij[J-1,I-1] ne 0.D0) then begin
       EJI = Elj[J-1] - Elj[I-1]
       WAV = 1.D8 / EJI
-      emissivity_line=Nlj[J]*Aij[J-1,I-1]*h_Planck*c_Speed*1.e8/(WAV*DENS)
+      emissivity_line=Nlj[J]*Aij[J-1,I-1]*h_Planck*c_Speed*1.e8/(WAV*density)
       emissivity_all=emissivity_all+emissivity_line
     endif
   endfor
