@@ -45,11 +45,12 @@ function calc_populations, temperature=temperature, density=density, $
 ;     Replaced INTERPOL (not accurate) with 
 ;                    SPL_INIT & SPL_INTERP, A. Danehkar, 19/11/2016
 ;     Make a new function calc_populations() and separated from 
-;       calc_abundance() and do_diagnostic(), A. Danehkar, 20/11/2016
+;       calc_abundance(), calc_density() and calc_temperature(), 
+;                                           A. Danehkar, 20/11/2016
 ;     Integration with AtomNeb, now uses atomic data input elj_data,
 ;                      omij_data, aij_data, A. Danehkar, 10/03/2017
 ;     Cleaning the function, and remove unused varibales
-;                        calc_emissivity(), A. Danehkar, 12/06/2017   
+;                        calc_populations(), A. Danehkar, 12/06/2017   
 ; 
 ; FORTRAN EQUIB HISTORY (F77/F90):
 ; 1981-05-03 I.D.Howarth  Version 1
@@ -77,6 +78,42 @@ function calc_populations, temperature=temperature, density=density, $
 ; 2006       B.Ercolano   Converted to F90
 ;- 
   
+  if keyword_set(temperature) eq 0 then begin 
+    print,'Temperature is not set'
+    return, 0
+  endif
+  if keyword_set(density) eq 0 then begin 
+    print,'Density is not set'
+    return, 0
+  endif
+  if keyword_set(temp_list) eq 0 then begin 
+    print,'temp_list is not set'
+    return, 0
+  endif
+  if keyword_set(Omij) eq 0 then begin 
+    print,'Omij is not set'
+    return, 0
+  endif
+  if keyword_set(Aij) eq 0 then begin 
+    print,'Aij is not set'
+    return, 0
+  endif 
+  if keyword_set(Elj) eq 0 then begin 
+    print,'Elj is not set'
+    return, 0
+  endif  
+  if keyword_set(Glj) eq 0 then begin 
+    print,'Glj is not set'
+    return, 0
+  endif  
+  if keyword_set(level_num) eq 0 then begin 
+    print,'level_num is not set'
+    return, 0
+  endif
+  if keyword_set(temp_num) eq 0 then begin 
+    print,'temp_num is not set'
+    return, 0
+  endif 
   DD=double(0)
   I= long(0)
   J= long(0) 

@@ -56,7 +56,8 @@ function calc_emissivity, temperature=temperature, density=density, $
 ;                    SPL_INIT & SPL_INTERP, A. Danehkar, 19/11/2016
 ;     Made a new function calc_populations() for solving atomic 
 ;       level populations and separated it from
-;       calc_abundance() and do_diagnostic(), A. Danehkar, 20/11/2016
+;       calc_abundance(), calc_density() and calc_temperature(), 
+;                                            A. Danehkar, 20/11/2016
 ;     Made a new function calc_emissivity() for calculating 
 ;                      line emissivities and separated it 
 ;                      from calc_abundance(), A. Danehkar, 21/11/2016
@@ -93,7 +94,35 @@ function calc_emissivity, temperature=temperature, density=density, $
   common share1, Atomic_Data_Path
 
   h_Planck = 6.62606957e-27 ; erg s
-  c_Speed = 2.99792458e10 ; cm/s 
+  c_Speed = 2.99792458e10 ; cm/s                    
+  if keyword_set(temperature) eq 0 then begin 
+    print,'Temperature is not set'
+    return, 0
+  endif
+  if keyword_set(density) eq 0 then begin 
+    print,'Density is not set'
+    return, 0
+  endif
+  if keyword_set(elj_data) eq 0 then begin 
+    print,'Energy Levels data (elj_data) are not set'
+    return, 0
+  endif
+  if keyword_set(omij_data) eq 0 then begin 
+    print,'Collision Strengths (omij_data) are not set'
+    return, 0
+  endif
+  if keyword_set(aij_data) eq 0 then begin 
+    print,'Transition Probabilities (aij_data) are not set'
+    return, 0
+  endif
+  if keyword_set(atomic_levels) eq 0 then begin 
+    print,'Atomic levels (atomic_levels) are not given'
+    return, 0
+  endif  
+  if (temperature le 0.D0) or (density le 0.D0) then begin
+      print,'temperature = ', temperature, ', density = ', density
+      return, 0
+  endif
   
   level_num= long(0) 
   temp_num= long(0) 

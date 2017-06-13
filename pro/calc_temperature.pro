@@ -1,13 +1,16 @@
-function do_diagnostic, elj_data, omij_data, aij_data, levu, levl, inratio, diagtype, fixedq
+function calc_temperature, line_flux_ratio=line_flux_ratio, density=density, $
+                          upper_levels=upper_levels, lower_levels=lower_levels, $
+                          elj_data=elj_data, omij_data=omij_data, $
+                          aij_data=aij_data
 ;+
 ; NAME:
-;     getdiagnostic
+;     cal_temperature
 ; PURPOSE:
-;     determine electron density or temperature from given 
+;     determine electron temperature from given 
 ;     flux intensity ratio for specified ion with upper level(s)
 ;     lower level(s) by solving atomic level populations and 
 ;     line emissivities in statistical equilibrium 
-;     for a fixed electron density or temperature.
+;     for given electron density.
 ;
 ; EXPLANATION:
 ;
@@ -15,38 +18,35 @@ function do_diagnostic, elj_data, omij_data, aij_data, levu, levl, inratio, diag
 ;     path='proEQUIB/atomic-data/'
 ;     set_atomic_data_path, path
 ;
-;     ion='sii'
-;     levu='1,2,1,3/'
-;     levl='1,5/'
-;     diagtype='T'
-;     dens = double(2550)
-;     niiTratio=double(10.753)
-;     temp=do_diagnostic(ion, levu, levl, niiTratio, diagtype, dens) 
-;     print, temp
-;
-;     ion='sii'
-;     levu='1,2/'
-;     levl='1,3/'
-;     diagtype='D'
-;     temp=double(7000.0)
-;     siiNratio=double(1.506)
-;     dens=do_diagnostic(ion, levu, levl, siiNratio, diagtype, temp)
-;     print, dens
+;     Atom_Elj_file='idllib/AtomNeb/atomic-data/chianti70/AtomElj.fits'
+;     Atom_Omij_file='idllib/AtomNeb/atomic-data/chianti70/AtomOmij.fits'
+;     Atom_Aij_file='idllib/AtomNeb/atomic-data/chianti70/AtomAij.fits' 
+;     atom='s'
+;     ion='ii'
+;     s_ii_elj=atomneb_read_elj(Atom_Elj_file, atom, ion, level_num=5) ; read Energy Levels (Ej) 
+;     s_ii_omij=atomneb_read_omij(Atom_Omij_file, atom, ion) ; read Collision Strengths (Omegaij)
+;     s_ii_aij=atomneb_read_aij(Atom_Aij_file, atom, ion) ; read Transition Probabilities (Aij)\
+;     upper_levels='1,2,1,3/'   
+;     lower_levels='1,5/'
+;     density = double(2550)
+;     line_flux_ratio=double(10.753)
+;     temperature=calc_temperature(line_flux_ratio=line_flux_ratio, density=density, $
+;                                  upper_levels=upper_levels, lower_levels=lower_levels, $
+;                                  elj_data=s_ii_elj, omij_data=s_ii_omij, $
+;                                  aij_data=s_ii_aij)
+;     print, "Electron Temperature:", temperature
 ;
 ; INPUTS:
-;     ion -       ion name e.g. 'sii', 'nii'
-;     levu -      upper level(s) e.g '1,2/', '1,2,1,3/'
-;     levl -      lower level(s) e.g '1,2/', '1,2,1,3/'
-;     inratio -   flux intensity ratio
-;     diagtype -  diagnostics type 
-;                 'd' or 'D' for electron density
-;                 't' or 'T' for electron temperature
-;     fixedq -    fixed quantity 
-;                 electron density when diagtype ='t' or 'T'
-;                 electron temperature when diagtype ='d' or 'D'
-; RETURN:  density or temperature
-;                 electron density when diagtype ='d' or 'D'
-;                 electron temperature when diagtype ='t' or 'T'
+;     line_flux_ratio  -     flux intensity ratio
+;     density          -     electron density
+;     upper_levels     -      upper atomic level(s) e.g '1,2/', '1,2,1,3/'
+;     lower_levels     -      lower atomic level(s) e.g '1,2/', '1,2,1,3/'
+;     elj_data         -     energy levels (Ej) data
+;     omij_data        -     collision strengths (omega_ij) data
+;     aij_data         -     transition probabilities (Aij) data
+;     
+; RETURN:  electron temperature
+; 
 ; REVISION HISTORY:
 ;     Converted from FORTRAN to IDL code by A. Danehkar, 15/09/2013
 ;     Replaced str2int with strnumber, A. Danehkar, 20/10/2016
@@ -60,8 +60,12 @@ function do_diagnostic, elj_data, omij_data, aij_data, levu, levl, inratio, diag
 ;                    SPL_INIT & SPL_INTERP, A. Danehkar, 19/11/2016
 ;     Made a new function calc_populations() for solving atomic 
 ;       level populations and separated it from
-;       calc_abundance() and do_diagnostic(), A. Danehkar, 20/11/2016
-;     Integration with AtomNeb, A. Danehkar, 10/03/2017
+;       calc_abundance(), calc_density() and calc_temperature(), 
+;                                           A. Danehkar, 20/11/2016
+;     Integration with AtomNeb, now uses atomic data input elj_data,
+;                      omij_data, aij_data, A. Danehkar, 10/03/2017
+;     Cleaning the function, and remove unused varibales
+;                        calc_temperature(), A. Danehkar, 12/06/2017
 ; 
 ; FORTRAN EQUIB HISTORY (F77/F90):
 ; 1981-05-03 I.D.Howarth  Version 1
@@ -87,17 +91,12 @@ function do_diagnostic, elj_data, omij_data, aij_data, levu, levl, inratio, diag
 ;                         and the 0 0 0 data end is excluded for these c
 ;                         The A values have a different format for IBIG=
 ; 2006       B.Ercolano   Converted to F90
-; 2009-04    R.Wesson     Misc updates and improvements, inputs from cmd line, 
-;                         written purely to do diagnostics.
 ;- 
   common share1, Atomic_Data_Path
   
   h_Planck = 6.62606957e-27 ; erg s
   c_Speed = 2.99792458e10 ; cm/s 
   
-  GX= long(0)
-  ID=lonarr(2+1)
-  JD=lonarr(2+1)
   iteration= long(0)
   
   I= long(0) 
@@ -106,42 +105,27 @@ function do_diagnostic, elj_data, omij_data, aij_data, levu, levl, inratio, diag
   J= long(0) 
   K= long(0) 
   L= long(0) 
-  KK= long(0)
   JT= long(0) 
   JJD= long(0)
-  NLINES= long(0) 
-  NLEV= long(0) 
-  NTEMP= long(0) 
-  IBIG= long(0) 
+  level_num= long(0) 
+  temp_num= long(0) 
   IRATS= long(0) 
-  NTRA= long(0) 
-  ITEMP= long(0) 
-  IN= long(0) 
-  NLEV1= long(0) 
-  KP1= long(0) 
   INT= long(0) 
   IND= long(0) 
-  IOPT= long(0) 
   IT= long(0)
-  IP1= long(0) 
   IKT= long(0) 
   IA= long(0) 
   IB= long(0) 
-  IA1= long(0) 
-  IA2= long(0) 
-  IB1= long(0) 
-  IB2= long(0)
      
   TEMPI=double(0) 
   TINC=double(0)
   DENSI=double(0) 
   DINC=double(0)
-  DENS=double(0)
-  TEMP=double(0)
+  temperature=double(0)
   EJI=double(0)
   WAV=double(0)
-  SUMA=double(0)
-  SUMB=double(0)
+  emis_sum_a=double(0)
+  emis_sum_b=double(0)
   QX=double(0)
   AX=double(0)
   EX=double(0)
@@ -154,134 +138,118 @@ function do_diagnostic, elj_data, omij_data, aij_data, levu, levl, inratio, diag
   I= long(0)
   J= long(0)
   K= long(0)
-  IP1= long(0)
   
   temp=size(elj_data,/DIMENSIONS)
-  NLEV=temp[0]
+  level_num=temp[0]
   temp=size(omij_data[0].strength,/DIMENSIONS)
-  NTEMP=temp[0]
+  temp_num=temp[0]
   temp=size(omij_data,/DIMENSIONS)
   omij_num=temp[0]
   
-  Glj=lonarr(NLEV)
+  Glj=lonarr(level_num)
 
-  Nlj=dblarr(NLEV)
-  WAVA=dblarr(NLEV+1)
-  WAVB=dblarr(NLEV+1)
-  Omij=dblarr(NTEMP,NLEV,NLEV)   
-  Aij=dblarr(NLEV,NLEV)   
-  Elj=dblarr(NLEV)   
-  Telist=dblarr(NTEMP)
+  Nlj=dblarr(level_num)
+  WAVA=dblarr(level_num+1)
+  WAVB=dblarr(level_num+1)
+  Omij=dblarr(temp_num,level_num,level_num)   
+  Aij=dblarr(level_num,level_num)   
+  Elj=dblarr(level_num)   
+  temp_list=dblarr(temp_num)
   check_value=dblarr(3+1)
      
-  LABEL1=STRARR(NLEV+1)
+  LABEL1=STRARR(level_num+1)
   
-  levu_str=strsplit(levu, ',', ESCAPE='/', /EXTRACT)
-  levl_str=strsplit(levl, ',', ESCAPE='/', /EXTRACT)
+  upper_levels_str=strsplit(upper_levels, ',', ESCAPE='/', /EXTRACT)
+  lower_levels_str=strsplit(lower_levels, ',', ESCAPE='/', /EXTRACT)
   
-  temp=size(levu_str, /N_ELEMENTS)
-  levu_num=long(temp[0]/2)
-  temp=size(levl_str, /N_ELEMENTS)
-  levl_num=long(temp[0]/2)
+  temp=size(upper_levels_str, /N_ELEMENTS)
+  upper_levels_num=long(temp[0]/2)
+  temp=size(lower_levels_str, /N_ELEMENTS)
+  lower_levels_num=long(temp[0]/2)
   
-  ITRANA=lonarr(2,levu_num)
-  ITRANB=lonarr(2,levl_num)
+  ITRANA=lonarr(2,upper_levels_num)
+  ITRANB=lonarr(2,lower_levels_num)
   
   ITRANA[*,*]=0
   ITRANB[*,*]=0
   
-  levu_i=0
-  for i=0, levu_num-1 do begin 
-    res=equib_strnumber(levu_str[levu_i], val)
+  upper_levels_i=0
+  for i=0, upper_levels_num-1 do begin 
+    res=equib_strnumber(upper_levels_str[upper_levels_i], val)
     if res eq 1 then ITRANA[0,i]=long(val)
-    res=equib_strnumber(levu_str[levu_i+1], val)
+    res=equib_strnumber(upper_levels_str[upper_levels_i+1], val)
     if res eq 1 then ITRANA[1,i]=long(val)
-    levu_i = levu_i + 2
-    ;if levu_i ge 2*levu_num then break
+    upper_levels_i = upper_levels_i + 2
+    ;if upper_levels_i ge 2*upper_levels_num then break
   endfor
 
-  levl_i=0
-  for i=0, levl_num-1 do begin 
-    res=equib_strnumber(levl_str[levl_i], val)
+  lower_levels_i=0
+  for i=0, lower_levels_num-1 do begin 
+    res=equib_strnumber(lower_levels_str[lower_levels_i], val)
     if res eq 1 then ITRANB[0,i]=long(val)
-    res=equib_strnumber(levl_str[levl_i+1], val)
+    res=equib_strnumber(lower_levels_str[lower_levels_i+1], val)
     if res eq 1 then ITRANB[1,i]=long(val)
-    levl_i = levl_i + 2
-    ;if levl_i ge 2*levl_num then break;
+    lower_levels_i = lower_levels_i + 2
+    ;if lower_levels_i ge 2*lower_levels_num then break;
   endfor
   IRATS=0
-  Telist = omij_data[0].strength
-  Telist = alog10(Telist)
+  temp_list = omij_data[0].strength
+  temp_list = alog10(temp_list)
   for k = 1, omij_num-1 do begin
     I = omij_data[k].level1
     J = omij_data[k].level2
-    if I le NLEV and J le NLEV then begin
-      Omij[0:NTEMP-1,I-1,J-1] = omij_data[k].strength
+    if I le level_num and J le level_num then begin
+      Omij[0:temp_num-1,I-1,J-1] = omij_data[k].strength
     endif
   endfor
   level_max=max([max(ITRANA),max(ITRANB)])
   Aij =aij_data.AIJ
   Elj =elj_data.Ej
   Glj =long(elj_data.J_v*2.+1.)
-
+  ; set temperature iterations
   ; start of iterations
+  ; ****************************
   for iteration = 1, 9 do begin
-    if (diagtype eq 't') or (diagtype eq 'T') then begin
-      if (iteration eq 1) then begin
-        TEMPI=5000.0
-      endif else begin 
-        TEMPI= check_value[1]
-      endelse
-      INT=4
-      TINC=(15000.0)/((INT-1)^(iteration))
-      ;INT=15
-      ;TINC=(70000.0)/((INT-1)^(iteration))
-      densi=fixedq
-      dinc=0
-      ind=1
-      
-      ; ALLOCATE(RESULTS(3,INT))
-      RESULTS=dblarr(3+1,INT+1)
-    endif else begin
-      if (iteration eq 1) then begin
-        densi=0.0
-      endif else begin
-        densi=check_value[2]
-      endelse
-      IND=4
-      DINC=(100000.0)/((IND-1)^(iteration))
-      ;IND=8
-      ;DINC=(1000000.0)/((IND-1)^(iteration))
-      TempI=fixedq
-      TINC=0
-      INT=1
-        
-      ;allocate(results(3,IND))
-      RESULTS=dblarr(3+1,IND+1)
+    if (iteration eq 1) then begin
+      TEMPI=5000.0
+    endif else begin 
+      TEMPI= check_value[1]
     endelse
+    INT=4
+    TINC=(15000.0)/((INT-1)^(iteration))
+    ;INT=15
+    ;TINC=(70000.0)/((INT-1)^(iteration))
+    densi=density
+    dinc=0
+    ind=1
+    
+    RESULTS=dblarr(3+1,INT+1)
     if (densi le 0) then densi=1
     if (tempi lt 5000) then tempi=5000 ; add
-    ; Start of Te iteration
+    ; Start of temperature iteration
     for JT = 1, INT do begin
-      TEMP=TEMPI+(JT-1)*TINC 
-      ; Start of Ne iteration=
+      temperature=TEMPI+(JT-1)*TINC 
+      ; Start of density iteration=
       for JJD = 1, IND  do begin
-        DENS=DENSI+(JJD-1)*DINC
-        if (TEMP le 0.D0) or (DENS le 0.D0) then begin
-            print,'Temp = ', TEMP, ', Dens = ', DENS
+        density=DENSI+(JJD-1)*DINC
+        if (temperature le 0.D0) or (density le 0.D0) then begin
+            print,'temperature = ', temperature, ', density = ', density
             return, 0
         endif
-        if level_max gt NLEV then begin
+        if level_max gt level_num then begin
           print, "error outside level range"
           retunr, 0
         endif
-        ;Nlj=calc_populations(TEMP, DENS, Telist, Omij, Aij, Elj, Glj, NLEV, NTEMP, IRATS)
-        Nlj=calc_populations(TEMP, DENS, Telist, Omij, Aij, Elj, Glj, level_max, NTEMP, IRATS)
+        Nlj=calc_populations(temperature=temperature, density=density, $
+                           temp_list=temp_list, $ 
+                           Omij=Omij, Aij=Aij, Elj=Elj, $
+                           Glj=Glj, level_num=level_max, $
+                           temp_num=temp_num, irats=irats)
         
         ; Search ITRANA, ITRANB for transitions & sum up   
-        SUMA=double(0.0)
-        SUMB=double(0.0)
-        for IKT=0, levu_num-1 do begin 
+        emis_sum_a=double(0.0)
+        emis_sum_b=double(0.0)
+        for IKT=0, upper_levels_num-1 do begin 
           I=ITRANA[0,IKT]
           J=ITRANA[1,IKT]
           emissivity_line=double(0.0)
@@ -289,10 +257,10 @@ function do_diagnostic, elj_data, omij_data, aij_data, levu, levl, inratio, diag
             EJI = Elj[J-1] - Elj[I-1]
             WAV = 1.D8 / EJI
             emissivity_line=Nlj[J]*Aij[J-1,I-1]*h_Planck*c_Speed*1.e8/WAV
-            SUMA=SUMA+emissivity_line
+            emis_sum_a=emis_sum_a+emissivity_line
           endif
         endfor
-        for IKT=0, levl_num-1 do begin 
+        for IKT=0, lower_levels_num-1 do begin 
           I=ITRANB[0,IKT]
           J=ITRANB[1,IKT]
           emissivity_line=double(0.0)
@@ -300,38 +268,28 @@ function do_diagnostic, elj_data, omij_data, aij_data, levu, levl, inratio, diag
             EJI = Elj[J-1] - Elj[I-1]
             WAV = 1.D8 / EJI
             emissivity_line=Nlj[J]*Aij[J-1,I-1]*h_Planck*c_Speed*1.e8/WAV
-            SUMB=SUMB+emissivity_line
+            emis_sum_b=emis_sum_b+emissivity_line
           endif
         endfor
-        FRAT=SUMA/SUMB
-        if (diagtype eq 't') or (diagtype eq 'T') then begin
-          RESULTS[1, JT] = TEMP
-          RESULTS[2, JT] = DENS
-          RESultS[3, JT] = FRAT-inratio
-        endif else begin
-          RESULTS[1, JJD] = TEMP
-          RESULTS[2, JJD] = DENS
-          RESultS[3, JJD] = FRAT-inratio
-        endelse ;End of the Ne iteration
+        FRAT=emis_sum_a/emis_sum_b
+        RESULTS[1, JT] = temperature
+        RESULTS[2, JT] = density
+        RESultS[3, JT] = FRAT-line_flux_ratio
       endfor
-      for IA = 0, levu_num-1 do begin
+      for IA = 0, upper_levels_num-1 do begin
         I1=ITRANA[0,IA]
         I2=ITRANA[1,IA]
         DEE=Elj[I2-1]-Elj[I1-1]
         WAVA[IA]=1.D8/DEE
       endfor
-      for IB = 0, levl_num-1 do begin
+      for IB = 0, lower_levels_num-1 do begin
         I1=ITRANB[0,IB]
         I2=ITRANB[1,IB]
         DEE=Elj[I2-1]-Elj[I1-1]
         WAVB[IB]=1.D8/DEE
       endfor
-    ; End of the Te iteration
+    ; End of the temperature iteration
     endfor
-    
-    if (diagtype eq 'D') or (diagtype eq 'd') then begin
-      INT = ind
-    endif
     ; iteration and detect the sign change.
     for I=2,INT do begin
       check=0
@@ -342,7 +300,7 @@ function do_diagnostic, elj_data, omij_data, aij_data, levu, levl, inratio, diag
         break
       endif
     endfor
-    if(check eq 0) and (iteration lt 9) then begin ;check if no change of sign,
+    if(check eq 0) and (iteration lt 9) then begin ; check if there is any change of sign,
                              ;and checks if it should be upper or lower limit
       if(abs(results[3,1])) lt (abs(results[3,INT])) then begin
           check_value[*]=results[*,1]
@@ -350,7 +308,7 @@ function do_diagnostic, elj_data, omij_data, aij_data, levu, levl, inratio, diag
                 if(abs(results[3,INT]) lt abs(results[3,1])) then begin
                 check_value[*]=results[*,INT-1]
             endif else begin
-                print,'check_value failed'
+                print,'check_value is wrong'
                 return, 0
            endelse
       endelse
@@ -363,7 +321,7 @@ function do_diagnostic, elj_data, omij_data, aij_data, levu, levl, inratio, diag
                 if (abs(results[3,INT]) lt abs(results[3,1])) then begin
                 check_value[*]=results[*,INT]
             endif else begin
-                print,'check_value failed'
+                print,'check_value is wrong'
                 return, 0
             endelse
           endelse
@@ -371,10 +329,7 @@ function do_diagnostic, elj_data, omij_data, aij_data, levu, levl, inratio, diag
     endelse
   endfor
   ; end of iterations
-  if (diagtype eq 'D') or (diagtype eq 'd') then begin
-    result1 = check_value[2]
-  endif else begin
-    result1 = check_value[1]
-  endelse
+  ;****************************
+  result1 = check_value[1]
   return, result1
 end

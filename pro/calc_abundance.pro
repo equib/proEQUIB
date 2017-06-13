@@ -19,13 +19,28 @@ function calc_abundance, temperature=temperature, density=density, $
 ;     path='proEQUIB/atomic-data/'
 ;     set_atomic_data_path, path
 ;
-;     ion='oiii'
-;     tempi=double(10000.0)
-;     densi=double(5000.0)
-;     levels5007='3,4/'
+;     Atom_Elj_file='idllib/AtomNeb/atomic-data/chianti70/AtomElj.fits'
+;     Atom_Omij_file='idllib/AtomNeb/atomic-data/chianti70/AtomOmij.fits'
+;     Atom_Aij_file='idllib/AtomNeb/atomic-data/chianti70/AtomAij.fits'
+;     Atom_RC_SH95_file='idllib/AtomNeb/atomic-data-rc/rc_SH95.fits'
+;     atom='o'
+;     ion='iii'
+;     o_iii_elj=atomneb_read_elj(Atom_Elj_file, atom, ion, level_num=5) ; read Energy Levels (Ej) 
+;     o_iii_omij=atomneb_read_omij(Atom_Omij_file, atom, ion) ; read Collision Strengths (Omegaij)
+;     o_iii_aij=atomneb_read_aij(Atom_Aij_file, atom, ion) ; read Transition Probabilities (Aij)
+;     atom='h'
+;     ion='ii' ; H I
+;     hi_rc_data=atomneb_read_aeff_sh95(Atom_RC_SH95_file, atom, ion)
+;     h_i_aeff_data=hi_rc_data[0].Aeff
+;     temperature=double(10000.0)
+;     density=double(5000.0)
+;     atomic_levels='3,4/'
 ;     iobs5007=double(1200.0)
-;     Abb5007=double(0.0) 
-;     Abb5007=calc_abundance(ion, levels5007, tempi, densi, iobs5007)
+;     Abb5007=double(0.0)  
+;     Abb5007=calc_abundance(temperature=temperature, density=density, $
+;                            line_flux=iobs5007, atomic_levels=atomic_levels,$
+;                            elj_data=o_iii_elj, omij_data=o_iii_omij, $
+;                            aij_data=o_iii_aij, h_i_aeff_data=hi_rc_data[0].Aeff)
 ;     print, Abb5007
 ;
 ; INPUTS:
@@ -51,16 +66,17 @@ function calc_abundance, temperature=temperature, density=density, $
 ;           with IDL function LUDC & LUSOL, A. Danehkar, 15/11/2016
 ;     Replaced INTERPOL (not accurate) with 
 ;                    SPL_INIT & SPL_INTERP, A. Danehkar, 19/11/2016
-;     Made a new function getpopulations() for solving atomic 
+;     Made a new function calc_populations() for solving atomic 
 ;       level populations and separated it from
-;       calc_abundance() and do_diagnostic(), A. Danehkar, 20/11/2016
+;       calc_abundance(), calc_density() and calc_temperature(), 
+;                                           A. Danehkar, 20/11/2016
 ;     Made a new function calc_emissivity() for calculating 
 ;                      line emissivities and separated it 
 ;                      from calc_abundance(), A. Danehkar, 21/11/2016
 ;     Integration with AtomNeb, now uses atomic data input elj_data,
 ;                      omij_data, aij_data, A. Danehkar, 10/03/2017
 ;     Cleaning the function, and remove unused varibales
-;                        calc_emissivity(), A. Danehkar, 12/06/2017
+;                        calc_abundance(), A. Danehkar, 12/06/2017
 ; 
 ; FORTRAN EQUIB HISTORY (F77/F90):
 ; 1981-05-03 I.D.Howarth  Version 1
