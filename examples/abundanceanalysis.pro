@@ -23,13 +23,15 @@ o_iii_omij=atomneb_read_omij(Atom_Omij_file, atom, ion) ; read Collision Strengt
 o_iii_aij=atomneb_read_aij(Atom_Aij_file, atom, ion) ; read Transition Probabilities (Aij)
 
 levels5007='3,4/'
-tempi=double(10000.0)
-densi=double(5000.0)
+temperature=double(10000.0)
+density=double(5000.0)
 iobs5007=double(1200.0)
 Abb5007=double(0.0) 
 
-Abb5007=calc_abundance(o_iii_elj, o_iii_omij, o_iii_aij, hi_rc_data[0].Aeff, levels5007, tempi, densi, iobs5007)
-
+Abb5007=calc_abundance(temperature=temperature, density=density, $
+                       line_flux=iobs5007, atomic_levels=levels5007,$
+                       elj_data=o_iii_elj, omij_data=o_iii_omij, $
+                       aij_data=o_iii_aij, h_i_aeff_data=hi_rc_data[0].Aeff)
 print, Abb5007
 
 end 
