@@ -1,8 +1,7 @@
 function calc_abundance, temperature=temperature, density=density, $
                          line_flux=line_flux, atomic_levels=atomic_levels, $
                          elj_data=elj_data, omij_data=omij_data, $
-                         aij_data=aij_data, h_i_aeff_data=h_i_aeff_data
-                        
+                         aij_data=aij_data, h_i_aeff_data=h_i_aeff_data              
 ;+
 ; NAME:
 ;     calc_abundance
@@ -68,8 +67,7 @@ function calc_abundance, temperature=temperature, density=density, $
 ;                    SPL_INIT & SPL_INTERP, A. Danehkar, 19/11/2016
 ;     Made a new function calc_populations() for solving atomic 
 ;       level populations and separated it from
-;       calc_abundance(), calc_density() and calc_temperature(), 
-;                                           A. Danehkar, 20/11/2016
+;       calc_abundance(), calc_density() and calc_temperature(), A. Danehkar, 20/11/2016
 ;     Made a new function calc_emissivity() for calculating 
 ;                      line emissivities and separated it 
 ;                      from calc_abundance(), A. Danehkar, 21/11/2016
