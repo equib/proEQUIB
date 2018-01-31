@@ -56,7 +56,8 @@ function calc_emissivity, temperature=temperature, density=density, $
 ;                    SPL_INIT & SPL_INTERP, A. Danehkar, 19/11/2016
 ;     Made a new function calc_populations() for solving atomic 
 ;       level populations and separated it from
-;       calc_abundance(), calc_density() and calc_temperature(), A. Danehkar, 20/11/2016
+;       calc_abundance(), calc_density() and calc_temperature(), 
+;                                            A. Danehkar, 20/11/2016
 ;     Made a new function calc_emissivity() for calculating 
 ;                      line emissivities and separated it 
 ;                      from calc_abundance(), A. Danehkar, 21/11/2016

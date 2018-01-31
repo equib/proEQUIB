@@ -1,4 +1,4 @@
-function recomb_n_iii, niii_rc_data, h_i_aeff_data, temp, dens, wavelength, iobs 
+function recomb_n_iii, niii_rc_data, h_i_aeff_data, temperature, density, wavelength, iobs 
 ;+
 ; NAME:
 ;     recomb_n_iii
@@ -8,11 +8,11 @@ function recomb_n_iii, niii_rc_data, h_i_aeff_data, temp, dens, wavelength, iobs
 ; EXPLANATION:
 ;
 ; CALLING SEQUENCE:
-;     niiiRLs=recomb_n_iii(tempi, densi, Abund)
+;     niiiRLs=recomb_n_iii(temperature, density, Abund)
 ;
 ; INPUTS:
-;     temp  - electron temperature in K
-;     dens  - electron density in cm-3
+;     temperature  - electron temperature in K
+;     density  - electron density in cm-3
 ;     abund - abundance coefficient
 ; RETURN:  recombination coefficients of N III
 ;          niiiRLstructure
@@ -32,8 +32,8 @@ function recomb_n_iii, niii_rc_data, h_i_aeff_data, temp, dens, wavelength, iobs
   h_Planck = 6.62606957e-27 ; erg s
   c_Speed = 2.99792458e10 ; cm/s 
   
-  TEh2=double(temp)
-  NEh2=double(dens)
+  TEh2=double(temperature)
+  NEh2=double(density)
   abund=1.0
 
   nlines = 2
@@ -52,7 +52,7 @@ function recomb_n_iii, niii_rc_data, h_i_aeff_data, temp, dens, wavelength, iobs
   
   z = 3.0 ; ion level c^3+
   ; equation (1) in 1991A&A...251..680P
-  temp4 = 1.0e-4 * temp /z^2
+  temp4 = 1.0e-4 * temperature /z^2
   loc1=where(abs(niii_rc_data.Wavelength-wavelength) le 0.01)
   temp2=size(loc1,/DIMENSIONS)
   if temp2[0] ne 1 then begin

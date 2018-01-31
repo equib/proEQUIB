@@ -1,4 +1,4 @@
-function recomb_ne_ii, neii_rc_data, h_i_aeff_data, temp, dens, wavelength, iobs
+function recomb_ne_ii, neii_rc_data, h_i_aeff_data, temperature, density, wavelength, iobs
 ;+
 ; NAME:
 ;     recomb_ne_ii
@@ -8,11 +8,11 @@ function recomb_ne_ii, neii_rc_data, h_i_aeff_data, temp, dens, wavelength, iobs
 ; EXPLANATION:
 ;
 ; CALLING SEQUENCE:
-;     neiiRLs=recomb_ne_ii(tempi, densi, Abund)
+;     neiiRLs=recomb_ne_ii(temperature, density, Abund)
 ;
 ; INPUTS:
-;     temp  - electron temperature in K
-;     dens  - electron density in cm-3
+;     temperature  - electron temperature in K
+;     density  - electron density in cm-3
 ;     abund - abundance coefficient
 ; RETURN:  recombination coefficients of Ne II
 ;          neiiRLstructure
@@ -23,7 +23,7 @@ function recomb_ne_ii, neii_rc_data, h_i_aeff_data, temp, dens, wavelength, iobs
 ;     from Kisielius et al. 1998A&AS..133..257K
 ;     & Storey (unpublished)
 ;     Adopted from MOCASSIN, Ercolano et al. 2005MNRAS.362.1038E
-;     scripts added by Zhang Yong to MOCASSIN, 2003/02
+;     scripts added by Yong Zhang to MOCASSIN, 2003/02
 ;     IDL code by A. Danehkar, 10/05/2013
 ;     Integration with AtomNeb, A. Danehkar, 10/04/2017
 ;- 
@@ -34,8 +34,8 @@ function recomb_ne_ii, neii_rc_data, h_i_aeff_data, temp, dens, wavelength, iobs
   h_Planck = 6.62606957e-27 ; erg s
   c_Speed = 2.99792458e10 ; cm/s 
   
-  TEh2=double(temp)
-  NEh2=double(dens)
+  TEh2=double(temperature)
+  NEh2=double(density)
   abund=1.0
 
   nlines = 38
@@ -55,7 +55,7 @@ function recomb_ne_ii, neii_rc_data, h_i_aeff_data, temp, dens, wavelength, iobs
   
   z = 3.0 ; ion level c^3+
   ; equation (1) in 1991A&A...251..680P
-  temp4 = temp/10000.0
+  temp4 = temperature/10000.0
   loc1=where(abs(neii_rc_data.Wavelength-wavelength) le 0.01)
   temp2=size(loc1,/DIMENSIONS)
   if temp2[0] ne 1 then begin

@@ -1,4 +1,4 @@
-function he_i_emissivity_porter, he_i_aeff_data, h_i_aeff_data, temp, dens, linenum, iobs
+function he_i_emissivity_porter, he_i_aeff_data, h_i_aeff_data, temperature, density, linenum, iobs
 ;+
 ; NAME:
 ;     he_i_emissivity_porter
@@ -8,11 +8,11 @@ function he_i_emissivity_porter, he_i_aeff_data, h_i_aeff_data, temp, dens, line
 ; EXPLANATION:
 ;
 ; CALLING SEQUENCE:
-;     heidata=he_i_emissivity_porter(temp, dens, linenum)
+;     heidata=he_i_emissivity_porter(temperature, density, linenum)
 ;
 ; INPUTS:
-;     temp -     electron temperature in K
-;     dens -     electron density in cm-3
+;     temperature -     electron temperature in K
+;     density -     electron density in cm-3
 ;     linenum -  line number
 ; RETURN:  emissivity of He I line
 ;
@@ -23,8 +23,8 @@ function he_i_emissivity_porter, he_i_aeff_data, h_i_aeff_data, temp, dens, line
 ;     Integration with AtomNeb, A. Danehkar, 20/03/2017
 ;- 
   
-  TEh2=double(temp)
-  NEh2=double(dens)
+  TEh2=double(temperature)
+  NEh2=double(density)
   line1=long(linenum-1)
   emissivity=double(0.0)
   

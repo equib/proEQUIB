@@ -1,4 +1,4 @@
-function recomb_n_ii, nii_rc_data_br, nii_rc_data, h_i_aeff_data, temp, dens, wavelength, iobs 
+function recomb_n_ii, nii_rc_data_br, nii_rc_data, h_i_aeff_data, temperature, density, wavelength, iobs 
 ;+
 ; NAME:
 ;     recomb_n_ii
@@ -9,11 +9,11 @@ function recomb_n_ii, nii_rc_data_br, nii_rc_data, h_i_aeff_data, temp, dens, wa
 ; EXPLANATION:
 ;
 ; CALLING SEQUENCE:
-;     niiRLs=recomb_n_ii(tempi, densi, Abund)
+;     niiRLs=recomb_n_ii(temperature, density, Abund)
 ;
 ; INPUTS:
-;     temp  - electron temperature in K
-;     dens  - electron density in cm-3
+;     temperature  - electron temperature in K
+;     density  - electron density in cm-3
 ;     abund - abundance coefficient
 ; RETURN:  recombination coefficients of O II
 ;    niiRLstructure ={g1:0, g2:0, ION:0, bMult:0, 
@@ -29,7 +29,7 @@ function recomb_n_ii, nii_rc_data_br, nii_rc_data, h_i_aeff_data, temp, dens, wa
 ;     nebula NGC 7009: new observations and atomic data
 ;     Liu et al. 1995MNRAS.272..369L
 ;     Adopted from MIDAS script Rnii.prg written by X.W.Liu
-;     Revised based on scripts by Zhang Yong added to MOCASSIN, 2003/02
+;     Revised based on scripts by Yong Zhang added to MOCASSIN, 2003/02
 ;                       Ercolano et al. 2005MNRAS.362.1038E
 ;     IDL code by A. Danehkar, 10/05/2013
 ;     Integration with AtomNeb, A. Danehkar, 15/04/2017
@@ -49,8 +49,8 @@ function recomb_n_ii, nii_rc_data_br, nii_rc_data, h_i_aeff_data, temp, dens, wa
   h_Planck = double(6.62606957e-27) ; erg s
   c_Speed = double(2.99792458e10) ; cm/s 
   
-  TEh2=double(temp)
-  NEh2=double(dens)
+  TEh2=double(temperature)
+  NEh2=double(density)
   abund=1.0
   nlines = 99
   hbeta_ems= (10.0^gamma4861(h_i_aeff_data,TEh2,NEh2))
@@ -62,7 +62,7 @@ function recomb_n_ii, nii_rc_data_br, nii_rc_data, h_i_aeff_data, temp, dens, wa
   RL_br=double(0.0)
   g1=double(0.0)
   g2=double(0.0)
-  temp4 = temp/10000.0
+  temp4 = temperature/10000.0
   loc1=where(abs(nii_rc_data_br.Wavelength-wavelength) le 0.01)
   temp2=size(loc1,/DIMENSIONS)
   if temp2[0] ne 1 then begin

@@ -1,4 +1,4 @@
-function recomb_c_ii, cii_rc_data, h_i_aeff_data, temp, dens, wavelength, iobs
+function recomb_c_ii, cii_rc_data, h_i_aeff_data, temperature, density, wavelength, iobs
 ;+
 ; NAME:
 ;     recomb_c_ii
@@ -8,11 +8,11 @@ function recomb_c_ii, cii_rc_data, h_i_aeff_data, temp, dens, wavelength, iobs
 ; EXPLANATION:
 ;
 ; CALLING SEQUENCE:
-;     ciiRLs=recomb_c_ii(tempi, densi, Abund)
+;     ciiRLs=recomb_c_ii(temperature, density, Abund)
 ;
 ; INPUTS:
-;     temp  - electron temperature in K
-;     dens  - electron density in cm-3
+;     temperature  - electron temperature in K
+;     density  - electron density in cm-3
 ;     abund - abundance coefficient
 ; RETURN:  recombination coefficients of C II
 ;          ciiRLstructure
@@ -23,7 +23,7 @@ function recomb_c_ii, cii_rc_data, h_i_aeff_data, temp, dens, wavelength, iobs
 ;     Recombination coefficients for C Ii lines from
 ;     Davey et al. 2000A&AS..142...85D
 ;     Adopted from MOCASSIN, Ercolano et al. 2005MNRAS.362.1038E
-;     Originally added by Zhang Yong to MOCASSIN, 2003/02
+;     Originally added by Yong Zhang to MOCASSIN, 2003/02
 ;     Converted to IDL code by A. Danehkar, 10/05/2013
 ;     Integration with AtomNeb, A. Danehkar, 15/04/2017
 ;- 
@@ -33,8 +33,8 @@ function recomb_c_ii, cii_rc_data, h_i_aeff_data, temp, dens, wavelength, iobs
   h_Planck = 6.62606957e-27 ; erg s
   c_Speed = 2.99792458e10 ; cm/s 
   
-  TEh2=double(temp)
-  NEh2=double(dens)
+  TEh2=double(temperature)
+  NEh2=double(density)
   abund=1.0
   nlines = 57 
   hbeta_aeff= (10.0^gamma4861(h_i_aeff_data,TEh2,NEh2))*double(4861.33/(h_Planck*c_Speed*1.e8)) 
@@ -49,8 +49,8 @@ function recomb_c_ii, cii_rc_data, h_i_aeff_data, temp, dens, wavelength, iobs
   f=double(0.0)
   aeff=double(0.0)
   br=double(1.0)
-  temp4 = temp/10000.0
-  loc1=where(abs(cii_rc_data.Wavelength-wavelength) le 0.01)
+  temp4 = temperature/10000.0
+  loc1=where(abs(cii_rc_data.Wavelength-wavelength) le 1.5)
   temp2=size(loc1,/DIMENSIONS)
   if temp2[0] ne 1 then begin
     Wavelength_min=min(cii_rc_data[loc1].Wavelength)

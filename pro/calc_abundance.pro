@@ -67,7 +67,8 @@ function calc_abundance, temperature=temperature, density=density, $
 ;                    SPL_INIT & SPL_INTERP, A. Danehkar, 19/11/2016
 ;     Made a new function calc_populations() for solving atomic 
 ;       level populations and separated it from
-;       calc_abundance(), calc_density() and calc_temperature(), A. Danehkar, 20/11/2016
+;       calc_abundance(), calc_density() and calc_temperature(), 
+;                                           A. Danehkar, 20/11/2016
 ;     Made a new function calc_emissivity() for calculating 
 ;                      line emissivities and separated it 
 ;                      from calc_abundance(), A. Danehkar, 21/11/2016
@@ -144,10 +145,10 @@ function calc_abundance, temperature=temperature, density=density, $
       return, 0
   endif
   
-  ; T4=TEMP*1.0D-4
-  ; AHB=3.036D-14*T4^(-0.87D0) ; Brocklehurt 1971; Aller (1984), Physics of Thermal Gaseous Nebulae, p. 76
-  ; WAVHB=4861.33D ;4861.D0
-  ; emissivity_Hbeta=AHB*h_Planck*c_Speed*1.e8/WAVHB ; N(H+) * N(e-) (erg/s) 
+;  T4=temperature*1.0D-4
+;  AHB=3.036D-14*T4^(-0.87D0) ; Brocklehurt 1971; Aller (1984), Physics of Thermal Gaseous Nebulae, p. 76
+;  WAVHB=4861.33D ;4861.D0
+;  emissivity_Hbeta=AHB*h_Planck*c_Speed*1.e8/WAVHB ; N(H+) * N(e-) (erg/s) 
   ; emissivity_Hbeta=1.387D-25*T4^(-0.983D0)* 10.D0^(-0.0424D0/T4) ;  Brocklehurst (1971); Aller (1984)
   emissivity_Hbeta=10.0^gamma4861(h_i_aeff_data, temperature, density)
   

@@ -45,11 +45,12 @@ function calc_populations, temperature=temperature, density=density, $
 ;     Replaced INTERPOL (not accurate) with 
 ;                    SPL_INIT & SPL_INTERP, A. Danehkar, 19/11/2016
 ;     Make a new function calc_populations() and separated from 
-;       calc_abundance(), calc_density() and calc_temperature(), A. Danehkar, 20/11/2016
+;       calc_abundance(), calc_density() and calc_temperature(), 
+;                                           A. Danehkar, 20/11/2016
 ;     Integration with AtomNeb, now uses atomic data input elj_data,
 ;                      omij_data, aij_data, A. Danehkar, 10/03/2017
 ;     Cleaning the function, and remove unused varibales
-;                        calc_populations(), A. Danehkar, 12/06/2017   
+;                        calc_populations(), A. Danehkar, 12/06/2017  
 ; 
 ; FORTRAN EQUIB HISTORY (F77/F90):
 ; 1981-05-03 I.D.Howarth  Version 1

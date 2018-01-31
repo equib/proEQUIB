@@ -1,4 +1,4 @@
-function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temp, dens, wavelength, iobs 
+function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temperature, density, wavelength, iobs 
 ;+
 ; NAME:
 ;     recomb_o_ii
@@ -9,11 +9,11 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temp, dens, wa
 ; EXPLANATION:
 ;
 ; CALLING SEQUENCE:
-;     oiiRLs=recomb_o_ii(tempi, densi, Abund)
+;     oiiRLs=recomb_o_ii(temperature, density, Abund)
 ;
 ; INPUTS:
-;     temp  - electron temperature in K
-;     dens  - electron density in cm-3
+;     temperature  - electron temperature in K
+;     density  - electron density in cm-3
 ;     abund - abundance coefficient
 ; RETURN:  recombination coefficients of O II
 ;    oiiRLstructure ={g1:0, g2:0, ION:0, bMult:0, 
@@ -29,7 +29,7 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temp, dens, wa
 ;     nebula NGC 7009: new observations and atomic data
 ;     Liu et al. 1995MNRAS.272..369L
 ;     Adopted from MIDAS script Roii.prg written by X.W.Liu
-;     Revised based on scripts by Zhang Yong added to MOCASSIN, 2003/02
+;     Revised based on scripts by Yong Zhang added to MOCASSIN, 2003/02
 ;                       Ercolano et al. 2005MNRAS.362.1038E
 ;     IDL code by A. Danehkar, 10/05/2013
 ;     Integration with AtomNeb, A. Danehkar, 25/04/2017
@@ -49,8 +49,8 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temp, dens, wa
   h_Planck = double(6.62606957e-27) ; erg s
   c_Speed = double(2.99792458e10) ; cm/s 
   
-  TEh2=double(temp)
-  NEh2=double(dens)
+  TEh2=double(temperature)
+  NEh2=double(density)
   abund=1.0
   nlines = 415
   hbeta_ems= (10.0^gamma4861(h_i_aeff_data,TEh2,NEh2))
@@ -64,20 +64,24 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temp, dens, wa
   Br_C=double(0.0)
   g1=double(0.0)
   g2=double(0.0)
-  temp4 = temp/10000.0
+  temp4 = temperature/10000.0
   loc1=where(abs(oii_rc_data_br.Wavelength-wavelength) le 0.01)
   temp2=size(loc1,/DIMENSIONS)
   if temp2[0] ne 1 then begin
     Wavelength_min=min(oii_rc_data_br[loc1].Wavelength)
     loc1=where(oii_rc_data_br.Wavelength eq  Wavelength_min)
   endif
+  
+  temp2=size(loc1,/DIMENSIONS)
+  if temp2[0] ne 1 then loc1=min(loc1)
+  
   Wave=oii_rc_data_br[loc1].Wavelength
   Br_A=oii_rc_data_br[loc1].Br_A
   Br_B=oii_rc_data_br[loc1].Br_B
   Br_C=oii_rc_data_br[loc1].Br_C
   g1=oii_rc_data_br[loc1].g1
   g2=oii_rc_data_br[loc1].g2
-  densi=double(dens)
+  densi=double(density)
   log10ne=alog10(densi)
   
   case 1 of
@@ -93,10 +97,10 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temp, dens, wa
         if (log10ne le 2) then a = an[0] $
         else if (log10ne gt 2 and log10ne le 4) then a = an[0] + (an[1] - an[0]) / 2. * (log10ne - 2.) $
           else if (log10ne gt 4 and log10ne le 5) then a = an[1] + (an[2] - an[1]) * (log10ne - 2.) $
-               else if (log10ne gt 6) and (log10ne le 6) then a = an[2] + (an[3] - an[2]) * (log10ne - 2.) $
+               else if (log10ne gt 5) and (log10ne le 6) then a = an[2] + (an[3] - an[2]) * (log10ne - 2.) $
                     else a = an[3] 
                         
-        temp4 = temp/10000.0
+        temp4 = temperature/10000.0
         aeff = 1.0e-14 * a * temp4^(b)
         aeff = aeff*(1. + c*(1. - temp4) + d * (1. - temp4)^2)
       
@@ -108,7 +112,7 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temp, dens, wa
           aeff = 1.0e-14 * a * temp4^(b + c * alog(temp4))
         endif
         
-        Ems1 = aeff * (h_Planck*c_Speed*1.e8) /Wave * g2 * Br_B[loc1]
+        Ems1 = aeff * (h_Planck*c_Speed*1.e8) /Wave * g2 * Br_B;[loc1]
         oiiRLs_Int = 100. * Ems1 / hbeta_ems * abund 
      end
      ;---------------------------------------
@@ -123,7 +127,7 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temp, dens, wa
         if (log10ne le 2) then a = an[0] $
         else if (log10ne gt 2 and log10ne le 4) then a = an[0] + (an[1] - an[0]) / 2. * (log10ne - 2.) $
           else if (log10ne gt 4 and log10ne le 5) then a = an[1] + (an[2] - an[1]) * (log10ne - 2.) $
-               else if (log10ne gt 6) and (log10ne le 6) then a = an[2] + (an[3] - an[2]) * (log10ne - 2.) $
+               else if (log10ne gt 5) and (log10ne le 6) then a = an[2] + (an[3] - an[2]) * (log10ne - 2.) $
                     else a = an[3] 
         
         aeff = 1.e-14*a*temp4^(b) 
@@ -135,7 +139,7 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temp, dens, wa
           c = -0.02470
           aeff = 1.e-14*a*temp4^(b + c*alog(temp4))
         endif
-        Ems1 = aeff * (h_Planck*c_Speed*1.e8) /Wave * g2 * Br_B[loc1]
+        Ems1 = aeff * (h_Planck*c_Speed*1.e8) /Wave * g2 * Br_B;[loc1]
         oiiRLs_Int = 100. * Ems1 / hbeta_ems * abund 
      end
      ;---------------------------------------
@@ -152,7 +156,7 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temp, dens, wa
         if (log10ne le 2) then a = an[0] $
         else if (log10ne gt 2 and log10ne le 4) then a = an[0] + (an[1] - an[0]) / 2. * (log10ne - 2.) $
           else if (log10ne gt 4 and log10ne le 5) then a = an[1] + (an[2] - an[1]) * (log10ne - 2.) $
-               else if (log10ne gt 6) and (log10ne le 6) then a = an[2] + (an[3] - an[2]) * (log10ne - 2.) $
+               else if (log10ne gt 5) and (log10ne le 6) then a = an[2] + (an[3] - an[2]) * (log10ne - 2.) $
                     else a = an[3] 
         aeff = 1.e-14*a*temp4^(b) 
         aeff = aeff*(1. + c*(1. - temp4) + d*(1. - temp4)^2)
@@ -163,7 +167,7 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temp, dens, wa
           c = -0.02906
           aeff = 1.e-14*a*temp4^(b + c*alog(temp4))
         endif
-        Ems1 = aeff * (h_Planck*c_Speed*1.e8) /Wave * g2 * Br_B[loc1]
+        Ems1 = aeff * (h_Planck*c_Speed*1.e8) /Wave * g2 * Br_B;[loc1]
         oiiRLs_Int = 100. * Ems1 / hbeta_ems * abund 
      end
      ;---------------------------------------
@@ -180,7 +184,7 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temp, dens, wa
         if (log10ne le 2) then a = an[0] $
         else if (log10ne gt 2 and log10ne le 4) then a = an[0] + (an[1] - an[0]) / 2. * (log10ne - 2.) $
           else if (log10ne gt 4 and log10ne le 5) then a = an[1] + (an[2] - an[1]) * (log10ne - 2.) $
-               else if (log10ne gt 6) and (log10ne le 6) then a = an[2] + (an[3] - an[2]) * (log10ne - 2.) $
+               else if (log10ne gt 5) and (log10ne le 6) then a = an[2] + (an[3] - an[2]) * (log10ne - 2.) $
                     else a = an[3]
         aeff = 1.e-14*a*temp4^(b) 
         aeff = aeff*(1. + c*(1. - temp4) + d*(1. - temp4)^2)
@@ -191,7 +195,7 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temp, dens, wa
           c = -0.02906
           aeff = 1.e-14*a*temp4^(b + c*alog(temp4))
         endif
-        Ems1 = aeff * (h_Planck*c_Speed*1.e8) /Wave * g2 * Br_A[loc1]
+        Ems1 = aeff * (h_Planck*c_Speed*1.e8) /Wave * g2 * Br_A;[loc1]
         oiiRLs_Int = 100. * Ems1 / hbeta_ems * abund 
      end
      ;---------------------------------------
@@ -207,7 +211,7 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temp, dens, wa
         if (log10ne le 2) then a = an[0] $
         else if (log10ne gt 2 and log10ne le 4) then a = an[0] + (an[1] - an[0]) / 2. * (log10ne - 2.) $
           else if (log10ne gt 4 and log10ne le 5) then a = an[1] + (an[2] - an[1]) * (log10ne - 2.) $
-               else if (log10ne gt 6) and (log10ne le 6) then a = an[2] + (an[3] - an[2]) * (log10ne - 2.) $
+               else if (log10ne gt 5) and (log10ne le 6) then a = an[2] + (an[3] - an[2]) * (log10ne - 2.) $
                     else a = an[3]
         aeff = 1.e-14*a*temp4^(b) 
         aeff = aeff*(1. + c*(1. - temp4) + d*(1. - temp4)^2)
@@ -218,7 +222,7 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temp, dens, wa
           c = -0.03467
           aeff = 1.e-14*a*temp4^(b + c*alog(temp4))
         endif
-        Ems1 = aeff * (h_Planck*c_Speed*1.e8) /Wave * g2 * Br_A[loc1]
+        Ems1 = aeff * (h_Planck*c_Speed*1.e8) /Wave * g2 * Br_A;[loc1]
         oiiRLs_Int = 100. * Ems1 / hbeta_ems * abund 
      end
      ;---------------------------------------
@@ -234,7 +238,7 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temp, dens, wa
         if (log10ne le 2) then a = an[0] $
         else if (log10ne gt 2 and log10ne le 4) then a = an[0] + (an[1] - an[0]) / 2. * (log10ne - 2.) $
           else if (log10ne gt 4 and log10ne le 5) then a = an[1] + (an[2] - an[1]) * (log10ne - 2.) $
-               else if (log10ne gt 6) and (log10ne le 6) then a = an[2] + (an[3] - an[2]) * (log10ne - 2.) $
+               else if (log10ne gt 5) and (log10ne le 6) then a = an[2] + (an[3] - an[2]) * (log10ne - 2.) $
                     else a = an[3]
         aeff = 1.e-14*a*temp4^(b) 
         aeff = aeff*(1. + c*(1. - temp4) + d*(1. - temp4)^2)
@@ -245,7 +249,7 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temp, dens, wa
           c = -0.03120
           aeff = 1.e-14*a*temp4^(b + c*alog(temp4))
         endif
-        Ems1 = aeff * (h_Planck*c_Speed*1.e8) /Wave * g2 * Br_A[loc1]
+        Ems1 = aeff * (h_Planck*c_Speed*1.e8) /Wave * g2 * Br_A;[loc1]
         oiiRLs_Int = 100. * Ems1 / hbeta_ems * abund 
      end
      ;---------------------------------------
@@ -264,7 +268,7 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temp, dens, wa
         if (log10ne le 2) then a = an[0] $
         else if (log10ne gt 2 and log10ne le 4) then a = an[0] + (an[1] - an[0]) / 2. * (log10ne - 2.) $
           else if (log10ne gt 4 and log10ne le 5) then a = an[1] + (an[2] - an[1]) * (log10ne - 2.) $
-               else if (log10ne gt 6) and (log10ne le 6) then a = an[2] + (an[3] - an[2]) * (log10ne - 2.) $
+               else if (log10ne gt 5) and (log10ne le 6) then a = an[2] + (an[3] - an[2]) * (log10ne - 2.) $
                     else a = an[3]
         aeff = 1.e-14*a*temp4^(b) 
         aeff = aeff*(1. + c*(1. - temp4) + d*(1. - temp4)^2)
@@ -276,7 +280,7 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temp, dens, wa
           d = 0.01213
           aeff = 1.e-14*a*temp4^(b + c*alog(temp4) + d* alog(temp4)^2)
         endif
-        Ems1 = aeff * (h_Planck*c_Speed*1.e8) /Wave * g2 * Br_B[loc1]
+        Ems1 = aeff * (h_Planck*c_Speed*1.e8) /Wave * g2 * Br_B;[loc1]
         oiiRLs_Int = 100. * Ems1 / hbeta_ems * abund 
      end
      ;---------------------------------------
@@ -295,7 +299,7 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temp, dens, wa
         if (log10ne le 2) then a = an[0] $
         else if (log10ne gt 2 and log10ne le 4) then a = an[0] + (an[1] - an[0]) / 2. * (log10ne - 2.) $
           else if (log10ne gt 4 and log10ne le 5) then a = an[1] + (an[2] - an[1]) * (log10ne - 2.) $
-               else if (log10ne gt 6) and (log10ne le 6) then a = an[2] + (an[3] - an[2]) * (log10ne - 2.) $
+               else if (log10ne gt 5) and (log10ne le 6) then a = an[2] + (an[3] - an[2]) * (log10ne - 2.) $
                     else a = an[3]
         aeff = 1.e-14*a*temp4^(b) 
         aeff = aeff*(1. + c*(1. - temp4) + d*(1. - temp4)^2)
@@ -307,7 +311,7 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temp, dens, wa
           d = 0.00517
           aeff = 1.e-14*a*temp4^(b + c*alog(temp4) + d* alog(temp4)^2)
         endif
-        Ems1 = aeff * (h_Planck*c_Speed*1.e8) /Wave * g2 * Br_B[loc1]
+        Ems1 = aeff * (h_Planck*c_Speed*1.e8) /Wave * g2 * Br_B;[loc1]
         oiiRLs_Int = 100. * Ems1 / hbeta_ems * abund 
      end
      ;---------------------------------------
@@ -326,7 +330,7 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temp, dens, wa
         if (log10ne le 2) then a = an[0] $
         else if (log10ne gt 2 and log10ne le 4) then a = an[0] + (an[1] - an[0]) / 2. * (log10ne - 2.) $
           else if (log10ne gt 4 and log10ne le 5) then a = an[1] + (an[2] - an[1]) * (log10ne - 2.) $
-               else if (log10ne gt 6) and (log10ne le 6) then a = an[2] + (an[3] - an[2]) * (log10ne - 2.) $
+               else if (log10ne gt 5) and (log10ne le 6) then a = an[2] + (an[3] - an[2]) * (log10ne - 2.) $
                     else a = an[3]
         aeff = 1.e-14*a*temp4^(b) 
         aeff = aeff*(1. + c*(1. - temp4) + d*(1. - temp4)^2)
@@ -338,7 +342,7 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temp, dens, wa
           d = 0.00936
           aeff = 1.e-14*a*temp4^(b + c*alog(temp4) + d* alog(temp4)^2)
         endif
-        Ems1 = aeff * (h_Planck*c_Speed*1.e8) /Wave * g2 * Br_B[loc1]
+        Ems1 = aeff * (h_Planck*c_Speed*1.e8) /Wave * g2 * Br_B;[loc1]
         oiiRLs_Int = 100. * Ems1 / hbeta_ems * abund 
      end
      ;---------------------------------------
@@ -357,7 +361,7 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temp, dens, wa
         if (log10ne le 2) then a = an[0] $
         else if (log10ne gt 2 and log10ne le 4) then a = an[0] + (an[1] - an[0]) / 2. * (log10ne - 2.) $
           else if (log10ne gt 4 and log10ne le 5) then a = an[1] + (an[2] - an[1]) * (log10ne - 2.) $
-               else if (log10ne gt 6) and (log10ne le 6) then a = an[2] + (an[3] - an[2]) * (log10ne - 2.) $
+               else if (log10ne gt 5) and (log10ne le 6) then a = an[2] + (an[3] - an[2]) * (log10ne - 2.) $
                     else a = an[3]
         aeff = 1.e-14*a*temp4^(b) 
         aeff = aeff*(1. + c*(1. - temp4) + d*(1. - temp4)^2)
@@ -369,7 +373,7 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temp, dens, wa
           d = 0.03856
           aeff = 1.e-14*a*temp4^(b + c*alog(temp4) + d* alog(temp4)^2)
         endif
-        Ems1 = aeff * (h_Planck*c_Speed*1.e8) /Wave * g2 * Br_A[loc1]
+        Ems1 = aeff * (h_Planck*c_Speed*1.e8) /Wave * g2 * Br_A;[loc1]
         oiiRLs_Int = 100. * Ems1 / hbeta_ems * abund 
      end
      ;---------------------------------------
@@ -388,7 +392,7 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temp, dens, wa
         if (log10ne le 2) then a = an[0] $
         else if (log10ne gt 2 and log10ne le 4) then a = an[0] + (an[1] - an[0]) / 2. * (log10ne - 2.) $
           else if (log10ne gt 4 and log10ne le 5) then a = an[1] + (an[2] - an[1]) * (log10ne - 2.) $
-               else if (log10ne gt 6) and (log10ne le 6) then a = an[2] + (an[3] - an[2]) * (log10ne - 2.) $
+               else if (log10ne gt 5) and (log10ne le 6) then a = an[2] + (an[3] - an[2]) * (log10ne - 2.) $
                     else a = an[3]
         aeff = 1.e-14*a*temp4^(b) 
         aeff = aeff*(1. + c*(1. - temp4) + d*(1. - temp4)^2)
@@ -400,7 +404,7 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temp, dens, wa
           d = 0.03191
           aeff = 1.e-14*a*temp4^(b + c*alog(temp4) + d* alog(temp4)^2)
         endif
-        Ems1 = aeff * (h_Planck*c_Speed*1.e8) /Wave * g2 * Br_A[loc1]
+        Ems1 = aeff * (h_Planck*c_Speed*1.e8) /Wave * g2 * Br_A;[loc1]
         oiiRLs_Int = 100. * Ems1 / hbeta_ems * abund 
      end
      ;---------------------------------------
@@ -419,7 +423,7 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temp, dens, wa
         if (log10ne le 2) then a = an[0] $
         else if (log10ne gt 2 and log10ne le 4) then a = an[0] + (an[1] - an[0]) / 2. * (log10ne - 2.) $
           else if (log10ne gt 4 and log10ne le 5) then a = an[1] + (an[2] - an[1]) * (log10ne - 2.) $
-               else if (log10ne gt 6) and (log10ne le 6) then a = an[2] + (an[3] - an[2]) * (log10ne - 2.) $
+               else if (log10ne gt 5) and (log10ne le 6) then a = an[2] + (an[3] - an[2]) * (log10ne - 2.) $
                     else a = an[3]
         aeff = 1.e-14*a*temp4^(b) 
         aeff = aeff*(1. + c*(1. - temp4) + d*(1. - temp4)^2)
@@ -431,7 +435,7 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temp, dens, wa
           d = 0.06666
           aeff = 1.e-14*a*temp4^(b + c*alog(temp4) + d* alog(temp4)^2)
         endif
-        Ems1 = aeff * (h_Planck*c_Speed*1.e8) /Wave * g2 * Br_A[loc1]
+        Ems1 = aeff * (h_Planck*c_Speed*1.e8) /Wave * g2 * Br_A;[loc1]
         oiiRLs_Int = 100. * Ems1 / hbeta_ems * abund 
      end
   else: print, 'wavelength has an illegal value.'

@@ -60,7 +60,8 @@ function calc_density, line_flux_ratio=line_flux_ratio, temperature=temperature,
 ;                    SPL_INIT & SPL_INTERP, A. Danehkar, 19/11/2016
 ;     Made a new function calc_populations() for solving atomic 
 ;       level populations and separated it from
-;       calc_abundance(), calc_density() and calc_temperature(), A. Danehkar, 20/11/2016
+;       calc_abundance(), calc_density() and calc_temperature(), 
+;                                           A. Danehkar, 20/11/2016
 ;     Integration with AtomNeb, now uses atomic data input elj_data,
 ;                      omij_data, aij_data, A. Danehkar, 10/03/2017
 ;     Cleaning the function, and remove unused varibales
@@ -214,10 +215,12 @@ function calc_density, line_flux_ratio=line_flux_ratio, temperature=temperature,
     endif else begin
       densi=check_value[2]
     endelse
-    IND=4
-    DINC=(100000.0)/((IND-1)^(iteration))
-    ;IND=8
-    ;DINC=(1000000.0)/((IND-1)^(iteration))
+;    IND=4
+;    DINC=(100000.0)/((IND-1)^(iteration))
+;    IND=8
+;    DINC=(1000000.0)/((IND-1)^(iteration))
+    IND=12
+    DINC=(1000000.0)/((IND-1)^(iteration))
     TempI=temperature
     TINC=0
     INT=1

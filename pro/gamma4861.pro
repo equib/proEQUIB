@@ -1,4 +1,4 @@
-function gamma4861, h_i_aeff_data, temp, dens
+function gamma4861, h_i_aeff_data, temperature, density
 ;+
 ; NAME:
 ;     gamm4861
@@ -9,11 +9,11 @@ function gamma4861, h_i_aeff_data, temp, dens
 ; EXPLANATION:
 ;
 ; CALLING SEQUENCE:
-;     gamm4861_theory = gamma4861(temp,dens)
+;     gamm4861_theory = gamma4861(temperature,density)
 ;
 ; INPUTS:
-;     temp -     electron temperature in K
-;     dens -     electron density in cm-3
+;     temperature -     electron temperature in K
+;     density -     electron density in cm-3
 ; RETURN:  Log10 (gamm(H Beta))
 ;
 ; REVISION HISTORY:
@@ -26,8 +26,8 @@ function gamma4861, h_i_aeff_data, temp, dens
   ;h_a_col= find_aeff_sh95_column(3, 2)
   linenum= find_aeff_sh95_column(4, 2, 25)
 
-  TEh2=double(temp)
-  NEh2=double(dens)
+  TEh2=double(temperature)
+  NEh2=double(density)
   line1=long(linenum-1)
   emissivity=double(0.0)
   
@@ -61,7 +61,7 @@ function gamma4861, h_i_aeff_data, temp, dens
 
   ;logems = alog10(hr_tmp/double(4861.33/1.98648E-08))
   ;hb_ems = 10.0^logems
-  ;hb_ems=alog10(hb_emissivity(temp, dens))
+  ;hb_ems=alog10(hb_emissivity(temp, density))
 
   ;hb_ems=alog10(emiss_log/double(4861.33/1.98648E-08))
   hb_ems = alog10(emiss_log)
