@@ -11,10 +11,6 @@ History of codes can be found [here](https://physics.mq.edu.au/~ashkbiz/proequib
 Website: [physics.mq.edu.au/~ashkbiz/proequib](https://physics.mq.edu.au/~ashkbiz/proequib/)
 
 ### References
+* A. Danehkar, [PASA, 35, e005, 2018](http://adsabs.harvard.edu/abs/2018PASA...35....5D) 
+
 * A. Danehkar, Q.A. Parker & W. Steffen, [AJ, 151, 38, 2016](http://adsabs.harvard.edu/abs/2016AJ....151...38D)
-
-* A. Danehkar, H. Todt, B. Ercolano & A.Y. Kniazev, [MNRAS, 439, 3605, 2014](http://adsabs.harvard.edu/abs/2014MNRAS.439.3605D)
-
-* A. Danehkar, Q.A. Parker & B. Ercolano, [MNRAS, 434, 1513, 2013](http://adsabs.harvard.edu/abs/2013MNRAS.434.1513D)
-
-* A. Danehkar, Ph.D. Thesis, [Macquarie University, 2014](http://adsabs.harvard.edu/abs/2014PhDT........76D)
