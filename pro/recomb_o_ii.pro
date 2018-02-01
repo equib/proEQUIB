@@ -9,7 +9,8 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temperature, d
 ; EXPLANATION:
 ;
 ; CALLING SEQUENCE:
-;     oiiRLs=recomb_o_ii(temperature, density, Abund)
+;     oiiRLs=recomb_o_ii(oii_rc_data_br, oii_rc_data, 
+;     h_i_aeff_data, temperature, density, wavelength, iobs 
 ;
 ; INPUTS:
 ;     temperature  - electron temperature in K
@@ -31,7 +32,7 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temperature, d
 ;     Adopted from MIDAS script Roii.prg written by X.W.Liu
 ;     Revised based on scripts by Yong Zhang added to MOCASSIN, 2003/02
 ;                       Ercolano et al. 2005MNRAS.362.1038E
-;     IDL code by A. Danehkar, 10/05/2013
+;     Converted to IDL code by A. Danehkar, 10/05/2013
 ;     Integration with AtomNeb, A. Danehkar, 25/04/2017
 ;- 
 

@@ -8,7 +8,8 @@ function recomb_c_ii, cii_rc_data, h_i_aeff_data, temperature, density, waveleng
 ; EXPLANATION:
 ;
 ; CALLING SEQUENCE:
-;     ciiRLs=recomb_c_ii(temperature, density, Abund)
+;     ciiRLs=recomb_c_ii(h_i_aeff_data, temperature, 
+;     density, wavelength, iobs)
 ;
 ; INPUTS:
 ;     temperature  - electron temperature in K

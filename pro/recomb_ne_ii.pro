@@ -8,7 +8,8 @@ function recomb_ne_ii, neii_rc_data, h_i_aeff_data, temperature, density, wavele
 ; EXPLANATION:
 ;
 ; CALLING SEQUENCE:
-;     neiiRLs=recomb_ne_ii(temperature, density, Abund)
+;     neiiRLs=recomb_ne_ii(neii_rc_data, h_i_aeff_data, 
+;     temperature, density, wavelength, iobs)
 ;
 ; INPUTS:
 ;     temperature  - electron temperature in K
@@ -24,7 +25,7 @@ function recomb_ne_ii, neii_rc_data, h_i_aeff_data, temperature, density, wavele
 ;     & Storey (unpublished)
 ;     Adopted from MOCASSIN, Ercolano et al. 2005MNRAS.362.1038E
 ;     scripts added by Yong Zhang to MOCASSIN, 2003/02
-;     IDL code by A. Danehkar, 10/05/2013
+;     Converted to IDL code by A. Danehkar, 10/05/2013
 ;     Integration with AtomNeb, A. Danehkar, 10/04/2017
 ;- 
   common share1, Atomic_Data_Path

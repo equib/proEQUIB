@@ -8,7 +8,8 @@ function recomb_n_iii, niii_rc_data, h_i_aeff_data, temperature, density, wavele
 ; EXPLANATION:
 ;
 ; CALLING SEQUENCE:
-;     niiiRLs=recomb_n_iii(temperature, density, Abund)
+;     niiiRLs=recomb_n_iii(niii_rc_data, h_i_aeff_data, 
+;     temperature, density, wavelength, iobs)
 ;
 ; INPUTS:
 ;     temperature  - electron temperature in K

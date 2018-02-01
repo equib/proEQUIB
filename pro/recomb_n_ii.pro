@@ -8,7 +8,8 @@ function recomb_n_ii, nii_rc_data_br, nii_rc_data, h_i_aeff_data, temperature, d
 ; EXPLANATION:
 ;
 ; CALLING SEQUENCE:
-;     niiRLs=recomb_n_ii(temperature, density, Abund)
+;     niiRLs=recomb_n_ii(nii_rc_data_br, nii_rc_data, 
+;     h_i_aeff_data, temperature, density, wavelength, iobs )
 ;
 ; INPUTS:
 ;     temperature  - electron temperature in K
@@ -24,10 +25,10 @@ function recomb_n_ii, nii_rc_data_br, nii_rc_data, h_i_aeff_data, temperature, d
 ;     Effective recombination coefficients of neutral carbon 
 ;     and singly ionized nitrogen from
 ;     Escalante & Victor 1990ApJS...73..513E
-;     Adopted from MIDAS script Rnii.prg written by X.W.Liu
-;     Revised based MOCASSIN, Ercolano et al. 2005
-;     and Fortran Program NEAT, 2012MNRAS.422.3516W
+;     Revised based on scripts by Yong Zhang added to MOCASSIN, 2003/02
+;                       Ercolano et al. 2005MNRAS.362.1038E
 ;     Converted to IDL code by A. Danehkar, 10/05/2013
+;     Integration with AtomNeb, A. Danehkar, 25/04/2017
 ;- 
 
   ;  niiRLstructure ={Wave:double(0.0), $ ;REAL*8
