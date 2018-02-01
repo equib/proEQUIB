@@ -215,14 +215,14 @@ function calc_temperature, line_flux_ratio=line_flux_ratio, density=density, $
     endif else begin 
       TEMPI= check_value[1]
     endelse
-  ;  INT=4
-   ; TINC=(15000.0)/((INT-1)^(iteration))
+    INT=4
+    TINC=(15000.0)/((INT-1)^(iteration))
 ;    INT=15
 ;    TINC=(50000.0)/((INT-1)^(iteration))
 ;    INT=20
 ;    TINC=(70000.0)/((INT-1)^(iteration))
-    INT=50
-    TINC=(250000.0)/((INT-1)^(iteration))
+;    INT=50
+;    TINC=(250000.0)/((INT-1)^(iteration))
 ;    INT=15
 ;    TINC=(70000.0)/((INT-1)^(iteration))
 ;    INT=30

@@ -215,12 +215,12 @@ function calc_density, line_flux_ratio=line_flux_ratio, temperature=temperature,
     endif else begin
       densi=check_value[2]
     endelse
-;    IND=4
-;    DINC=(100000.0)/((IND-1)^(iteration))
+    IND=4
+    DINC=(100000.0)/((IND-1)^(iteration))
 ;    IND=8
 ;    DINC=(1000000.0)/((IND-1)^(iteration))
-    IND=12
-    DINC=(1000000.0)/((IND-1)^(iteration))
+;    IND=12
+;    DINC=(1000000.0)/((IND-1)^(iteration))
     TempI=temperature
     TINC=0
     INT=1
