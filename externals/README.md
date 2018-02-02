@@ -7,3 +7,4 @@ The respective copyrights, restrictions and disclaimers of the original librarie
 
 * ./astron/: external library from the [IDL Astronomy User's library](http://idlastro.gsfc.nasa.gov/homepage.html)
 * ./atomneb/: required atomic data for ionized nebulae from the [AtomNeb IDL Library](https://github.com/atomneb/AtomNeb-idl)
+* ./emcee/: external library from the [IDL MCMC Hammer library](https://github.com/mcfit/idl_emcee)
