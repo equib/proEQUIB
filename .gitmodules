@@ -4,3 +4,6 @@
 [submodule "externals/atomneb"]
 	path = externals/atomneb
 	url = git://github.com/atomneb/AtomNeb-idl.git
+[submodule "externals/idl_emcee"]
+	path = externals/idl_emcee
+	url = git://github.com/mcfit/idl_emcee.git
