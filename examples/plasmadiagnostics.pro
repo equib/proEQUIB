@@ -1,8 +1,8 @@
-; Example: getdiagnostic()
+; Example: calc_temperature() and calc_density()
 ;     determine electron density or temperature from given 
 ;     flux intensity ratio for a fixed electron density 
-;     or temperature using  getdiagnostic function
-;     from proEQUIB
+;     or temperature using calc_temperature function
+;     calc_density function from proEQUIB
 ; 
 ; --- Begin $MAIN$ program. ---------------
 ; 
