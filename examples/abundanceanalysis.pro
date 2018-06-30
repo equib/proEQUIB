@@ -1,7 +1,7 @@
-; Example: getabundance()
+; Example: calc_abundance()
 ;     determine ionic abundance from observed 
 ;     flux intensity for gievn electron density 
-;     and temperature using  getabundance function
+;     and temperature using  calc_abundance function
 ;     from proEQUIB
 ; 
 ; --- Begin $MAIN$ program. ---------------
