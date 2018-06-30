@@ -59,7 +59,7 @@ relies on the the IDL Astronomy User's library [@Landsman:1993; @Landsman:1995]
 and the IDL library AtomNeb [@Danehkar:2018b]. The IDL functions of this package 
 can easily be used to generate spatially-resolved maps of temperatures, density, 
 and ionic abundances from integral field spectroscopic observations 
-[see e.g. @Danehkar:2013; @Danehkar:2014].
+[see e.g. @Danehkar:2013; @Danehkar:2014; @Danehkar:2014b].
 
 # Acknowledgements
 
