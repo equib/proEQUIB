@@ -55,7 +55,7 @@ fluxes of Balmer lines.
 
 ``proEQUIB`` has recently been used for plasma diagnostics and abundance analysis 
 of planetary nebulae [@Danehkar:2016; @Danehkar:2018]. ``proEQUIB`` heavily 
-relies on the the IDL Astronomy User's library [@Landsman:1993; @Landsman:1995] 
+relies on the IDL Astronomy User's library [@Landsman:1993; @Landsman:1995] 
 and the IDL library AtomNeb [@Danehkar:2018b]. The IDL functions of this package 
 can easily be used to generate spatially-resolved maps of temperatures, density, 
 and ionic abundances from integral field spectroscopic observations 
