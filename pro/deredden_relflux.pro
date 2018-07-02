@@ -3,8 +3,8 @@ function deredden_relflux, wavelength, relflux, m_ext, ext_law=ext_law, rv=rv, f
 ; NAME:
 ;     deredden_relflux
 ; PURPOSE:
-;     determine deredden flux intensity relative to Hb=100, 
-;     depending on the law used
+;     deredden flux intensity relative to Hb=100, 
+;     based on the law used
 ; EXPLANATION:
 ;
 ; CALLING SEQUENCE:

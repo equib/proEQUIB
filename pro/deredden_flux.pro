@@ -3,8 +3,8 @@ function deredden_flux, wavelength, flux, m_ext, ext_law=ext_law, rv=rv, fmlaw=f
 ; NAME:
 ;     deredden
 ; PURPOSE:
-;     determine deredden flux intensity relative to Hb=100, 
-;     depending on the law used
+;     deredden absolute flux intensity
+;     based on the reddening law
 ; EXPLANATION:
 ;
 ; CALLING SEQUENCE:
