@@ -58,10 +58,6 @@ h_i_aeff_data=h_i_rc_data[0].Aeff
 he_i_aeff_data=he_i_rc_data[0].Aeff
 he_ii_aeff_data=he_ii_rc_data[0].Aeff
 
-atom='h'
-ion='ii' ; H I Rec
-hi_rc_data=atomneb_read_aeff_sh95(Atom_RC_SH95_file, atom, ion)
-
 temperature=double(10000.0)
 density=double(5000.0)
 
