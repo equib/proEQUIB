@@ -28,10 +28,16 @@ density=double(5000.0)
 iobs5007=double(1200.0)
 Abb5007=double(0.0) 
 
+emis=calc_emissivity(temperature=temperature, density=density, $
+                         atomic_levels=levels5007, $
+                         elj_data=o_iii_elj, omij_data=o_iii_omij, $
+                         aij_data=o_iii_aij)
+print, 'Emissivity(O III 5007):', emis
+                      
 Abb5007=calc_abundance(temperature=temperature, density=density, $
                        line_flux=iobs5007, atomic_levels=levels5007,$
                        elj_data=o_iii_elj, omij_data=o_iii_omij, $
                        aij_data=o_iii_aij, h_i_aeff_data=hi_rc_data[0].Aeff)
-print, Abb5007
+print, 'N(O^2+)/N(H+):', Abb5007
 
 end 
