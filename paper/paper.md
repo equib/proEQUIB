@@ -1,5 +1,5 @@
 ---
-title: proEQUIB: IDL Library for Plasma Diagnostics and Abundance Analysis
+title: 'proEQUIB: IDL Library for Plasma Diagnostics and Abundance Analysis'
 tags:
   - IDL
   - plasma diagnostics
