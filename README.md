@@ -10,6 +10,16 @@ History of codes can be found [here](https://physics.mq.edu.au/~ashkbiz/proequib
 
 Website: [physics.mq.edu.au/~ashkbiz/proequib](https://physics.mq.edu.au/~ashkbiz/proequib/)
 
+### Installation
+To install the **proEQUIB** library,
+simply place it in your IDL path.
+If you're new to IDL,
+learn more about path management in
+[this article](https://www.harrisgeospatial.com/Support/SelfHelpTools/HelpArticles/HelpArticles-Detail/TabId/2718/ArtMID/10220/ArticleID/16156/Quick-tips-for-customizing-your-IDL-program-search-path.aspx)
+from Harris Geospatial Solutions,
+or in [this article](http://www.idlcoyote.com/code_tips/installcoyote.php)
+by David Fanning of the Coyote IDL Library.
+
 ### References
 * A. Danehkar, [PASA, 35, e005, 2018](http://adsabs.harvard.edu/abs/2018PASA...35....5D) 
 
