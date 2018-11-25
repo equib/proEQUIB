@@ -7,10 +7,16 @@
 ; --- Begin $MAIN$ program. ---------------
 ; 
 ; 
-Atom_Elj_file='/AtomNeb/atomic-data/chianti70/AtomElj.fits'
-Atom_Omij_file='/AtomNeb/atomic-data/chianti70/AtomOmij.fits'
-Atom_Aij_file='/AtomNeb/atomic-data/chianti70/AtomAij.fits'
-Atom_RC_SH95_file='/AtomNeb/atomic-data-rc/rc_SH95.fits'
+
+; Locate datasets
+base_dir = file_dirname(file_dirname((routine_info('$MAIN$', /source)).path))
+data_dir = ['atomic-data', 'chianti70']
+Atom_Elj_file = filepath('AtomElj.fits', root_dir=base_dir, subdir=data_dir )
+Atom_Omij_file = filepath('AtomOmij.fits', root_dir=base_dir, subdir=data_dir )
+Atom_Aij_file = filepath('AtomAij.fits', root_dir=base_dir, subdir=data_dir )
+base_dir = file_dirname(file_dirname((routine_info('$MAIN$', /source)).path))
+data_rc_dir = ['atomic-data-rc']
+Atom_RC_SH95_file= filepath('rc_SH95.fits', root_dir=base_dir, subdir=data_rc_dir )
 
 atom='h'
 ion='ii' ; H I Rec

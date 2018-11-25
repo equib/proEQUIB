@@ -11,10 +11,14 @@
 ; --- Begin $MAIN$ program. ---------------
 ; 
 ; 
-Atom_RC_All_file='/AtomNeb/atomic-data-rc/rc_collection.fits'
-Atom_RC_He_I_file='/AtomNeb/atomic-data-rc/rc_he_ii_PFSD12.fits'
-Atom_RC_PPB91_file='/AtomNeb/atomic-data-rc/rc_PPB91.fits'
-Atom_RC_SH95_file='/AtomNeb/atomic-data-rc/rc_SH95.fits'
+
+; Locate datasets
+base_dir = file_dirname(file_dirname((routine_info('$MAIN$', /source)).path))
+data_rc_dir = ['atomic-data-rc']
+Atom_RC_All_file= filepath('rc_collection.fits', root_dir=base_dir, subdir=data_rc_dir )
+Atom_RC_He_I_file= filepath('rc_he_ii_PFSD12.fits', root_dir=base_dir, subdir=data_rc_dir )
+Atom_RC_PPB91_file= filepath('rc_PPB91.fits', root_dir=base_dir, subdir=data_rc_dir )
+Atom_RC_SH95_file= filepath('rc_SH95.fits', root_dir=base_dir, subdir=data_rc_dir )
 
 atom='h'
 ion='ii' ; H I
