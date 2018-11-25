@@ -1,13 +1,13 @@
-function equib_sign, A, B
+function _sign, A, B
 ;+
 ; NAME:
-;     equib_sign
+;     _sign
 ; PURPOSE:
 ;     
 ; EXPLANATION:
 ;
 ; CALLING SEQUENCE:
-;     ret= equib_sign(A, B)
+;     ret= _sign(A, B)
 ;
 ; INPUTS:
 ;     A -     A parameter

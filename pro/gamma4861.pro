@@ -57,7 +57,7 @@ function gamma4861, h_i_aeff_data, temperature, density
 
   hi_ems1=hi_ems[*,*]
   ; Bilinearly interpolate density & temperature
-  emiss_log = equib_interp2d(hi_ems1, temp_grid, dens_grid, TEh2, dens_log, [101,101], /cubic, /quintic)
+  emiss_log = _interp2d(hi_ems1, temp_grid, dens_grid, TEh2, dens_log, [101,101], /cubic, /quintic)
 
   ;logems = alog10(hr_tmp/double(4861.33/1.98648E-08))
   ;hb_ems = 10.0^logems

@@ -1,4 +1,4 @@
- function equib_interp2d, A, x0, y0, x1, y1, nxny, missing=missing,   $
+ function _interp2d, A, x0, y0, x1, y1, nxny, missing=missing,   $
   grid=grid, quintic=quintic, regular=regular, cubic=cubic
 ;+
 ; NAME:

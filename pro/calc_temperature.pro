@@ -175,9 +175,9 @@ function calc_temperature, line_flux_ratio=line_flux_ratio, density=density, $
   
   upper_levels_i=0
   for i=0, upper_levels_num-1 do begin 
-    res=equib_strnumber(upper_levels_str[upper_levels_i], val)
+    res=_strnumber(upper_levels_str[upper_levels_i], val)
     if res eq 1 then ITRANA[0,i]=long(val)
-    res=equib_strnumber(upper_levels_str[upper_levels_i+1], val)
+    res=_strnumber(upper_levels_str[upper_levels_i+1], val)
     if res eq 1 then ITRANA[1,i]=long(val)
     upper_levels_i = upper_levels_i + 2
     ;if upper_levels_i ge 2*upper_levels_num then break
@@ -185,9 +185,9 @@ function calc_temperature, line_flux_ratio=line_flux_ratio, density=density, $
 
   lower_levels_i=0
   for i=0, lower_levels_num-1 do begin 
-    res=equib_strnumber(lower_levels_str[lower_levels_i], val)
+    res=_strnumber(lower_levels_str[lower_levels_i], val)
     if res eq 1 then ITRANB[0,i]=long(val)
-    res=equib_strnumber(lower_levels_str[lower_levels_i+1], val)
+    res=_strnumber(lower_levels_str[lower_levels_i+1], val)
     if res eq 1 then ITRANB[1,i]=long(val)
     lower_levels_i = lower_levels_i + 2
     ;if lower_levels_i ge 2*lower_levels_num then break;
@@ -301,7 +301,7 @@ function calc_temperature, line_flux_ratio=line_flux_ratio, density=density, $
     ; iteration and detect the sign change.
     for I=2,INT do begin
       check=0
-      if (equib_sign(results[3,I],results[3,1]) ne results[3,I]) then begin 
+      if (_sign(results[3,I],results[3,1]) ne results[3,I]) then begin 
         ;if this condition, the values have a different sign
         check_value[*] = results[*,I-1] ; the value before the sign change returned
         check=1

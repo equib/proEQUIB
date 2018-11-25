@@ -1,7 +1,7 @@
-function equib_strnumber, st, val, hex = hexflg, NaN = nan, L64 = l64
+function _strnumber, st, val, hex = hexflg, NaN = nan, L64 = l64
 ;+
 ; NAME:
-;      STRNUMBER()
+;      _strnumber
 ; PURPOSE:
 ;      Function to determine if a string is a valid numeric value.
 ;
@@ -9,7 +9,7 @@ function equib_strnumber, st, val, hex = hexflg, NaN = nan, L64 = l64
 ;      A string is considered a valid numeric value if IDL can convert it
 ;      to a numeric variable without error.    
 ; CALLING SEQUENCE:
-;      result = strnumber( st, [val, /HEX] )
+;      result = _strnumber( st, [val, /HEX] )
 ;
 ; INPUTS:
 ;      st - any IDL scalar string
@@ -33,7 +33,7 @@ function equib_strnumber, st, val, hex = hexflg, NaN = nan, L64 = l64
 ;              an empty string is considered a valid numeric value.
 ;
 ; EXAMPLES:
-;      IDL> res = strnumber('0.2d', val)
+;      IDL> res = _strnumber('0.2d', val)
 ;           returns res=1 (a valid number), and val = 0.2000d
 ;              
 ; NOTES:

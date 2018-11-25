@@ -1,4 +1,4 @@
-function equib_meshgrid, x,y,double=double
+function _meshgrid, x,y,double=double
 ; duplicate the function meshgrid(x,y) in matlab
 ; 2011-01-30
 ; Ding Yuan, CFSA, Department of Physics

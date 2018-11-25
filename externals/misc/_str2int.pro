@@ -1,11 +1,11 @@
-function equib_str2int, str
+function _str2int, str
 ;+
 ; NAME :
-;       equib_str2int
+;       _str2int
 ; PURPOSE:
 ;       Convert string of number to integer.
 ; CALLING SEQUENCE:
-;       xx = equib_str2int(str)
+;       xx = _str2int(str)
 ; INPUTS:
 ;       str   = string of number
 ; MODIFICATION HISTORY

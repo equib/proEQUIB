@@ -158,9 +158,9 @@ function calc_emissivity, temperature=temperature, density=density, $
   ITRANC[*,*]=0
   levels_i=0
   for i=1, levels_num do begin 
-    res=equib_strnumber(levels_str[levels_i], val)
+    res=_strnumber(levels_str[levels_i], val)
     if res eq 1 then ITRANC[1,i]=long(val)
-    res=equib_strnumber(levels_str[levels_i+1], val)
+    res=_strnumber(levels_str[levels_i+1], val)
     if res eq 1 then ITRANC[2,i]=long(val)
     levels_i = levels_i + 2
     ;if levels_i ge 2*levels_num then break

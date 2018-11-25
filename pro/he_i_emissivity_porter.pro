@@ -56,7 +56,7 @@ function he_i_emissivity_porter, he_i_aeff_data, h_i_aeff_data, temperature, den
 
   hei_ems1=hei_ems[*,*]
   ; Bilinearly interpolate density & temperature
-  emiss_log = equib_interp2d(hei_ems1, temp_grid, dens_grid, TEh2, dens_log, [101,101], /cubic, /quintic)
+  emiss_log = _interp2d(hei_ems1, temp_grid, dens_grid, TEh2, dens_log, [101,101], /cubic, /quintic)
     
   ; wavl=he_i_aeff_data_Wavelength[line1]
   emissivity= 100.*10.^(emiss_log-gamma4861(h_i_aeff_data,TEh2,NEh2))
