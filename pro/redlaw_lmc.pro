@@ -1,34 +1,95 @@
-function redlaw_lmc, wave
+; docformat = 'rst'
+
+function redlaw_lmc, wavelength
+;+
+;    This function determines the reddening law function of the line at the given wavelength
+;    for the Large Magellanic Cloud.
+;
+; :Returns:
+;    type=double/array. This function returns the reddening law function value(s) for the given wavelength(s).
+;
+; :Params:
+;     wavelength :  in, required, type=float
+;                   Wavelength in Angstrom
+;
+; :Examples:
+;    For example::
+;
+;     IDL> wavelength=6563.0
+;     IDL> fl=redlaw_lmc(wavelength)
+;     IDL> print, 'fl(6563)', fl
+;        fl(6563)     -0.30871187
+;
+; :Categories:
+;   Interstellar Extinction
+;
+; :Dirs:
+;  ./
+;      Subroutines
+;
+; :Author:
+;   Ashkbiz Danehkar
+;
+; :Copyright:
+;   This library is released under a GNU General Public License.
+;
+; :Version:
+;   0.0.1
+;
+; :History:
+;     Based on Formulae by Howarth 1983, MNRAS, 203, 301
+;     1983MNRAS.203..301H
+;     
+;     Originally from IRAF STSDAS SYNPHOT ebmvlfunc.x, redlaw.x
+;     
+;     18/10/1994, R. A. Shaw, Initial IRAF implementation.
+;     
+;     14/03/1995, R. A. Shaw, Return A(lambda)/A(V) instead.
+;     
+;     31/08/2012, A. Danehkar, Converted to IDL code.
+;-
+
 ;+
 ; NAME:
-;     redlaw_ccm
+;     redlaw_lmc
 ; PURPOSE:
-;    reddening law function for the Large Magellanic Cloud
-; 
-; EXPLANATION:
+;    This function determines the reddening law function of the line at the given wavelength
+;    for the Large Magellanic Cloud.
 ;
 ; CALLING SEQUENCE:
-;     fl = redlaw_lmc(wave)
+;     Result = redlaw_lmc(Wavelength)
 ;
 ; INPUTS:
-;     wave[] -  wavelength of emission line, Angstroms
-; RETURN: extl[] -  extinction evaluation array
+;     Wavelength[] -  in, required, type=float/array, 
+;               wavelength in Angstroms
+; 
+; OUTPUTS: This function returns a double/array  as the reddening law function 
+;                   value(s) f(lambda) for the given wavelength(s) lambda.
 ;
-; REVISION HISTORY:
+; PROCEDURE: This function is callsed by redlaw.
+;
+; EXAMPLE:
+;     wavelength=6563.0
+;     fl=redlaw_lmc(wavelength)
+;     print, 'fl(6563)', fl
+;     > fl(6563)     -0.30871187
+; 
+; MODIFICATION HISTORY:
 ;     Based on Formulae by Howarth 1983, MNRAS, 203, 301
 ;     1983MNRAS.203..301H
 ;     Originally from IRAF STSDAS SYNPHOT ebmvlfunc.x, redlaw.x
-;     Initial IRAF implementation, R. A. Shaw, 18/10/1994
-;     Return A(lambda)/A(V) instead, R. A. Shaw, 14/03/95 
-;     Converted to IDL code by A. Danehkar, 31/08/2012
+;     18/10/1994, R. A. Shaw, Initial IRAF implementation.
+;     14/03/1995, R. A. Shaw, Return A(lambda)/A(V) instead.
+;     31/08/2012, A. Danehkar, Converted to IDL code.
 ;-
+
   ; Tabulated inverse wavelengths in microns:
   xtab=[ 0.00,  0.29,  0.45,  0.80,  1.11,  1.43,  1.82 ]
 
   ; Tabulated extinction function, A(lambda)/E(B-V), from Savage & Mathis:
   extab=[ 0.00,  0.16,  0.38,  0.87,  1.50,  2.32,  3.10 ]
  
-  temp=  size(wave,/DIMENSIONS)
+  temp=  size(wavelength,/DIMENSIONS)
   if temp[0] eq 0 then begin
     npts=1
     extl=double(0.0)
@@ -37,10 +98,10 @@ function redlaw_lmc, wave
     extl = dblarr(npts)
   endelse
   for pix = 0, npts-1 do begin
-    if (wave[pix] lt 1000.0) then print, "redlaw_lmc: Invalid wavelength"
+    if (wavelength[pix] lt 1000.0) then print, "redlaw_lmc: Invalid wavelength"
     
     ; Convert input wavelength to inverse microns
-    x = 10000.D+0 / wave[pix]
+    x = 10000.D+0 / wavelength[pix]
 
     ; Infrared - optical
     if ( x le 1.82) then begin

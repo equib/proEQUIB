@@ -1,27 +1,190 @@
+; docformat = 'rst'
+
 function calc_abundance, temperature=temperature, density=density, $
                          line_flux=line_flux, atomic_levels=atomic_levels, $
                          elj_data=elj_data, omij_data=omij_data, $
                          aij_data=aij_data, h_i_aeff_data=h_i_aeff_data              
 ;+
+;     This function determines the ionic abundance from the observed 
+;     flux intensity for specified ion with level(s)
+;     by solving atomic level populations and 
+;     line emissivities in statistical equilibrium 
+;     for given electron density and temperature.
+;   
+; :Returns:
+;    type=double. This function returns the ionic abundanc.
+;
+; :Keywords:
+;     temperature   :     in, required, type=float 
+;                         electron temperature
+;     density       :     in, required, type=float 
+;                         electron density
+;     line_flux     :     in, required, type=float 
+;                         line flux intensity
+;     atomic_levels :     in, required, type=string 
+;                         level(s) e.g '1,2/', '1,2,1,3/'
+;     elj_data      :     in, required, type=array/object 
+;                         energy levels (Ej) data
+;     omij_data     :     in, required, type=array/object 
+;                         collision strengths (omega_ij) data
+;     aij_data      :     in, required, type=array/object 
+;                         transition probabilities (Aij) data
+;     h_i_aeff_data :     in, required, type=array/object 
+;                         H I recombination coefficients
+;
+; :Examples:
+;    For example::
+;    
+;     IDL> base_dir = file_dirname(file_dirname((routine_info('$MAIN$', /source)).path))
+;     IDL> data_dir = ['atomic-data', 'chianti70']
+;     IDL> Atom_Elj_file = filepath('AtomElj.fits', root_dir=base_dir, subdir=data_dir )
+;     IDL> Atom_Omij_file = filepath('AtomOmij.fits', root_dir=base_dir, subdir=data_dir )
+;     IDL> Atom_Aij_file = filepath('AtomAij.fits', root_dir=base_dir, subdir=data_dir )
+;     IDL> data_rc_dir = ['atomic-data-rc']
+;     IDL> Atom_RC_SH95_file= filepath('rc_SH95.fits', root_dir=base_dir, subdir=data_rc_dir )
+;     IDL> atom='o'
+;     IDL> ion='iii'
+;     IDL> o_iii_elj=atomneb_read_elj(Atom_Elj_file, atom, ion, level_num=5) ; read Energy Levels (Ej)
+;     IDL> o_iii_omij=atomneb_read_omij(Atom_Omij_file, atom, ion) ; read Collision Strengths (Omegaij)
+;     IDL> o_iii_aij=atomneb_read_aij(Atom_Aij_file, atom, ion) ; read Transition Probabilities (Aij)
+;     IDL> atom='h'
+;     IDL> ion='ii' ; H I
+;     IDL> hi_rc_data=atomneb_read_aeff_sh95(Atom_RC_SH95_file, atom, ion)
+;     IDL> h_i_aeff_data=hi_rc_data[0].Aeff
+;     IDL> temperature=double(10000.0)
+;     IDL> density=double(5000.0)
+;     IDL> atomic_levels='3,4/'
+;     IDL> iobs5007=double(1200.0)
+;     IDL> Abb5007=double(0.0)
+;     IDL> Abb5007=calc_abundance(temperature=temperature, density=density, $
+;     IDL>                        line_flux=iobs5007, atomic_levels=atomic_levels,$
+;     IDL>                        elj_data=o_iii_elj, omij_data=o_iii_omij, $
+;     IDL>                        aij_data=o_iii_aij, h_i_aeff_data=hi_rc_data[0].Aeff)
+;     IDL> print, 'N(O^2+)/N(H+):', Abb5007
+;        N(O^2+)/N(H+):   0.00041108740
+;
+; :Categories:
+;   Abundance Analysis, Collisionally Excited Lines
+;
+; :Dirs:
+;  ./
+;      Main routines
+;
+; :Author:
+;   Ashkbiz Danehkar
+;  
+; :Copyright:
+;   This library is released under a GNU General Public License.
+; 
+; :Version:
+;   0.0.6
+;   
+; :History:
+;     15/09/2013, A. Danehkar, Translated from FORTRAN to IDL code. 
+;     
+;     20/10/2016, A. Danehkar, Replaced str2int with strnumber. 
+;     
+;     20/10/2016, A. Danehkar, Replaced CFY, SPLMAT, and CFD with
+;          IDL function INTERPOL( /SPLINE). 
+;        
+;     20/10/2016, A. Danehkar, Replaced LUSLV with IDL LAPACK function 
+;                       LA_LINEAR_EQUATION. 
+;               
+;     15/11/2016, A. Danehkar, Replaced LA_LINEAR_EQUATION (not work in GDL)
+;           with IDL function LUDC & LUSOL. 
+;     
+;     19/11/2016, A. Danehkar, Replaced INTERPOL (not accurate) with 
+;                    SPL_INIT & SPL_INTERP. 
+;     
+;     20/11/2016, A. Danehkar, Made a new function calc_populations() 
+;       for solving atomic level populations and separated it from
+;       calc_abundance(), calc_density() and calc_temperature(). 
+;                         
+;     21/11/2016, A. Danehkar, Made a new function calc_emissivity() 
+;                      for calculating line emissivities and separated it 
+;                      from calc_abundance(). 
+;     
+;     10/03/2017, A. Danehkar, Integration with AtomNeb, now uses atomic data
+;                      input elj_data, omij_data, aij_data. 
+;     
+;     12/06/2017, A. Danehkar, Cleaning the function, and remove unused varibales
+;                        from calc_abundance(). 
+;        
+; FORTRAN HISTORY:
+; 
+;     03/05/1981, I.D.Howarth,  Version 1.
+; 
+;     05/05/1981, I.D.Howarth,  Minibug fixed!
+; 
+;     07/05/1981, I.D.Howarth,  Now takes collision rates or strengths.
+; 
+;     03/08/1981, S.Adams,      Interpolates collision strengths.
+; 
+;     07/08/1981, S.Adams,      Input method changed.
+; 
+;     19/11/1984, R.E.S.Clegg,  SA files entombed in scratch disk. Logical
+;                               filenames given to SA's data files.
+; 
+;     08/1995, D.P.Ruffle, Changed input file format. Increased matrices.
+; 
+;     02/1996, X.W.Liu,   Tidy up. SUBROUTINES SPLMAT, HGEN, CFY and CFD
+;                         modified such that matrix sizes (i.e. maximum
+;                         of Te and maximum no of levels) can now be cha
+;                         by modifying the parameters NDIM1, NDIM2 and N
+;                         in the Main program. EASY!
+;                         Now takes collision rates as well.
+;                         All variables are declared explicitly
+;                         Generate two extra files (ionpop.lis and ionra
+;                         of plain stream format for plotting.
+; 
+;     06/1996, C.J.Pritchet, Changed input data format for cases IBIG=1,2.
+;                         Fixed readin bug for IBIG=2 case.
+;                         Now reads reformatted upsilons (easier to see
+;                         and the 0 0 0 data end is excluded for these c
+;                         The A values have a different format for IBIG=.
+; 
+;     2006, B.Ercolano,   Converted to F90.
+;-
+
+;+
 ; NAME:
 ;     calc_abundance
+;
 ; PURPOSE:
-;     determine ionic abundance from observed 
+;     This function determines the ionic abundance from the observed 
 ;     flux intensity for specified ion with level(s)
 ;     by solving atomic level populations and 
 ;     line emissivities in statistical equilibrium 
 ;     for given electron density and temperature.
 ;
-; EXPLANATION:
-;
 ; CALLING SEQUENCE:
-;     path='proEQUIB/atomic-data/'
-;     set_atomic_data_path, path
+;     Result = calc_abundance(TEMPERATURE=temperature, DENSITY=density, $
+;                              LINE_FLUX=line_flux, ATOMIC_LEVELS=atomic_levels, $
+;                              ELJ_DATA=elj_data, OMIJ_DATA=omij_data, $
+;                              AIJ_DATA=aij_data, H_I_AEFF_DATA=h_i_aeff_data)             
 ;
-;     Atom_Elj_file='idllib/AtomNeb/atomic-data/chianti70/AtomElj.fits'
-;     Atom_Omij_file='idllib/AtomNeb/atomic-data/chianti70/AtomOmij.fits'
-;     Atom_Aij_file='idllib/AtomNeb/atomic-data/chianti70/AtomAij.fits'
-;     Atom_RC_SH95_file='idllib/AtomNeb/atomic-data-rc/rc_SH95.fits'
+; KEYWORD PARAMETERS:
+;     TEMPERATURE   :     in, required, type=float, electron temperature
+;     DENSITY       :     in, required, type=float, electron density
+;     LINE_FLUX     :     in, required, type=float, line flux intensity
+;     ATOMIC_LEVELS :     in, required, type=string, level(s) e.g '1,2/', '1,2,1,3/'
+;     ELJ_DATA      :     in, required, type=array/object, energy levels (Ej) data
+;     OMIJ_DATA     :     in, required, type=array/object, collision strengths (omega_ij) data
+;     AIJ_DATA      :     in, required, type=array/object, transition probabilities (Aij) data
+;     H_I_AEFF_DATA :     in, required, type=array/object, H I recombination coefficients
+;     
+; OUTPUTS:  This function returns a double as the ionic abundance.
+; 
+; PROCEDURE: This function calls calc_emissivity and gamma_hb_4861.
+;
+; EXAMPLE:
+;     base_dir = file_dirname(file_dirname((routine_info('$MAIN$', /source)).path))
+;     data_dir = ['atomic-data', 'chianti70']
+;     Atom_Elj_file = filepath('AtomElj.fits', root_dir=base_dir, subdir=data_dir )
+;     Atom_Omij_file = filepath('AtomOmij.fits', root_dir=base_dir, subdir=data_dir )
+;     Atom_Aij_file = filepath('AtomAij.fits', root_dir=base_dir, subdir=data_dir )
+;     data_rc_dir = ['atomic-data-rc']
+;     Atom_RC_SH95_file= filepath('rc_SH95.fits', root_dir=base_dir, subdir=data_rc_dir )
 ;     atom='o'
 ;     ion='iii'
 ;     o_iii_elj=atomneb_read_elj(Atom_Elj_file, atom, ion, level_num=5) ; read Energy Levels (Ej) 
@@ -40,69 +203,56 @@ function calc_abundance, temperature=temperature, density=density, $
 ;                            line_flux=iobs5007, atomic_levels=atomic_levels,$
 ;                            elj_data=o_iii_elj, omij_data=o_iii_omij, $
 ;                            aij_data=o_iii_aij, h_i_aeff_data=hi_rc_data[0].Aeff)
-;     print, Abb5007
+;     print, 'N(O^2+)/N(H+):', Abb5007
+;     > N(O^2+)/N(H+):   0.00041108740
 ;
-; INPUTS:
-;     temperature   -     electron temperature
-;     density       -     electron density
-;     line_flux     -     line flux intensity
-;     atomic_levels -     level(s) e.g '1,2/', '1,2,1,3/'
-;     elj_data      -     energy levels (Ej) data
-;     omij_data     -     collision strengths (omega_ij) data
-;     aij_data      -     transition probabilities (Aij) data
-;     h_i_aeff_data -     H I recombination coefficients
-;     
-; RETURN:  ionic abundance
-;
-; REVISION HISTORY:
-;     Converted from FORTRAN to IDL code by A. Danehkar, 15/09/2013
-;     Replaced str2int with strnumber,      A. Danehkar, 20/10/2016
-;     Replaced CFY, SPLMAT, and CFD with
-;          IDL function INTERPOL( /SPLINE), A. Danehkar, 20/10/2016
-;     Replaced LUSLV with IDL LAPACK function 
-;                       LA_LINEAR_EQUATION, A. Danehkar, 20/10/2016
-;     Replaced LA_LINEAR_EQUATION (not work in GDL)
-;           with IDL function LUDC & LUSOL, A. Danehkar, 15/11/2016
-;     Replaced INTERPOL (not accurate) with 
-;                    SPL_INIT & SPL_INTERP, A. Danehkar, 19/11/2016
-;     Made a new function calc_populations() for solving atomic 
-;       level populations and separated it from
-;       calc_abundance(), calc_density() and calc_temperature(), 
-;                                           A. Danehkar, 20/11/2016
-;     Made a new function calc_emissivity() for calculating 
-;                      line emissivities and separated it 
-;                      from calc_abundance(), A. Danehkar, 21/11/2016
-;     Integration with AtomNeb, now uses atomic data input elj_data,
-;                      omij_data, aij_data, A. Danehkar, 10/03/2017
-;     Cleaning the function, and remove unused varibales
-;                        calc_abundance(), A. Danehkar, 12/06/2017
+; MODIFICATION HISTORY:
+;     15/09/2013, A. Danehkar, Translated from FORTRAN to IDL code. 
+;     20/10/2016, A. Danehkar, Replaced str2int with strnumber. 
+;     20/10/2016, A. Danehkar, Replaced CFY, SPLMAT, and CFD with
+;          IDL function INTERPOL( /SPLINE). 
+;     20/10/2016, A. Danehkar, Replaced LUSLV with IDL LAPACK function 
+;                       LA_LINEAR_EQUATION. 
+;     15/11/2016, A. Danehkar, Replaced LA_LINEAR_EQUATION (not work in GDL)
+;           with IDL function LUDC & LUSOL. 
+;     19/11/2016, A. Danehkar, Replaced INTERPOL (not accurate) with 
+;                    SPL_INIT & SPL_INTERP. 
+;     20/11/2016, A. Danehkar, Made a new function calc_populations() 
+;       for solving atomic level populations and separated it from
+;       calc_abundance(), calc_density() and calc_temperature().                             
+;     21/11/2016, A. Danehkar, Made a new function calc_emissivity() 
+;                      for calculating line emissivities and separated it 
+;                      from calc_abundance(). 
+;     10/03/2017, A. Danehkar, Integration with AtomNeb, now uses atomic data
+;                      input elj_data, omij_data, aij_data. 
+;     12/06/2017, A. Danehkar, Cleaning the function, and remove unused varibales
+;                        from calc_abundance(). 
 ; 
-; FORTRAN EQUIB HISTORY (F77/F90):
-; 1981-05-03 I.D.Howarth  Version 1
-; 1981-05-05 I.D.Howarth  Minibug fixed!
-; 1981-05-07 I.D.Howarth  Now takes collision rates or strengths
-; 1981-08-03 S.Adams      Interpolates collision strengths
-; 1981-08-07 S.Adams      Input method changed
-; 1984-11-19 R.E.S.Clegg  SA files entombed in scratch disk. Logical
-;                         filenames given to SA's data files.
-; 1995-08    D.P.Ruffle   Changed input file format. Increased matrices.
-; 1996-02    X.W.Liu      Tidy up. SUBROUTINES SPLMAT, HGEN, CFY and CFD
-;                         modified such that matrix sizes (i.e. maximum
-;                         of Te and maximum no of levels) can now be cha
-;                         by modifying the parameters NDIM1, NDIM2 and N
-;                         in the Main program. EASY!
-;                         Now takes collision rates as well.
-;                         All variables are declared explicitly
-;                         Generate two extra files (ionpop.lis and ionra
-;                         of plain stream format for plotting
-; 1996-06    C.J.Pritchet Changed input data format for cases IBIG=1,2.
-;                         Fixed readin bug for IBIG=2 case.
-;                         Now reads reformatted upsilons (easier to see
-;                         and the 0 0 0 data end is excluded for these c
-;                         The A values have a different format for IBIG=
-; 2006       B.Ercolano   Converted to F90
+; FORTRAN HISTORY:
+;     03/05/1981, I.D.Howarth,  Version 1.
+;     05/05/1981, I.D.Howarth,  Minibug fixed!
+;     07/05/1981, I.D.Howarth,  Now takes collision rates or strengths.
+;     03/08/1981, S.Adams,      Interpolates collision strengths.
+;     07/08/1981, S.Adams,      Input method changed.
+;     19/11/1984, R.E.S.Clegg,  SA files entombed in scratch disk. Logical
+;                               filenames given to SA's data files.
+;     08/1995, D.P.Ruffle, Changed input file format. Increased matrices.
+;     02/1996, X.W.Liu,    Tidy up. SUBROUTINES SPLMAT, HGEN, CFY and CFD
+;                          modified such that matrix sizes (i.e. maximum
+;                          of Te and maximum no of levels) can now be cha
+;                          by modifying the parameters NDIM1, NDIM2 and N
+;                          in the Main program. EASY!
+;                          Now takes collision rates as well.
+;                          All variables are declared explicitly
+;                          Generate two extra files (ionpop.lis and ionra
+;                          of plain stream format for plotting.
+;     06/1996, C.J.Pritchet, Changed input data format for cases IBIG=1,2.
+;                          Fixed readin bug for IBIG=2 case.
+;                          Now reads reformatted upsilons (easier to see
+;                          and the 0 0 0 data end is excluded for these c
+;                          The A values have a different format for IBIG=.
+;     2006, B.Ercolano,    Converted to F90.
 ;- 
-
   AHB=double(0)
   
   h_Planck = 6.62606957e-27 ; erg s
@@ -150,7 +300,7 @@ function calc_abundance, temperature=temperature, density=density, $
 ;  WAVHB=4861.33D ;4861.D0
 ;  emissivity_Hbeta=AHB*h_Planck*c_Speed*1.e8/WAVHB ; N(H+) * N(e-) (erg/s) 
   ; emissivity_Hbeta=1.387D-25*T4^(-0.983D0)* 10.D0^(-0.0424D0/T4) ;  Brocklehurst (1971); Aller (1984)
-  emissivity_Hbeta=10.0^gamma4861(h_i_aeff_data, temperature, density)
+  emissivity_Hbeta=10.0^gamma_hb_4861(temperature=temperature,density=density,h_i_aeff_data=h_i_aeff_data)
   
   emissivity_all=double(0.0)
   emissivity_all=calc_emissivity(temperature=temperature, density=density, $

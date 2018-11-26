@@ -1,28 +1,85 @@
-function redlaw_jbk, wave
+; docformat = 'rst'
+
+function redlaw_jbk, wavelength
+;+
+;    This function determines the reddening law function for Galactic Whitford1958 + Seaton1977 + Kaler1976.
+;
+; :Returns:
+;    type=double/array. This function returns the reddening law function value(s) for the given wavelength(s).
+;
+; :Params:
+;     wavelength :  in, required, type=float
+;                   Wavelength in Angstrom
+;
+; :Examples:
+;    For example::
+;
+;     IDL> wavelength=6563.0
+;     IDL> fl=redlaw_jbk(wavelength)
+;     IDL> print, 'fl(6563)', fl
+;        fl(6563)     -0.33113684
+;
+; :Categories:
+;   Interstellar Extinction
+;
+; :Dirs:
+;  ./
+;      Subroutines
+;
+; :Author:
+;   Ashkbiz Danehkar
+;
+; :Copyright:
+;   This library is released under a GNU General Public License.
+;
+; :Version:
+;   0.0.1
+;
+; :History:
+;     Based on Whitford (1958), extended to the UV by Seaton (1977), 
+;     adapted by Kaler (1976).
+;     
+;     Originally from IRAF STSDAS SYNPHOT redlaw.x
+;     
+;     13/05/1993, R. A. Shaw, Initial IRAF implementation.
+;     
+;     31/08/2012, A. Danehkar, Converted to IDL code.
+;-
+
 ;+
 ; NAME:
-;     redlaw_smc
-; PURPOSE:
-;    reddening law function for Galactic Whitford1958 + Seaton1977 + Kaler1976
+;     redlaw_jbk
 ; 
-; EXPLANATION:
+; PURPOSE:
+;    This function determines the reddening law function for Galactic Whitford1958 + Seaton1977 + Kaler1976.
 ;
 ; CALLING SEQUENCE:
-;     fl = redlaw_jbk(wave)
+;     fl = redlaw_jbk(Wavelength)
 ;
 ; INPUTS:
-;     wave[] -  wavelength of emission line, Angstroms
-; RETURN: extl[] -  extinction evaluation array
+;     Wavelength[] -  in, required, type=float/array, 
+;               wavelength in Angstroms
 ;
-; REVISION HISTORY:
+; OUTPUTS: This function returns a double/array  as the reddening law function 
+;                   value(s) f(lambda) for the given wavelength(s) lambda.
+;
+; PROCEDURE: This function is callsed by redlaw.
+;
+; EXAMPLE:
+;     wavelength=6563.0
+;     fl=redlaw_jbk(wavelength)
+;     print, 'fl(6563)', fl
+;     > fl(6563)     -0.33113684
+;
+; MODIFICATION HISTORY:
 ;     Based on Whitford (1958), extended to the UV by Seaton (1977), 
 ;     adapted by Kaler (1976).
 ;     Originally from IRAF STSDAS SYNPHOT redlaw.x
-;     Initial IRAF implementation, R. A. Shaw, 13/05/1993
-;     Converted to IDL code by A. Danehkar, 31/08/2012
+;     13/05/1993, R. A. Shaw, Initial IRAF implementation.
+;     31/08/2012, A. Danehkar, Converted to IDL code.
 ;-
-  ; Tabulated wavelengths, Angstroms:
 
+  ; Tabulated wavelengths, Angstroms:
   refw=[ 1150., 1200., 1250., 1300., 1350., 1400., 1450., 1500., 1550., $
         1600., 1650., 1700., 1750., 1800., 1850., 1900., 1950., 2000., 2050., $
         2100., 2150., 2200., 2250., 2300., 2350., 2400., 2450., 2500., 2550., $
@@ -34,8 +91,7 @@ function redlaw_jbk, wave
         7600., 7800., 8000., 8200., 8400., 8600., 8800., 9000., 9500., 10000., $
         11000.,12000.,14000.,16000.,20000.,1.D+6]
         
- ;  Tabulated extinction function:
-  
+  ; Tabulated extinction function:
   extab=[1.96,  1.78,  1.61,  1.49,  1.37,  1.29,  1.24,  1.20,  1.20, $ 
         1.20,  1.17,  1.13,  1.11,  1.10,  1.12,  1.17,  1.25,  1.35,  1.45, $
         1.53,  1.60,  1.62,  1.52,  1.40,  1.28,  1.17,  1.06,  0.98,  0.9, $
@@ -48,7 +104,7 @@ function redlaw_jbk, wave
         -0.718,-0.763,-0.840,-0.890,-0.960,-1.000]
 
   xtable = 10000.D+0 / refw
-  temp=  size(wave,/DIMENSIONS)
+  temp=  size(wavelength,/DIMENSIONS)
   if temp[0] eq 0 then begin
     npts=1
     extl=double(0.0)
@@ -57,9 +113,9 @@ function redlaw_jbk, wave
     extl = dblarr(npts)
   endelse
   for pix = 0, npts-1 do begin
-    if (wave[pix] lt 1000.0) then print, "redlaw_smc: Invalid wavelength"	
+    if (wavelength[pix] lt 1000.0) then print, "redlaw_smc: Invalid wavelength"	
     ; Convert wavelength in angstroms to 1/microns
-    x = 10000.D+0 / wave[pix]
+    x = 10000.D+0 / wavelength[pix]
     x = min([x, 10.0])
     
     ; Linearly interpolate extinction law in 1/lam

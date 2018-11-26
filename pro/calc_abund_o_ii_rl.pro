@@ -1,39 +1,152 @@
-function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temperature, density, wavelength, iobs 
+; docformat = 'rst'
+
+function calc_abund_o_ii_rl, temperature=temperature, density=density, $
+                      wavelength=wavelength, line_flux=line_flux, $
+                      o_ii_rc_br=o_ii_rc_br, o_ii_rc_data=o_ii_rc_data, $
+                      h_i_aeff_data=h_i_aeff_data
+;+
+;     This function determines the ionic abundance from the observed 
+;     flux intensity for the given wavelength of O II recombination line 
+;     by using the recombination coefficients from  
+;     Storey 1994A&A...282..999S and Liu et al. 1995MNRAS.272..369L.
+;
+; :Returns:
+;    type=double. This function returns the ionic abundanc.
+;
+; :Keywords:
+;     temperature   :     in, required, type=float
+;                         electron temperature
+;     density       :     in, required, type=float
+;                         electron density
+;     wavelength    :     in, required, type=float
+;                         Line Wavelength in Angstrom
+;     line_flux     :     in, required, type=float
+;                         line flux intensity
+;     o_ii_rc_br    :     in, required, type=array/object
+;                         O II branching ratios (Br)
+;     o_ii_rc_data  :     in, required, type=array/object
+;                         O II recombination coefficients
+;     h_i_aeff_data :     in, required, type=array/object
+;                         H I recombination coefficients
+;
+; :Examples:
+;    For example::
+;
+;     IDL> base_dir = file_dirname(file_dirname((routine_info('$MAIN$', /source)).path))
+;     IDL> data_rc_dir = ['atomic-data-rc']
+;     IDL> Atom_RC_All_file= filepath('rc_collection.fits', root_dir=base_dir, subdir=data_rc_dir )
+;     IDL> Atom_RC_SH95_file= filepath('rc_SH95.fits', root_dir=base_dir, subdir=data_rc_dir )
+;     IDL> atom='h'
+;     IDL> ion='ii' ; H I
+;     IDL> h_i_rc_data=atomneb_read_aeff_sh95(Atom_RC_SH95_file, atom, ion)
+;     IDL> h_i_aeff_data=h_i_rc_data[0].Aeff
+;     IDL> atom='o'
+;     IDL> ion='iii' ; O II
+;     IDL> o_ii_rc_data=atomneb_read_aeff_collection(Atom_RC_All_file, atom, ion)
+;     IDL> o_ii_rc_data_br=atomneb_read_aeff_collection(Atom_RC_All_file, atom, ion, /br)
+;     IDL> temperature=double(10000.0)
+;     IDL> density=double(5000.0)
+;     IDL> o_ii_4614_flux = 0.009
+;     IDL> wavelength=4613.68
+;     IDL> Abund_o_ii=calc_abund_o_ii_rl(temperature=temperature, density=density, $
+;     IDL>                               wavelength=wavelength, line_flux=o_ii_4614_flux, $
+;     IDL>                               o_ii_rc_br=o_ii_rc_data_br, o_ii_rc_data=o_ii_rc_data, $
+;     IDL>                               h_i_aeff_data=h_i_aeff_data)
+;     IDL> print, 'N(O^2+)/N(H+):', Abund_o_ii
+;        N(O^2+)/N(H+):    0.0018818075
+;
+; :Categories:
+;   Abundance Analysis, Recombination Lines
+;
+; :Dirs:
+;  ./
+;      Main routines
+;
+; :Author:
+;   Ashkbiz Danehkar
+;
+; :Copyright:
+;   This library is released under a GNU General Public License.
+;
+; :Version:
+;   0.0.3
+;
+; :History:
+;     Based on recombination coefficients for O II lines from
+;     Storey 1994A&A...282..999S and Liu et al. 1995MNRAS.272..369L.
+;     
+;     Adopted from MIDAS script Roii.prg written by X.W.Liu.
+;     
+;     Revised based on scripts by Yong Zhang added to MOCASSIN, 02/2003
+;                       Ercolano et al. 2005MNRAS.362.1038E.
+;     
+;     10/05/2013, A. Danehkar, Translated to IDL code.
+;     
+;     25/04/2017, A. Danehkar, Integration with AtomNeb.
+;-
+
 ;+
 ; NAME:
-;     recomb_o_ii
+;     calc_abund_o_ii_rl
+;
 ; PURPOSE:
-;     return the recombination coefficients of O II lines
-;     from Storey 1994A&A...282..999S 
-;     and Liu et al. 1995MNRAS.272..369L
-; EXPLANATION:
+;     This function determines the ionic abundance from the observed 
+;     flux intensity for the given wavelength of O II recombination line 
+;     by using the recombination coefficients from  
+;     Storey 1994A&A...282..999S and Liu et al. 1995MNRAS.272..369L.
 ;
 ; CALLING SEQUENCE:
-;     oiiRLs=recomb_o_ii(oii_rc_data_br, oii_rc_data, 
-;     h_i_aeff_data, temperature, density, wavelength, iobs 
+;     Result = calc_abund_o_ii_rl(TEMPERATURE=temperature, DENSITY=density, $
+;                                 WAVELENGTH=wavelength, LINE_FLUX=line_flux, $
+;                                 O_II_RC_BR=o_ii_rc_br, O_II_RC_DATA=o_ii_rc_data, $
+;                                 H_I_AEFF_DATA=h_i_aeff_data
 ;
-; INPUTS:
-;     temperature  - electron temperature in K
-;     density  - electron density in cm-3
-;     abund - abundance coefficient
-; RETURN:  recombination coefficients of O II
-;    oiiRLstructure ={g1:0, g2:0, ION:0, bMult:0, 
-;            Wave:0.0, E1:0.0, E2:0.0, Em:0.0, Int:0.0,
-;            Br_A:0.0, Br_B:0.0, Br_C:0.0,
-;            gf1:0.0, gf2:0.0, Obs:0.0, abundance:0.0,
-;            Mult1:'', Term1:'', Term2:''} 
-; REVISION HISTORY:
-;     Recombination coefficients for O II lines at nebular 
-;     temperatures and densities
-;     Storey 1994A&A...282..999S 
-;     The rich O II recombination spectrum of the planetary 
-;     nebula NGC 7009: new observations and atomic data
-;     Liu et al. 1995MNRAS.272..369L
-;     Adopted from MIDAS script Roii.prg written by X.W.Liu
-;     Revised based on scripts by Yong Zhang added to MOCASSIN, 2003/02
-;                       Ercolano et al. 2005MNRAS.362.1038E
-;     Converted to IDL code by A. Danehkar, 10/05/2013
-;     Integration with AtomNeb, A. Danehkar, 25/04/2017
+; KEYWORD PARAMETERS:
+;     TEMPERATURE   :     in, required, type=float, electron temperature
+;     DENSITY       :     in, required, type=float, electron density
+;     WAVELENGTH    :     in, required, type=float
+;                         Line Wavelength in Angstrom
+;     LINE_FLUX     :     in, required, type=float, line flux intensity
+;     O_II_RC_BR    :     in, required, type=array/object, O II branching ratios (Br)
+;     O_II_RC_DATA  :     in, required, type=array/object, O II recombination coefficients
+;     H_I_AEFF_DATA :     in, required, type=array/object, H I recombination coefficients
+;     
+; OUTPUTS:  This function returns a double as the ionic abundance.
+;
+; PROCEDURE: This function calls gamma_hb_4861.
+;
+; EXAMPLE:
+;     base_dir = file_dirname(file_dirname((routine_info('$MAIN$', /source)).path))
+;     data_rc_dir = ['atomic-data-rc']
+;     Atom_RC_All_file= filepath('rc_collection.fits', root_dir=base_dir, subdir=data_rc_dir )
+;     Atom_RC_SH95_file= filepath('rc_SH95.fits', root_dir=base_dir, subdir=data_rc_dir )
+;     atom='h'
+;     ion='ii' ; H I
+;     h_i_rc_data=atomneb_read_aeff_sh95(Atom_RC_SH95_file, atom, ion)
+;     h_i_aeff_data=h_i_rc_data[0].Aeff
+;     atom='o'
+;     ion='iii' ; O II
+;     o_ii_rc_data=atomneb_read_aeff_collection(Atom_RC_All_file, atom, ion)
+;     o_ii_rc_data_br=atomneb_read_aeff_collection(Atom_RC_All_file, atom, ion, /br)
+;     temperature=double(10000.0)
+;     density=double(5000.0)
+;     o_ii_4614_flux = 0.009
+;     wavelength=4613.68
+;     Abund_o_ii=calc_abund_o_ii_rl(temperature=temperature, density=density, 
+;                                   wavelength=wavelength, line_flux=o_ii_4614_flux, $
+;                                   o_ii_rc_br=o_ii_rc_data_br, o_ii_rc_data=o_ii_rc_data, $
+;                                   h_i_aeff_data=h_i_aeff_data)
+;     print, 'N(O^2+)/N(H+):', Abund_o_ii
+;     > N(O^2+)/N(H+):    0.0018818075
+; 
+; MODIFICATION HISTORY:
+;     Based on recombination coefficients for O II lines from
+;     Storey 1994A&A...282..999S and Liu et al. 1995MNRAS.272..369L.
+;     Adopted from MIDAS script Roii.prg written by X.W.Liu.
+;     Revised based on scripts by Yong Zhang added to MOCASSIN, 02/2003
+;                       Ercolano et al. 2005MNRAS.362.1038E.
+;     10/05/2013, A. Danehkar, Translated to IDL code.
+;     25/04/2017, A. Danehkar, Integration with AtomNeb.
 ;- 
 
   ;  oiiRLstructure ={Wave:double(0.0), $ ;REAL*8
@@ -54,7 +167,7 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temperature, d
   NEh2=double(density)
   abund=1.0
   nlines = 415
-  hbeta_ems= (10.0^gamma4861(h_i_aeff_data,TEh2,NEh2))
+  hbeta_ems= (10.0^gamma_hb_4861(temperature=TEh2,density=NEh2,h_i_aeff_data=h_i_aeff_data))
   ;hbeta_aeff= (10.0^atomneb_gamma4861(h_i_aeff_data,TEh2,NEh2))*double(4861.33/(h_Planck*c_Speed*1.e8)) 
 
   ; oiiRLs=REPLICATE(oiiRLstructure, nlines)
@@ -66,22 +179,22 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temperature, d
   g1=double(0.0)
   g2=double(0.0)
   temp4 = temperature/10000.0
-  loc1=where(abs(oii_rc_data_br.Wavelength-wavelength) le 0.01)
+  loc1=where(abs(o_ii_rc_br.Wavelength-wavelength) le 0.01)
   temp2=size(loc1,/DIMENSIONS)
   if temp2[0] ne 1 then begin
-    Wavelength_min=min(oii_rc_data_br[loc1].Wavelength)
-    loc1=where(oii_rc_data_br.Wavelength eq  Wavelength_min)
+    Wavelength_min=min(o_ii_rc_br[loc1].Wavelength)
+    loc1=where(o_ii_rc_br.Wavelength eq  Wavelength_min)
   endif
   
   temp2=size(loc1,/DIMENSIONS)
   if temp2[0] ne 1 then loc1=min(loc1)
   
-  Wave=oii_rc_data_br[loc1].Wavelength
-  Br_A=oii_rc_data_br[loc1].Br_A
-  Br_B=oii_rc_data_br[loc1].Br_B
-  Br_C=oii_rc_data_br[loc1].Br_C
-  g1=oii_rc_data_br[loc1].g1
-  g2=oii_rc_data_br[loc1].g2
+  Wave=o_ii_rc_br[loc1].Wavelength
+  Br_A=o_ii_rc_br[loc1].Br_A
+  Br_B=o_ii_rc_br[loc1].Br_B
+  Br_C=o_ii_rc_br[loc1].Br_C
+  g1=o_ii_rc_br[loc1].g1
+  g2=o_ii_rc_br[loc1].g2
   densi=double(density)
   log10ne=alog10(densi)
   
@@ -89,12 +202,12 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temperature, d
      ;---------------------------------------
      (loc1 ge 0) and (loc1 le 182): begin
         ; 4f-3d transitions
-        a = oii_rc_data[0].a4 ; 0.232
-        b = oii_rc_data[0].b ;-0.92009
-        c = oii_rc_data[0].c ; 0.15526
-        d = oii_rc_data[0].d ; 0.03442
+        a = o_ii_rc_data[0].a4 ; 0.232
+        b = o_ii_rc_data[0].b ;-0.92009
+        c = o_ii_rc_data[0].c ; 0.15526
+        d = o_ii_rc_data[0].d ; 0.03442
         ; an = [0.236, 0.232, 0.228, 0.222]
-        an = [oii_rc_data[0].a2, oii_rc_data[0].a4, oii_rc_data[0].a5, oii_rc_data[0].a6]
+        an = [o_ii_rc_data[0].a2, o_ii_rc_data[0].a4, o_ii_rc_data[0].a5, o_ii_rc_data[0].a6]
         if (log10ne le 2) then a = an[0] $
         else if (log10ne gt 2 and log10ne le 4) then a = an[0] + (an[1] - an[0]) / 2. * (log10ne - 2.) $
           else if (log10ne gt 4 and log10ne le 5) then a = an[1] + (an[2] - an[1]) * (log10ne - 2.) $
@@ -119,12 +232,12 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temperature, d
      ;---------------------------------------
      (loc1 ge 183) and (loc1 le 218): begin
         ; 3d-3p ^4F transitions (Case A=B=C for a,b,c,d; Br diff. slightly, adopt Case B)
-        a = oii_rc_data[1].a4 ; 0.876
-        b = oii_rc_data[1].b ; -0.73465
-        c = oii_rc_data[1].c ; 0.13689
-        d = oii_rc_data[1].d ; 0.06220
+        a = o_ii_rc_data[1].a4 ; 0.876
+        b = o_ii_rc_data[1].b ; -0.73465
+        c = o_ii_rc_data[1].c ; 0.13689
+        d = o_ii_rc_data[1].d ; 0.06220
         ; an = [0.876, 0.876, 0.877, 0.880] ;a for logNe = 2,4,5,6 (LSBC95, Tab.5a)
-        an = [oii_rc_data[1].a2, oii_rc_data[1].a4, oii_rc_data[1].a5, oii_rc_data[1].a6]
+        an = [o_ii_rc_data[1].a2, o_ii_rc_data[1].a4, o_ii_rc_data[1].a5, o_ii_rc_data[1].a6]
         if (log10ne le 2) then a = an[0] $
         else if (log10ne gt 2 and log10ne le 4) then a = an[0] + (an[1] - an[0]) / 2. * (log10ne - 2.) $
           else if (log10ne gt 4 and log10ne le 5) then a = an[1] + (an[2] - an[1]) * (log10ne - 2.) $
@@ -146,14 +259,14 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temperature, d
      ;---------------------------------------
      (loc1 ge 219) and (loc1 le 309): begin
         ; 3d-3p ^4D, ^4P transitions 
-        a = oii_rc_data[3].a4 ; 0.745
-        b = oii_rc_data[3].b ; -0.74621
-        c = oii_rc_data[3].c ; 0.15710
-        d = oii_rc_data[3].d ; 0.07059
+        a = o_ii_rc_data[3].a4 ; 0.745
+        b = o_ii_rc_data[3].b ; -0.74621
+        c = o_ii_rc_data[3].c ; 0.15710
+        d = o_ii_rc_data[3].d ; 0.07059
         ;an = [0.727,0.726,0.725,0.726] ; Case: A
         ; an = [0.747, 0.745, 0.744, 0.745] ; Case: B
         ;an = [0.769,0.767,0.766,0.766] ; Case: C
-        an = [oii_rc_data[3].a2, oii_rc_data[3].a4, oii_rc_data[3].a5, oii_rc_data[3].a6]
+        an = [o_ii_rc_data[3].a2, o_ii_rc_data[3].a4, o_ii_rc_data[3].a5, o_ii_rc_data[3].a6]
         if (log10ne le 2) then a = an[0] $
         else if (log10ne gt 2 and log10ne le 4) then a = an[0] + (an[1] - an[0]) / 2. * (log10ne - 2.) $
           else if (log10ne gt 4 and log10ne le 5) then a = an[1] + (an[2] - an[1]) * (log10ne - 2.) $
@@ -174,14 +287,14 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temperature, d
      ;---------------------------------------
      (loc1 ge 310) and (loc1 le 327): begin
         ; 3d-3p ^2F transitions 
-        a = oii_rc_data[5].a4 ; 0.745
-        b = oii_rc_data[5].b ; -0.74621
-        c = oii_rc_data[5].c ; 0.15710
-        d = oii_rc_data[5].d ; 0.07059
+        a = o_ii_rc_data[5].a4 ; 0.745
+        b = o_ii_rc_data[5].b ; -0.74621
+        c = o_ii_rc_data[5].c ; 0.15710
+        d = o_ii_rc_data[5].d ; 0.07059
         ;an = [0.727, 0.726, 0.725, 0.726] ; Case: A
         ;an = [0.747,0.745,0.744,0.745] ; Case: B
         ;an = [0.769,0.767,0.766,0.766] ; Case: C
-        an = [oii_rc_data[5].a2, oii_rc_data[5].a4, oii_rc_data[5].a5, oii_rc_data[5].a6]
+        an = [o_ii_rc_data[5].a2, o_ii_rc_data[5].a4, o_ii_rc_data[5].a5, o_ii_rc_data[5].a6]
         if (log10ne le 2) then a = an[0] $
         else if (log10ne gt 2 and log10ne le 4) then a = an[0] + (an[1] - an[0]) / 2. * (log10ne - 2.) $
           else if (log10ne gt 4 and log10ne le 5) then a = an[1] + (an[2] - an[1]) * (log10ne - 2.) $
@@ -202,13 +315,13 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temperature, d
      ;---------------------------------------
      (loc1 ge 328) and (loc1 le 357): begin
         ; 3d-3p ^2D transitions 
-        a = oii_rc_data[11].a4 ; 0.601
-        b = oii_rc_data[11].b ; -0.79533
-        c = oii_rc_data[11].c ; 0.15314
-        d = oii_rc_data[11].d ; 0.05322
+        a = o_ii_rc_data[11].a4 ; 0.601
+        b = o_ii_rc_data[11].b ; -0.79533
+        c = o_ii_rc_data[11].c ; 0.15314
+        d = o_ii_rc_data[11].d ; 0.05322
         ;an = [0.603, 0.601, 0.600, 0.599] ; Case: A
         ;an = [0.620,0.618,0.616,0.615] ; Case: C
-        an = [oii_rc_data[11].a2, oii_rc_data[11].a4, oii_rc_data[11].a5, oii_rc_data[11].a6]
+        an = [o_ii_rc_data[11].a2, o_ii_rc_data[11].a4, o_ii_rc_data[11].a5, o_ii_rc_data[11].a6]
         if (log10ne le 2) then a = an[0] $
         else if (log10ne gt 2 and log10ne le 4) then a = an[0] + (an[1] - an[0]) / 2. * (log10ne - 2.) $
           else if (log10ne gt 4 and log10ne le 5) then a = an[1] + (an[2] - an[1]) * (log10ne - 2.) $
@@ -229,13 +342,13 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temperature, d
      ;---------------------------------------
      (loc1 ge 358) and (loc1 le 387): begin
         ; 3d-3p ^2P transitions 
-        a = oii_rc_data[13].a4 ; 0.524
-        b = oii_rc_data[13].b ; -0.78448
-        c = oii_rc_data[13].c ; 0.13681
-        d = oii_rc_data[13].d ; 0.05608
+        a = o_ii_rc_data[13].a4 ; 0.524
+        b = o_ii_rc_data[13].b ; -0.78448
+        c = o_ii_rc_data[13].c ; 0.13681
+        d = o_ii_rc_data[13].d ; 0.05608
         ;an = [0.526, 0.524, 0.523, 0.524] ; Case: A
         ;an = [0.538,0.536,0.535,0.536] ; Case: C
-        an = [oii_rc_data[13].a2, oii_rc_data[13].a4, oii_rc_data[13].a5, oii_rc_data[13].a6]
+        an = [o_ii_rc_data[13].a2, o_ii_rc_data[13].a4, o_ii_rc_data[13].a5, o_ii_rc_data[13].a6]
         if (log10ne le 2) then a = an[0] $
         else if (log10ne gt 2 and log10ne le 4) then a = an[0] + (an[1] - an[0]) / 2. * (log10ne - 2.) $
           else if (log10ne gt 4 and log10ne le 5) then a = an[1] + (an[2] - an[1]) * (log10ne - 2.) $
@@ -442,6 +555,6 @@ function recomb_o_ii, oii_rc_data_br, oii_rc_data, h_i_aeff_data, temperature, d
   else: print, 'wavelength has an illegal value.'
   endcase
   
-  abund=iobs/oiiRLs_Int
+  abund=line_flux/oiiRLs_Int
   return,abund
 end

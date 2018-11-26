@@ -1,67 +1,97 @@
+; docformat = 'rst'
+
 function calc_populations, temperature=temperature, density=density, $
                            temp_list=temp_list, $ 
                            Omij=Omij, Aij=Aij, Elj=Elj, $
                            Glj=Glj, level_num=level_num, $
                            temp_num=temp_num, irats=irats
 ;+
-; NAME:
-;     calc_populations
-; PURPOSE:
-;     solve atomic level populations in statistical equilibrium 
+;     This function solves atomic level populations in statistical equilibrium 
 ;     for given electron temperature and density.
 ;
-; EXPLANATION:
+; :Returns:
+;    type=array/object. This function returns the atomic level populations.
 ;
-; CALLING SEQUENCE:
-;     Nlj=calc_populations(temperature=temperature, density=density, $
-;                        temp_list=temp_list, $ 
-;                        Omij=Omij, Aij=Aij, Elj=Elj, Glj=Glj, $
-;                        level_num=level_num, temp_num=temp_num, 
-;                        irats=irats)
+; :Keywords:
+;     temperature :   in, required, type=float
+;                     electron temperature
+;     density     :   in, required, type=float
+;                     electron density
+;     temp_list   :   in, required, type=array
+;                     temperature intervals (array)
+;     Omij        :   in, required, type=array/object
+;                     Collision Strengths (Omega_ij)
+;     Aij         :   in, required, type=array/object
+;                     Transition Probabilities (A_ij)
+;     Elj         :   in, required, type=array
+;                     Energy Levels (E_j)
+;     Glj         :   in, required, type=array
+;                     Ground Levels (G_j)
+;     level_num   :   in, required, type=int
+;                     Number of levels
+;     temp_num    :   in, required, type=int
+;                     Number of temperature intervals
+;     irats       :     in, required, type=int
+;                     Else Coll. rates = tabulated values * 10 ** irats
 ;
-; INPUTS:
-;     temperature -     electron temperature
-;     density -     electron density
-;     temp_list -   temperature intervals (array)
-;     Omij - Collision Strengths (Omega_ij)
-;     Aij - Transition Probabilities (A_ij)
-;     Elj - Energy Levels (E_j)
-;     Glj - Ground Levels (G_j)
-;     level_num -Number of levels
-;     temp_num - Number of temperature intervals
-;     irats - Else Coll. rates = tabulated values * 10 ** irats
-;     
-; RETURN:  N_j (array): atomic level populations
+; :Dirs:
+;  ./
+;      Subroutines
 ;
-; REVISION HISTORY:
-;     Converted from FORTRAN to IDL code by A. Danehkar, 15/09/2013
-;     Replaced str2int with strnumber, A. Danehkar, 20/10/2016
-;     Replaced CFY, SPLMAT, and CFD with
-;          IDL function INTERPOL( /SPLINE), A. Danehkar, 20/10/2016
-;     Replaced LUSLV with IDL LAPACK function 
-;                       LA_LINEAR_EQUATION, A. Danehkar, 20/10/2016
-;     Replaced LA_LINEAR_EQUATION (not work in GDL) with IDL function 
-;                             LUDC & LUSOL, A. Danehkar, 15/11/2016
-;     Replaced INTERPOL (not accurate) with 
-;                    SPL_INIT & SPL_INTERP, A. Danehkar, 19/11/2016
-;     Make a new function calc_populations() and separated from 
-;       calc_abundance(), calc_density() and calc_temperature(), 
-;                                           A. Danehkar, 20/11/2016
-;     Integration with AtomNeb, now uses atomic data input elj_data,
-;                      omij_data, aij_data, A. Danehkar, 10/03/2017
-;     Cleaning the function, and remove unused varibales
-;                        calc_populations(), A. Danehkar, 12/06/2017  
-; 
-; FORTRAN EQUIB HISTORY (F77/F90):
-; 1981-05-03 I.D.Howarth  Version 1
-; 1981-05-05 I.D.Howarth  Minibug fixed!
-; 1981-05-07 I.D.Howarth  Now takes collision rates or strengths
-; 1981-08-03 S.Adams      Interpolates collision strengths
-; 1981-08-07 S.Adams      Input method changed
-; 1984-11-19 R.E.S.Clegg  SA files entombed in scratch disk. Logical
-;                         filenames given to SA's data files.
-; 1995-08    D.P.Ruffle   Changed input file format. Increased matrices.
-; 1996-02    X.W.Liu      Tidy up. SUBROUTINES SPLMAT, HGEN, CFY and CFD
+; :Author:
+;   Ashkbiz Danehkar
+;
+; :Copyright:
+;   This library is released under a GNU General Public License.
+;
+; :Version:
+;   0.0.6
+;
+; :History:
+;     15/09/2013, A. Danehkar, Translated from FORTRAN to IDL code.
+;
+;     20/10/2016, A. Danehkar, Replaced str2int with strnumber.
+;
+;     20/10/2016, A. Danehkar, Replaced CFY, SPLMAT, and CFD with
+;          IDL function INTERPOL( /SPLINE).
+;
+;     20/10/2016, A. Danehkar, Replaced LUSLV with IDL LAPACK function
+;                       LA_LINEAR_EQUATION.
+;
+;     15/11/2016, A. Danehkar, Replaced LA_LINEAR_EQUATION (not work in GDL)
+;           with IDL function LUDC & LUSOL.
+;
+;     19/11/2016, A. Danehkar, Replaced INTERPOL (not accurate) with
+;                    SPL_INIT & SPL_INTERP.
+;
+;     20/11/2016, A. Danehkar, Made a new function calc_populations()
+;       for solving atomic level populations and separated it from
+;       calc_abundance(), calc_density() and calc_temperature().
+;
+;     10/03/2017, A. Danehkar, Integration with AtomNeb, now uses atomic data
+;                      input elj_data, omij_data, aij_data.
+;
+;     12/06/2017, A. Danehkar, Cleaning the function, and remove unused varibales
+;                        from calc_populations().
+;
+; FORTRAN HISTORY:
+;
+;     03/05/1981, I.D.Howarth,  Version 1.
+;
+;     05/05/1981, I.D.Howarth,  Minibug fixed!
+;
+;     07/05/1981, I.D.Howarth,  Now takes collision rates or strengths.
+;
+;     03/08/1981, S.Adams,      Interpolates collision strengths.
+;
+;     07/08/1981, S.Adams,      Input method changed.
+;
+;     19/11/1984, R.E.S.Clegg,  SA files entombed in scratch disk. Logical
+;                               filenames given to SA's data files.
+;
+;     08/1995, D.P.Ruffle, Changed input file format. Increased matrices.
+;
+;     02/1996, X.W.Liu,   Tidy up. SUBROUTINES SPLMAT, HGEN, CFY and CFD
 ;                         modified such that matrix sizes (i.e. maximum
 ;                         of Te and maximum no of levels) can now be cha
 ;                         by modifying the parameters NDIM1, NDIM2 and N
@@ -69,13 +99,90 @@ function calc_populations, temperature=temperature, density=density, $
 ;                         Now takes collision rates as well.
 ;                         All variables are declared explicitly
 ;                         Generate two extra files (ionpop.lis and ionra
-;                         of plain stream format for plotting
-; 1996-06    C.J.Pritchet Changed input data format for cases IBIG=1,2.
+;                         of plain stream format for plotting.
+;
+;     06/1996, C.J.Pritchet, Changed input data format for cases IBIG=1,2.
 ;                         Fixed readin bug for IBIG=2 case.
 ;                         Now reads reformatted upsilons (easier to see
 ;                         and the 0 0 0 data end is excluded for these c
-;                         The A values have a different format for IBIG=
-; 2006       B.Ercolano   Converted to F90
+;                         The A values have a different format for IBIG=.
+;
+;     2006, B.Ercolano,   Converted to F90.
+;-
+
+;+
+; NAME:
+;     calc_populations
+; PURPOSE:
+;     This function solves atomic level populations in statistical equilibrium 
+;     for given electron temperature and density.
+;
+; CALLING SEQUENCE:
+;     Result = calc_populations(TEMPERATURE=temperature, DENSITY=density, $
+;                        TEMP_LIST=temp_list, $ 
+;                        OMIJ=Omij, AIJ=Aij, ELJ=Elj, GLJ=Glj, $
+;                        LEVEL_NUM=level_num, TEMP_NUM=temp_num, 
+;                        IRATS=irats)
+;
+; KEYWORD PARAMETERS:
+;     TEMPERATURE : in, required, type=float, electron temperature
+;     DENSITY     : in, required, type=float, electron density
+;     TEMP_LIST   : in, required, type=array, temperature intervals (array)
+;     OMIJ        : in, required, type=array/object, Collision Strengths (Omega_ij)
+;     AIJ         : in, required, type=array/object, Transition Probabilities (A_ij)
+;     ELJ         : in, required, type=array, Energy Levels (E_j)
+;     GLJ         : in, required, type=array, Ground Levels (G_j)
+;     LEVEL_NUM   : in, required, type=int, Number of levels
+;     TEMP_NUM    : in, required, type=int, Number of temperature intervals
+;     IRATS       : in, required, type=int, Else Coll. rates = tabulated values * 10 ** irats
+;     
+; OUTPUTS:  This function returns a array/object as the atomic level populations (N_j)
+;
+; PROCEDURE: This function is called by calc_emissivity, calc_temperature and calc_density.
+;
+; MODIFICATION HISTORY:
+;     15/09/2013, A. Danehkar, Translated from FORTRAN to IDL code.
+;     20/10/2016, A. Danehkar, Replaced str2int with strnumber.
+;     20/10/2016, A. Danehkar, Replaced CFY, SPLMAT, and CFD with
+;          IDL function INTERPOL( /SPLINE).
+;     20/10/2016, A. Danehkar, Replaced LUSLV with IDL LAPACK function
+;                       LA_LINEAR_EQUATION.
+;     15/11/2016, A. Danehkar, Replaced LA_LINEAR_EQUATION (not work in GDL)
+;           with IDL function LUDC & LUSOL.
+;     19/11/2016, A. Danehkar, Replaced INTERPOL (not accurate) with
+;                    SPL_INIT & SPL_INTERP.
+;     20/11/2016, A. Danehkar, Made a new function calc_populations()
+;       for solving atomic level populations and separated it from
+;       calc_abundance(), calc_density() and calc_temperature().
+;     10/03/2017, A. Danehkar, Integration with AtomNeb, now uses atomic data
+;                      input elj_data, omij_data, aij_data.
+;     12/06/2017, A. Danehkar, Cleaning the function, and remove unused varibales
+;                        from calc_populations().
+; 
+; FORTRAN HISTORY:
+;     03/05/1981, I.D.Howarth,  Version 1.
+;     05/05/1981, I.D.Howarth,  Minibug fixed!
+;     07/05/1981, I.D.Howarth,  Now takes collision rates or strengths.
+;     03/08/1981, S.Adams,      Interpolates collision strengths.
+;     07/08/1981, S.Adams,      Input method changed.
+;     19/11/1984, R.E.S.Clegg,  SA files entombed in scratch disk. Logical
+;                               filenames given to SA's data files.
+;     08/1995, D.P.Ruffle, Changed input file format. Increased matrices.
+;     02/1996, X.W.Liu,    Tidy up. SUBROUTINES SPLMAT, HGEN, CFY and CFD
+;                          modified such that matrix sizes (i.e. maximum
+;                          of Te and maximum no of levels) can now be cha
+;                          by modifying the parameters NDIM1, NDIM2 and N
+;                          in the Main program. EASY!
+;                          Now takes collision rates as well.
+;                          All variables are declared explicitly
+;                          Generate two extra files (ionpop.lis and ionra
+;                          of plain stream format for plotting.
+;     06/1996, C.J.Pritchet, Changed input data format for cases IBIG=1,2.
+;                          Fixed readin bug for IBIG=2 case.
+;                          Now reads reformatted upsilons (easier to see
+;                          and the 0 0 0 data end is excluded for these c
+;                          The A values have a different format for IBIG=.
+;     2006, B.Ercolano,    Converted to F90.
 ;- 
   
   if keyword_set(temperature) eq 0 then begin 

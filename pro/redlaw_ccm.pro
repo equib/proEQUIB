@@ -1,30 +1,97 @@
-function redlaw_ccm, wave, rv=rv
+; docformat = 'rst'
+
+function redlaw_ccm, wavelength, rv=rv
+;+
+;    This function determines the reddening law function of Cardelli, Clayton & Mathis.
+;
+; :Returns:
+;    type=double/array. This function returns the reddening law function value for the given wavelength.
+;
+; :Params:
+;     wavelength :  in, required, type=float/array
+;                   Wavelength in Angstrom
+;
+; :Keywords:
+;    RV       :  in, optional, type=float, default=3.1
+;                the optical total-to-selective extinction ratio, RV = A(V)/E(B-V).
+;
+; :Examples:
+;    For example::
+;
+;     IDL> wavelength=6563.0
+;     IDL> R_V=3.1
+;     IDL> fl=redlaw_ccm(wavelength, rv=R_V)
+;     IDL> print, 'fl(6563)', fl
+;        fl(6563)     -0.29756615
+;
+; :Categories:
+;   Interstellar Extinction
+;
+; :Dirs:
+;  ./
+;      Subroutines
+;
+; :Author:
+;   Ashkbiz Danehkar
+;
+; :Copyright:
+;   This library is released under a GNU General Public License.
+;
+; :Version:
+;   0.0.1
+;
+; :History:
+;     Based on Formulae by Cardelli, Clayton & Mathis 1989, ApJ 345, 245-256.
+;     1989ApJ...345..245C
+;     
+;     Originally from IRAF STSDAS SYNPHOT redlaw.x
+;     
+;     18/05/1993, R. A. Shaw, Initial IRAF implementation, based upon CCM module
+;         in onedspec.deredden.
+;     
+;     31/08/2012, A. Danehkar, Converted to IDL code.
+;-
+
 ;+
 ; NAME:
 ;     redlaw_ccm
-; PURPOSE:
-;    reddening law function of Cardelli, Clayton & Mathis
 ; 
-; EXPLANATION:
+; PURPOSE:
+;    This function determines the reddening law function of Cardelli, Clayton & Mathis.
 ;
 ; CALLING SEQUENCE:
-;     fl = redlaw_ccm(wave, rv)
+;     fl = redlaw_ccm(Wavelength, RV=rv)
 ;
 ; INPUTS:
-;     wave[] -  wavelength of emission line, Angstroms
-;     rv - The ratio of extinction to reddening defined as R_V = A_V/E(B-V)
-; RETURN: extl[] -  extinction evaluation array
+;     Wavelength[] -  in, required, type=float/array, 
+;               wavelength in Angstroms
+; 
+; KEYWORD PARAMETERS:
+;    RV       :  in, optional, type=float, default=3.1, 
+;                the optical total-to-selective extinction ratio, RV = A(V)/E(B-V).
+; 
+; OUTPUTS: This function returns a double/array  as the reddening law function 
+;                   value(s) f(lambda) for the given wavelength(s) lambda.
 ;
-; REVISION HISTORY:
+; PROCEDURE: This function is callsed by redlaw.
+;
+; EXAMPLE:
+;     wavelength=6563.0
+;     R_V=3.1
+;     fl=redlaw_ccm(wavelength, rv=R_V)
+;     print, 'fl(6563)', fl
+;     > fl(6563)     -0.29756615
+;
+; MODIFICATION HISTORY:
 ;     Based on Formulae by Cardelli, Clayton & Mathis 1989, ApJ 345, 245-256.
 ;     1989ApJ...345..245C
 ;     Originally from IRAF STSDAS SYNPHOT redlaw.x
-;     Initial IRAF implementation, based upon CCM module
-;         in onedspec.deredden, R. A. Shaw, 18/05/1993
-;     Converted to IDL code by A. Danehkar, 31/08/2012
+;     18/05/1993, R. A. Shaw, Initial IRAF implementation, based upon CCM module
+;         in onedspec.deredden.
+;     31/08/2012, A. Danehkar, Converted to IDL code.
 ;-
 
-  temp=  size(wave,/DIMENSIONS)
+  temp=  size(wavelength,/DIMENSIONS)
   if temp[0] eq 0 then begin
     npts=1
     extl=double(0.0)
@@ -38,10 +105,10 @@ function redlaw_ccm, wave, rv=rv
     R_V=3.1
   endelse
   for pix = 0, npts-1 do begin
-    if (wave[pix] lt 1000.0) then print, "redlaw_ccm: Invalid wavelength"
+    if (wavelength[pix] lt 1000.0) then print, "redlaw_ccm: Invalid wavelength"
     
     ; Convert input wavelength to inverse microns
-    x = 10000.D+0 / wave[pix]
+    x = 10000.D+0 / wavelength[pix]
     
     ; For wavelengths longward of the L passband, linearly interpolate
     ; to 0. at 1/lambda = 0.  (a=0.08, b=-0.0734 @ x=0.29)

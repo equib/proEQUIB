@@ -1,29 +1,125 @@
-function redlaw_fm, wave, fmlaw=fmlaw, rv=rv
+; docformat = 'rst'
+
+function redlaw_fm, wavelength, rv=rv, fmlaw=fmlaw
 ;+
-; NAME:
-;     redlaw_fm
-; PURPOSE:
-;    reddening law function of Fitzpatrick & Massa
-; 
-; EXPLANATION:
+;    This function determines the reddening law function by Fitzpatrick & Massa 
+;    for the line at the given wavelength.
 ;
-; CALLING SEQUENCE:
-;     fl = redlaw_fm(wave)
+; :Returns:
+;    type=double/array. This function returns the reddening law function value for the given wavelength.
 ;
-; INPUTS:
-;     wave[] -  wavelength of emission line, Angstroms
-; RETURN: extl[] -  extinction evaluation array
+; :Params:
+;     wavelength :  in, required, type=float/array
+;                   Wavelength in Angstrom
 ;
-; REVISION HISTORY:
+; :Keywords:
+;    RV       :  in, optional, type=float, default=3.1
+;                the optical total-to-selective extinction ratio, RV = A(V)/E(B-V).
+;
+;    fmlaw    :  in, optional, type=string, default='GAL'
+;                the fmlaw keyword is used only in the redlaw_fm function:
+;
+;                'GAL' for  the default fit parameters for the R-dependent
+;                           Galactic extinction curve from Fitzpatrick & Massa
+;                           (Fitzpatrick, 1999, PASP, 111, 63).
+;
+;                'LMC2' for the fit parameters are those determined for
+;                              reddening the LMC2 field (inc. 30 Dor)
+;                              from Misselt et al.  (1999, ApJ, 515, 128).
+;
+;                'AVGLMC' for  the fit parameters are those determined for
+;                              reddening in the general Large Magellanic Cloud (LMC)
+;                              field by Misselt et al.  (1999, ApJ, 515, 128).
+;
+; :Examples:
+;    For example::
+;
+;     IDL> wavelength=6563.0
+;     IDL> R_V=3.1
+;     IDL> fl=redlaw_fm(wavelength, rv=R_V)
+;     IDL> print, 'fl(6563)', fl
+;        fl(6563)     -0.35054942
+;
+; :Categories:
+;   Interstellar Extinction
+;
+; :Dirs:
+;  ./
+;      Subroutines
+;
+; :Author:
+;   Ashkbiz Danehkar
+;
+; :Copyright:
+;   This library is released under a GNU General Public License.
+;
+; :Version:
+;   0.0.1
+;
+; :History:
 ;     Based on Formulae by Fitzpatrick 1999, PASP, 11, 63
 ;     1999PASP..111...63F, Fitzpatrick & Massa 1990, 
 ;     ApJS, 72, 163, 1990ApJS...72..163F
-;     Adopted from NASA IDL Library & PyAstronomy
-;     Revised in IDL code by A. Danehkar, 30/12/2016
+;     
+;     Adopted from NASA IDL Library & PyAstronomy.
+;     
+;     30/12/2016, A. Danehkar, Revised in IDL code.
 ;-
-; Tabulated inverse wavelengths in microns:
 
-  temp=  size(wave,/DIMENSIONS)
+
+;+
+; NAME:
+;     redlaw_fm
+;
+; PURPOSE:
+;    This function determines the reddening law function by Fitzpatrick & Massa 
+;    for the line at the given wavelength.
+;
+; CALLING SEQUENCE:
+;     Result = redlaw_fm(Wavelength, RV=rv, FMLAW=fmlaw)
+;
+; INPUTS:
+;     Wavelength[] -  in, required, type=float/array, 
+;               wavelength in Angstroms
+;
+;    RV       :  in, optional, type=float, default=3.1
+;                the optical total-to-selective extinction ratio, RV = A(V)/E(B-V).
+;    
+;    FMLAW    :  in, optional, type=string, default='GAL'
+;                the fmlaw keyword is used only in the redlaw_fm function:
+;                
+;                'GAL' for  the default fit parameters for the R-dependent
+;                           Galactic extinction curve from Fitzpatrick & Massa
+;                           (Fitzpatrick, 1999, PASP, 111, 63).
+;                
+;                'LMC2' for the fit parameters are those determined for
+;                              reddening the LMC2 field (inc. 30 Dor)
+;                              from Misselt et al.  (1999, ApJ, 515, 128).
+;                
+;                'AVGLMC' for  the fit parameters are those determined for
+;                              reddening in the general Large Magellanic Cloud (LMC)
+;                              field by Misselt et al.  (1999, ApJ, 515, 128).
+; 
+; OUTPUTS: This function returns a double/array  as the reddening law function 
+;                   value(s) f(lambda) for the given wavelength(s) lambda.
+;
+; PROCEDURE: This function is callsed by redlaw.
+;
+; EXAMPLE:
+;     wavelength=6563.0
+;     R_V=3.1
+;     fl=redlaw_fm(wavelength, rv=R_V)
+;     print, 'fl(6563)', fl
+;     > fl(6563)     -0.35054942
+; 
+; MODIFICATION HISTORY:
+;     Based on Formulae by Fitzpatrick 1999, PASP, 11, 63
+;     1999PASP..111...63F, Fitzpatrick & Massa 1990, 
+;     ApJS, 72, 163, 1990ApJS...72..163F
+;     Adopted from NASA IDL Library & PyAstronomy.
+;     30/12/2016, A. Danehkar, Revised in IDL code.
+;-
+  temp=  size(wavelength,/DIMENSIONS)
   if temp[0] eq 0 then begin
     npts=1
     extl=double(0.0)
@@ -70,7 +166,7 @@ function redlaw_fm, wave, fmlaw=fmlaw, rv=rv
   endif
   for pix = 0, npts-1 do begin
     ; Convert input wavelength to inverse microns
-    x = 10000.D+0 / wave[pix]
+    x = 10000.D+0 / wavelength[pix]
     curve = x*0.
     
     ; Compute UV portion of A(lambda)/E(B-V) curve using FM fitting function and 
