@@ -19,17 +19,29 @@ function calc_abund_he_i_rl, temperature=temperature, density=density, $
 ;                         electron density
 ;     linenum        :    in, required, type=int
 ;                         Line Number for Wavelength
-;                         Wavelength=4120.84:linenum=7: 
-;                         Wavelength=4387.93: linenum=8
-;                         Wavelength=4437.55: linenum=9
-;                         Wavelength=4471.50: linenum=10
-;                         Wavelength=4921.93: linenum=12
-;                         Wavelength=5015.68: linenum=13
-;                         Wavelength=5047.74: linenum=14
-;                         Wavelength=5875.66: linenum=15
-;                         Wavelength=6678.16: linenum=16
-;                         Wavelength=7065.25: linenum=17
-;                         Wavelength=7281.35: linenum=18
+;                         
+;                         Wavelength=4120.84:linenum=7,  
+;                         
+;                         Wavelength=4387.93: linenum=8, 
+;                         
+;                         Wavelength=4437.55: linenum=9, 
+;                         
+;                         Wavelength=4471.50: linenum=10, 
+;                         
+;                         Wavelength=4921.93: linenum=12, 
+;                         
+;                         Wavelength=5015.68: linenum=13, 
+;                         
+;                         Wavelength=5047.74: linenum=14, 
+;                         
+;                         Wavelength=5875.66: linenum=15, 
+;                         
+;                         Wavelength=6678.16: linenum=16, 
+;                         
+;                         Wavelength=7065.25: linenum=17, 
+;                         
+;                         Wavelength=7281.35: linenum=18. 
+;                         
 ;     line_flux      :    in, required, type=float
 ;                         line flux intensity
 ;     he_i_aeff_data :    in, required, type=array/object
@@ -107,7 +119,7 @@ function calc_abund_he_i_rl, temperature=temperature, density=density, $
 ;     DENSITY       :     in, required, type=float, electron density
 ;     LINENUM       :     in, required, type=int
 ;                         Line Number for Wavelength
-;                         Wavelength=4120.84:linenum=7: 
+;                         Wavelength=4120.84:linenum=7
 ;                         Wavelength=4387.93: linenum=8
 ;                         Wavelength=4437.55: linenum=9
 ;                         Wavelength=4471.50: linenum=10
