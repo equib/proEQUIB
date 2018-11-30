@@ -49,7 +49,7 @@ function calc_abund_n_iii_rl, temperature=temperature, density=density, $
 ;     IDL>                                 wavelength=wavelength, line_flux=n_iii_4641_flux, $
 ;     IDL>                                 n_iii_rc_data=n_iii_rc_data, h_i_aeff_data=h_i_aeff_data)
 ;     IDL> print, 'N(N^3+)/N(H+):', Abund_n_iii
-;        N(N^3+)/N(H+):    6.3137168e-05
+;        N(N^3+)/N(H+):    6.3366175e-05
 ;
 ; :Categories:
 ;   Abundance Analysis, Recombination Lines
@@ -123,7 +123,7 @@ function calc_abund_n_iii_rl, temperature=temperature, density=density, $
 ;                                     wavelength=wavelength, line_flux=n_iii_4641_flux, $
 ;                                     n_iii_rc_data=n_iii_rc_data, h_i_aeff_data=h_i_aeff_data)
 ;     print, 'N(N^3+)/N(H+):', Abund_n_iii
-;     > N(N^3+)/N(H+):    6.3137168e-05
+;     > N(N^3+)/N(H+):    6.3366175e-05
 ; 
 ; MODIFICATION HISTORY:
 ;     Based on  effective radiative recombination coefficients for N III lines from

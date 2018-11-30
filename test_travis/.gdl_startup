@@ -1,0 +1,8 @@
+!PATH=!PATH + ':/home/travis/build/equib/proEQUIB/pro/'
+!PATH=!PATH + ':/home/travis/build/equib/proEQUIB/externals/misc/'
+!PATH=!PATH + ':/home/travis/build/equib/proEQUIB/externals/astron/pro/'
+!PATH=!PATH + ':/home/travis/build/equib/proEQUIB/externals/atomneb/pro/'
+!DIR='/home/travis/build/equib/proEQUIB/'
+print, '%** Personal settings are loaded and active **';
+
+

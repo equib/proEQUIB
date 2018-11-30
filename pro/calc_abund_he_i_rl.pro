@@ -72,7 +72,7 @@ function calc_abund_he_i_rl, temperature=temperature, density=density, $
 ;                                       linenum=linenum, line_flux=he_i_4471_flux, $
 ;                                       he_i_aeff_data=he_i_aeff_data, h_i_aeff_data=h_i_aeff_data)
 ;     IDL> print, 'N(He^+)/N(H^+):', Abund_he_i
-;        N(He^+)/N(H^+):     0.040722892
+;        N(He^+)/N(H^+):     0.040848393
 ;
 ; :Categories:
 ;   Abundance Analysis, Recombination Lines
@@ -159,7 +159,7 @@ function calc_abund_he_i_rl, temperature=temperature, density=density, $
 ;                                   linenum=linenum, line_flux=he_i_4471_flux, $
 ;                                   he_i_aeff_data=he_i_aeff_data, h_i_aeff_data=h_i_aeff_data)
 ;     print, 'N(He^+)/N(H^+):', Abund_he_i
-;     > N(He^+)/N(H^+):     0.040722892
+;     > N(He^+)/N(H^+):     0.040848393
 ; 
 ; MODIFICATION HISTORY:
 ;     Based on improved He I emissivities in the case B
@@ -201,7 +201,8 @@ function calc_abund_he_i_rl, temperature=temperature, density=density, $
 
   hei_ems1=hei_ems[*,*]
   ; Bilinearly interpolate density & temperature
-  emiss_log = _interp2d(hei_ems1, temp_grid, dens_grid, TEh2, dens_log, [101,101], /cubic, /quintic)
+  ; emiss_log =_interp2d(hei_ems1, temp_grid, dens_grid, TEh2, dens_log, [101,101], /cubic, /quintic);, /trigrid) not work on GDL
+  emiss_log=_interp_2d(hei_ems1, TEh2, dens_log, temp_grid, dens_grid)
     
   ; wavl=he_i_aeff_data_Wavelength[line1]
   emissivity= 100.*10.^(emiss_log-gamma_hb_4861(temperature=TEh2,density=NEh2,h_i_aeff_data=h_i_aeff_data))

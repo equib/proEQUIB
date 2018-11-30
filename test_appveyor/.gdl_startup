@@ -1,0 +1,7 @@
+!PATH=!PATH + ':/home/appveyor/projects/proequib/pro/'
+!PATH=!PATH + ':/home/appveyor/projects/proequib/externals/misc/'
+!PATH=!PATH + ':/home/appveyor/projects/proequib/externals/astron/pro/'
+!PATH=!PATH + ':/home/appveyor/projects/proequib/externals/atomneb/pro/'
+!DIR='/home/appveyor/projects/proequib/'
+print, '%** Personal settings are loaded and active **';
+

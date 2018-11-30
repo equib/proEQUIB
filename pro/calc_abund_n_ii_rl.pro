@@ -53,7 +53,7 @@ function calc_abund_n_ii_rl, temperature=temperature, density=density, $
 ;     IDL>                               n_ii_rc_br=n_ii_rc_data_br, n_ii_rc_data=n_ii_rc_data, $
 ;     IDL>                               h_i_aeff_data=h_i_aeff_data)
 ;     IDL> print, 'N(N^2+)/N(H+):', Abund_n_ii
-;        N(N^2+)/N(H+):   0.00069047098
+;        N(N^2+)/N(H+):   0.00069297541
 ;
 ; :Categories:
 ;   Abundance Analysis, Recombination Lines
@@ -137,7 +137,7 @@ function calc_abund_n_ii_rl, temperature=temperature, density=density, $
 ;                                   n_ii_rc_br=n_ii_rc_data_br, n_ii_rc_data=n_ii_rc_data, $
 ;                                   h_i_aeff_data=h_i_aeff_data)
 ;     print, 'N(N^2+)/N(H+):', Abund_n_ii
-;     > N(N^2+)/N(H+):   0.00069047098
+;     > N(N^2+)/N(H+):   0.00069297541
 ; 
 ; MODIFICATION HISTORY:
 ;     Based on Effective recombination coefficients for N II lines from

@@ -48,7 +48,7 @@ function calc_abund_c_ii_rl, temperature=temperature, density=density, $
 ;     IDL>                               wavelength=wavelength, line_flux=c_ii_6151_flux, $
 ;     IDL>                               c_ii_rc_data=c_ii_rc_data, h_i_aeff_data=h_i_aeff_data)
 ;     IDL> print, 'N(C^2+)/N(H+):', Abund_c_ii
-;        N(C^2+)/N(H+):    0.00063175504
+;        N(C^2+)/N(H+):    0.00063404650
 ;
 ; :Categories:
 ;   Abundance Analysis, Recombination Lines
@@ -127,7 +127,7 @@ function calc_abund_c_ii_rl, temperature=temperature, density=density, $
 ;                                   wavelength=wavelength, line_flux=c_ii_6151_flux, $
 ;                                   c_ii_rc_data=c_ii_rc_data, h_i_aeff_data=h_i_aeff_data)
 ;     print, 'N(C^2+)/N(H+):', Abund_c_ii
-;     > N(C^2+)/N(H+):    0.00063175504
+;     > N(C^2+)/N(H+):    0.00063404650
 ; 
 ; MODIFICATION HISTORY:
 ;     Based on recombination coefficients for C II lines from

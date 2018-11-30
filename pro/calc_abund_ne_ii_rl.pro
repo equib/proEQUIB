@@ -48,7 +48,7 @@ function calc_abund_ne_ii_rl, temperature=temperature, density=density, $
 ;     IDL>                                 wavelength=wavelength, line_flux=ne_ii_3777_flux, $
 ;     IDL>                                 ne_ii_rc_data=ne_ii_rc_data, h_i_aeff_data=h_i_aeff_data)
 ;     IDL> print, 'N(Ne^2+)/N(H+):', Abund_ne_ii
-;        N(Ne^2+)/N(H+):    0.00043220085
+;        N(Ne^2+)/N(H+):    0.00043376850
 ;
 ; :Categories:
 ;   Abundance Analysis, Recombination Lines
@@ -126,7 +126,7 @@ function calc_abund_ne_ii_rl, temperature=temperature, density=density, $
 ;                                     wavelength=wavelength, line_flux=ne_ii_3777_flux, $
 ;                                     ne_ii_rc_data=ne_ii_rc_data, h_i_aeff_data=h_i_aeff_data)
 ;     print, 'N(Ne^2+)/N(H+):', Abund_ne_ii
-;     > N(Ne^2+)/N(H+):    0.00043220085
+;     > N(Ne^2+)/N(H+):    0.00043376850
 ; 
 ; REVISION HISTORY:
 ;     Based on effective radiative recombination coefficients for Ne II lines

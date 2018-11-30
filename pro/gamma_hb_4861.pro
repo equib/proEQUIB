@@ -104,10 +104,11 @@ function gamma_hb_4861, temperature=temperature, density=density, h_i_aeff_data=
   dens_log=alog10(NEh2)
   
   dens_grid=double(indgen(13) + 2)
-
+  
   hi_ems1=hi_ems[*,*]
   ; Bilinearly interpolate density & temperature
-  emiss_log = _interp2d(hi_ems1, temp_grid, dens_grid, TEh2, dens_log, [101,101], /cubic, /quintic)
+  ; emiss_log =_interp2d(hi_ems1, temp_grid, dens_grid, TEh2, dens_log, [101,101], /cubic, /quintic);, /trigrid) not work on GDL
+  emiss_log=_interp_2d(hi_ems1, TEh2, dens_log, temp_grid, dens_grid)
 
   ;logems = alog10(hr_tmp/double(4861.33/1.98648E-08))
   ;hb_ems = 10.0^logems

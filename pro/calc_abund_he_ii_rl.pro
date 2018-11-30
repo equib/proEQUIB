@@ -46,7 +46,7 @@ function calc_abund_he_ii_rl, temperature=temperature, density=density, $
 ;     IDL>                                 line_flux=he_ii_4686_flux, $
 ;     IDL>                                 he_ii_aeff_data=he_ii_aeff_data, h_i_aeff_data=h_i_aeff_data)
 ;     IDL> print, 'N(He^2+)/N(H^+):', Abund_he_ii
-;        N(He^2+)/N(H^+):      0.11199059
+;        N(He^2+)/N(H^+):      0.11228817
 ;
 ; :Categories:
 ;   Abundance Analysis, Recombination Lines
@@ -118,7 +118,7 @@ function calc_abund_he_ii_rl, temperature=temperature, density=density, $
 ;                                     line_flux=he_ii_4686_flux, $
 ;                                     he_ii_aeff_data=he_ii_aeff_data, h_i_aeff_data=h_i_aeff_data)
 ;     print, 'N(He^2+)/N(H^+):', Abund_he_ii
-;     > N(He^2+)/N(H^+):      0.11199059
+;     > N(He^2+)/N(H^+):      0.11228817
 ; 
 ; MODIFICATION HISTORY:
 ;     Based on He II emissivities

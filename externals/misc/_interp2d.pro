@@ -70,15 +70,15 @@ if not keyword_set(regular) then begin
 ; Call triangulate and trigrid to get a regularly spaced grid
 
   nx = n_elements(X0) & ny = n_elements(Y0)
-  gs = [(max(X0)-min(X0))/(nxny(0)-1), (max(Y0)-min(Y0))/(nxny(1)-1)]
+  gs = [(max(X0)-min(X0))/(nxny[0]-1), (max(Y0)-min(Y0))/(nxny[1]-1)]
 
-  xx = rebin(reform(x0),nx,ny)
-  yy = rebin(transpose(reform(y0)),nx,ny)
+  xx = double(rebin(reform(x0),nx,ny))
+  yy = double(rebin(transpose(reform(y0)),nx,ny))
   triangulate, xx, yy, tr
   if n_elements(quintic) eq 0 then quintic = 0  ; Make sure quintic is define
   zz = trigrid(xx, yy, A, tr, gs, quintic=quintic)
-
-  zz = zz(0:nxny(0)-1,0:nxny(1)-1)  ; Make sure the dimensions are matched
+  
+  zz = zz[0:nxny[0]-1,0:nxny[1]-1]  ; Make sure the dimensions are matched
 endif else zz = A     ; /regular was set -- x0 and y0 are linear
 sz = size(zz)
 

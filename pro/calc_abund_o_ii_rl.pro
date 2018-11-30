@@ -53,7 +53,7 @@ function calc_abund_o_ii_rl, temperature=temperature, density=density, $
 ;     IDL>                               o_ii_rc_br=o_ii_rc_data_br, o_ii_rc_data=o_ii_rc_data, $
 ;     IDL>                               h_i_aeff_data=h_i_aeff_data)
 ;     IDL> print, 'N(O^2+)/N(H+):', Abund_o_ii
-;        N(O^2+)/N(H+):    0.0018818075
+;        N(O^2+)/N(H+):    0.0018886330
 ;
 ; :Categories:
 ;   Abundance Analysis, Recombination Lines
@@ -137,7 +137,7 @@ function calc_abund_o_ii_rl, temperature=temperature, density=density, $
 ;                                   o_ii_rc_br=o_ii_rc_data_br, o_ii_rc_data=o_ii_rc_data, $
 ;                                   h_i_aeff_data=h_i_aeff_data)
 ;     print, 'N(O^2+)/N(H+):', Abund_o_ii
-;     > N(O^2+)/N(H+):    0.0018818075
+;     > N(O^2+)/N(H+):    0.0018886330
 ; 
 ; MODIFICATION HISTORY:
 ;     Based on recombination coefficients for O II lines from
