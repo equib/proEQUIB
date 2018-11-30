@@ -1,0 +1,31 @@
+language: generic
+sudo: required
+dist: xenial
+group: travis_latest
+
+git:
+  depth: 3
+  quiet: true
+
+os:
+- linux
+
+#addons:
+#  apt:
+#    packages:
+#      - gnudatalanguage
+
+
+# FIXME: temporary for travis xenial
+before_install:
+- sudo apt-get -yq update > /dev/null
+- sudo apt-get install -yq --no-install-suggests --no-install-recommends gnudatalanguage > /dev/null
+
+install:
+- export GDL_STARTUP=/home/travis/build/equib/proEQUIB/test_travis/.gdl_startup
+
+script:
+- gdl -e @test_travis/redlaw_deredden_example.pro
+- gdl -e @test_travis/cel_diagnostics_example.pro
+- gdl -e @test_travis/cel_abundance_example.pro
+- gdl -e @test_travis/orl_abundance_example.pro
