@@ -5,11 +5,11 @@
 *.gz
 *.html
 *.css
-*.yml
 *.json
 *.js
 *.cls
 *.sty
 *.dot
-
+*.sav
+*.log
 
