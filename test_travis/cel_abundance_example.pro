@@ -48,4 +48,6 @@ Abb5007=calc_abundance(temperature=temperature, density=density, $
                        aij_data=o_iii_aij, h_i_aeff_data=hi_rc_data[0].Aeff)
 print, 'N(O^2+)/N(H+):', Abb5007
 
-end 
+; --- End $MAIN$ program. ---------------
+exit
+

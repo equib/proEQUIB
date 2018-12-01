@@ -7,6 +7,8 @@ function gamma_he_ii_4686, temperature=temperature, density=density, he_ii_aeff_
 ;     by using the helium emissivities from 
 ;     Storey & Hummer, 1995MNRAS.272...41S.
 ;
+; :Private:
+;  
 ; :Returns:
 ;    type=double. This function returns the value of gamma(He II 4686) = log10(4pi j(He II 4686)/Np Ne).
 ;

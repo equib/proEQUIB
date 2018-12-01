@@ -1,7 +1,24 @@
-function lin_interp, vv, xx, xout
-;     linear interpolation/extrapolaton
+; docformat = 'rst'
 
-  ; Make a copy so we don't overwrite the input arguments.
+function lin_interp, vv, xx, xout
+;+
+;     This function perfoms a linear interpolation/extrapolaton.
+;
+; :Private:
+;   
+; :Returns:
+;    type=double. This function returns the interpolated/extrapolated value.
+;           
+; :Params:
+;     vv  :  in, required, type=float
+;                   VV array to interpolate
+;
+;     xx  :  in, required, type=float
+;                   X array that correspond to x(0), x(1), ...
+;
+;     xout :  in, required, type=float
+;                   X values at which vv should be interpolated
+;-
   v = vv
   x = xx
   m = n_elements(v)  ;# of input pnts
@@ -20,3 +37,4 @@ function lin_interp, vv, xx, xout
   p = (xout-x[s])*diff/(x[s+1] - x[s]) + v[s]
   return, p
 end
+

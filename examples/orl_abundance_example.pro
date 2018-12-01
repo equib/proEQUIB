@@ -1,12 +1,13 @@
-; Example: he_i_emissivity_porter(), he_ii_emissivity()
-;          recomb_c_ii(), recomb_c_iii()
-;          recomb_n_ii(), recomb_n_iii()
-;          recomb_o_ii(), recomb_ne_ii()
+; Example: calc_abund_he_i_rl(), calc_abund_he_ii_rl()
+;          calc_abund_c_ii_rl(), calc_abund_c_iii_rl()
+;          calc_abund_n_ii_rl(), calc_abund_n_iii_rl()
+;          calc_abund_o_ii_rl(), calc_abund_ne_ii_rl()
 ;     determine ionic abundance from observed 
 ;     flux intensity for gievn electron density 
-;     and temperature using he_i_emissivity_porter, 
-;     he_ii_emissivity, recomb_c_ii, recomb_c_iii
-;     recomb_o_ii, and recomb_ne_ii from proEQUIB
+;     and temperature using calc_abund_he_i_rl, 
+;     calc_abund_he_ii_rl, calc_abund_c_ii_rl, calc_abund_c_iii_rl
+;     calc_abund_n_ii_rl, calc_abund_n_iii_rl
+;     calc_abund_o_ii_rl, and calc_abund_ne_ii_rl from proEQUIB
 ; 
 ; --- Begin $MAIN$ program. ---------------
 ; 
@@ -133,4 +134,6 @@ Abund_ne_ii=calc_abund_ne_ii_rl(temperature=temperature, density=density, $
                                 ne_ii_rc_data=ne_ii_rc_data, h_i_aeff_data=h_i_aeff_data)
 print, 'N(Ne^2+)/N(H+):', Abund_ne_ii
 
-end 
+; --- End $MAIN$ program. ---------------
+exit
+

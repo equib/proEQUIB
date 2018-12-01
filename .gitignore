@@ -10,4 +10,7 @@
 *.js
 *.cls
 *.sty
+*.dot
+overview
+footer
 

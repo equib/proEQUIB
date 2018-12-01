@@ -42,4 +42,6 @@ density=calc_density(line_flux_ratio=line_flux_ratio, temperature=temperature, $
                      aij_data=s_ii_aij)
 print, "Electron Density:", density
 
-end 
+; --- End $MAIN$ program. ---------------
+exit
+

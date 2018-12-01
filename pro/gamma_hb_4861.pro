@@ -7,6 +7,8 @@ function gamma_hb_4861, temperature=temperature, density=density, h_i_aeff_data=
 ;     by using the helium emissivities from 
 ;     Storey & Hummer, 1995MNRAS.272...41S.
 ;
+; :Private:
+;  
 ; :Returns:
 ;    type=double. This function returns the value of gamma(HBeta 4861) = log10(4pi j(HBeta 4861)/Np Ne).
 ;
