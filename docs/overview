@@ -1,0 +1,77 @@
+.. title:: proEQUIB Overview
+
+`proEQUIB <https://equib.github.io/proEQUIB>` is an IDL library for plasma diagnostics and abundance analysis in nebular astrophysics.
+This library has API functions written in `Interactive Data Language <http://www.harrisgeospatial.com/ProductsandSolutions/GeospatialProducts/IDL.aspx>` (IDL)/`GNU Data Language <http://gnudatalanguage.sourceforge.net/>` (GDL) programs.
+It uses the `AtomNeb IDL library <https://github.com/atomneb/AtomNeb-idl>`, which can be used to determine interstellar extinctions, electron temperatures, electron densities, and ionic abundances from collisionally excited lines (CEL) 
+and recombination lines (RL).
+
+`proEQUIB <https://equib.github.io/proEQUIB>` mainly contains the follwing API functions written purely in IDL/GDL: 
+
+* `API functions for collisionally excited lines (CEL)` have been developed based on the algorithm of the FORTRAN program `EQUIB <http://adsabs.harvard.edu/abs/2016ascl.soft03005H>` written in FORTRAN by `Howarth & Adams (1981) <http://adsabs.harvard.edu/abs/1981ucl..rept.....H>`. The program EQUIB calculates atomic level populations and line emissivities in statistical equilibrium in multi-level atoms for different physical conditions of the stratification layers where the chemical elements are ionized. Using the IDL/GDL implementation of the program `EQUIB <http://adsabs.harvard.edu/abs/2016ascl.soft03005H>`, electron temperatures, electron densities, and ionic abundances are determined from the measured fluxes of collisionally excited lines.
+
+* `API functions for recombination lines (RL)` have been developed based on the algorithm of the recombination scripts by X. W. Liu and Y. Zhang included in the FORTRAN program `MOCASSIN <https://github.com/mocassin/MOCASSIN-2.0>`. These API functiosn are used to determine ionic abundances from recombination lines for some heavy element ions.
+ 
+* `API functions for reddening and extinctions` have been developed according to the methods of the reddening law functions from `STSDAS IRAF Package <http://www.stsci.edu/institute/softwarehardware/stsdas>`, which are used to obtain interstellar extinctions and deredden measured fluxes based on different reddening laws.
+
+
+Dependencies
+------------
+
+* This package requires the following packages:
+
+    - `The IDL Astronomy User's Library <https://idlastro.gsfc.nasa.gov/homepage.html>`
+    
+    - `The AtomNeb IDL Library <https://github.com/atomneb/AtomNeb-idl>`
+    
+    - `IDL MCMC Hammer library <https://github.com/mcfit/idlemcee>` (currently not used!)
+    
+* To get this package with all the dependent packages, you can simply use ``git`` command as follows::
+
+        git clone --recursive https://github.com/equib/proEQUIB.git
+
+
+GDL Installation
+----------------
+
+*  The GNU Data Language (GDL) can be installed on
+
+    - Linux (Fedora)::
+
+        sudo dnf install gdl
+    
+    - Linux (Ubuntu)::
+    
+        sudo apt-get install gnudatalanguage
+    
+    - OS X::
+    
+        brew install gnudatalanguage
+    
+    - Windows: using the `GNU Data Language for Win32 <https://sourceforge.net/projects/gnudatalanguage-win32/>` (Unofficial Version) or compiling the `GitHub source <https://github.com/gnudatalanguage/gdl>` with Visual Studio 2015 as seen in `appveyor.yml <https://github.com/gnudatalanguage/gdl/blob/master/appveyor.yml>`.
+
+
+* To setup `proEQUIB <https://equib.github.io/proEQUIB>` in GDL, add its path to ``.gdl_startup`` in the home directory::
+
+    !PATH=!PATH + ':/home/proEQUIB/pro/'
+    !PATH=!PATH + ':/home/proEQUIB/externals/misc/'
+    !PATH=!PATH + ':/home/proEQUIB/externals/astron/pro/'
+    !PATH=!PATH + ':/home/proEQUIB/externals/atomneb/pro/'
+
+  Set ``GDL_STARTUP`` in ``.bashrc`` (bash)::
+
+    export GDL_STARTUP=~/.gdl_startup
+
+  or in ``.tcshrc`` (cshrc)::
+
+    setenv GDL_STARTUP ~/.gdl_startup
+
+* This package needs GDL version 0.9.8 or later.
+
+IDL Installation
+----------------
+
+* To install `proEQUIB <https://equib.github.io/proEQUIB>` in IDL, add its path to your IDL path. For more information about the path management in IDL, read `the IDL path management <https://www.harrisgeospatial.com/Support/Self-Help-Tools/Help-Articles/Help-Articles-Detail/ArtMID/10220/ArticleID/16156/Quick-tips-for-customizing-your-IDL-program-search-path>` by Harris Geospatial or `the IDL library installation  <http://www.idlcoyote.com/code_tips/installcoyote.php>` by David Fanning. 
+
+* This package needs IDL version 7.1 or later. 
+
+
