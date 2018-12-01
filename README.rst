@@ -60,7 +60,7 @@ Installation in IDL
 Installation in GDL
 -------------------
 
-*  You can install the GNU Data Language (GDL) if you do not have on your machine:
+*  You can install the GNU Data Language (GDL) if you do not have it on your machine:
 
     - Linux (Fedora)::
 
