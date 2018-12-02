@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:ror="http://rorweb.com/0.1/" >
+<channel>
+  <title>ROR Sitemap for https://equib.github.io/proEQUIB/</title>
+  <link>https://equib.github.io/proEQUIB/</link>
+
+<item>
+     <link>https://equib.github.io/proEQUIB/</link>
+     <title>proEQUIB by equib</title>
+     <description>proEQUIB by equib</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>0</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://equib.github.io/proEQUIB/doc/</link>
+     <title>API Documentation for proEQUIB</title>
+     <description>API Documentation for proEQUIB</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>1</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://equib.github.io/proEQUIB/doc/overview.html</link>
+     <title>API Documentation for proEQUIB</title>
+     <description>API Documentation for proEQUIB</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>2</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://equib.github.io/proEQUIB/doc/all-files.html</link>
+     <title>All files (API Documentation for proEQUIB)</title>
+     <description>All files (API Documentation for proEQUIB)</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>2</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://equib.github.io/proEQUIB/doc/categories.html</link>
+     <title>Categories (API Documentation for proEQUIB)</title>
+     <description>Categories (API Documentation for proEQUIB)</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>3</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://equib.github.io/proEQUIB/doc/search.html</link>
+     <title>Search (API Documentation for proEQUIB)</title>
+     <description>Search (API Documentation for proEQUIB)</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>3</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://equib.github.io/proEQUIB/doc/idldoc-index.html</link>
+     <title>Index (API Documentation for proEQUIB)</title>
+     <description>Index (API Documentation for proEQUIB)</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>3</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://equib.github.io/proEQUIB/doc/idldoc-warnings.html</link>
+     <title>Warnings (API Documentation for proEQUIB)</title>
+     <description>Warnings (API Documentation for proEQUIB)</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>3</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://equib.github.io/proEQUIB/doc/idldoc-help.html</link>
+     <title>Help (API Documentation for proEQUIB)</title>
+     <description>Help (API Documentation for proEQUIB)</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>3</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://equib.github.io/proEQUIB/doc/index.html</link>
+     <title>API Documentation for proEQUIB</title>
+     <description>API Documentation for proEQUIB</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>3</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://equib.github.io/proEQUIB/doc/calc_abund_c_ii_rl.html</link>
+     <title>calc_abund_c_ii_rl.pro (API Documentation for proEQUIB)</title>
+     <description>calc_abund_c_ii_rl.pro (API Documentation for proEQUIB)</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>3</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://equib.github.io/proEQUIB/doc/calc_abund_c_iii_rl.html</link>
+     <title>calc_abund_c_iii_rl.pro (API Documentation for proEQUIB)</title>
+     <description>calc_abund_c_iii_rl.pro (API Documentation for proEQUIB)</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>3</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://equib.github.io/proEQUIB/doc/calc_abund_he_i_rl.html</link>
+     <title>calc_abund_he_i_rl.pro (API Documentation for proEQUIB)</title>
+     <description>calc_abund_he_i_rl.pro (API Documentation for proEQUIB)</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>3</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://equib.github.io/proEQUIB/doc/calc_abund_he_ii_rl.html</link>
+     <title>calc_abund_he_ii_rl.pro (API Documentation for proEQUIB)</title>
+     <description>calc_abund_he_ii_rl.pro (API Documentation for proEQUIB)</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>3</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://equib.github.io/proEQUIB/doc/calc_abund_n_ii_rl.html</link>
+     <title>calc_abund_n_ii_rl.pro (API Documentation for proEQUIB)</title>
+     <description>calc_abund_n_ii_rl.pro (API Documentation for proEQUIB)</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>3</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://equib.github.io/proEQUIB/doc/calc_abund_n_iii_rl.html</link>
+     <title>calc_abund_n_iii_rl.pro (API Documentation for proEQUIB)</title>
+     <description>calc_abund_n_iii_rl.pro (API Documentation for proEQUIB)</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>3</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://equib.github.io/proEQUIB/doc/calc_abund_ne_ii_rl.html</link>
+     <title>calc_abund_ne_ii_rl.pro (API Documentation for proEQUIB)</title>
+     <description>calc_abund_ne_ii_rl.pro (API Documentation for proEQUIB)</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>3</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://equib.github.io/proEQUIB/doc/calc_abund_o_ii_rl.html</link>
+     <title>calc_abund_o_ii_rl.pro (API Documentation for proEQUIB)</title>
+     <description>calc_abund_o_ii_rl.pro (API Documentation for proEQUIB)</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>3</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://equib.github.io/proEQUIB/doc/calc_abundance.html</link>
+     <title>calc_abundance.pro (API Documentation for proEQUIB)</title>
+     <description>calc_abundance.pro (API Documentation for proEQUIB)</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>3</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://equib.github.io/proEQUIB/doc/calc_density.html</link>
+     <title>calc_density.pro (API Documentation for proEQUIB)</title>
+     <description>calc_density.pro (API Documentation for proEQUIB)</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>3</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://equib.github.io/proEQUIB/doc/calc_emissivity.html</link>
+     <title>calc_emissivity.pro (API Documentation for proEQUIB)</title>
+     <description>calc_emissivity.pro (API Documentation for proEQUIB)</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>3</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://equib.github.io/proEQUIB/doc/calc_populations.html</link>
+     <title>calc_populations.pro (API Documentation for proEQUIB)</title>
+     <description>calc_populations.pro (API Documentation for proEQUIB)</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>3</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://equib.github.io/proEQUIB/doc/calc_temperature.html</link>
+     <title>calc_temperature.pro (API Documentation for proEQUIB)</title>
+     <description>calc_temperature.pro (API Documentation for proEQUIB)</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>3</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://equib.github.io/proEQUIB/doc/deredden_flux.html</link>
+     <title>deredden_flux.pro (API Documentation for proEQUIB)</title>
+     <description>deredden_flux.pro (API Documentation for proEQUIB)</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>3</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://equib.github.io/proEQUIB/doc/deredden_relflux.html</link>
+     <title>deredden_relflux.pro (API Documentation for proEQUIB)</title>
+     <description>deredden_relflux.pro (API Documentation for proEQUIB)</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>3</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://equib.github.io/proEQUIB/doc/gamma_hb_4861.html</link>
+     <title>gamma_hb_4861.pro (API Documentation for proEQUIB)</title>
+     <description>gamma_hb_4861.pro (API Documentation for proEQUIB)</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>3</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://equib.github.io/proEQUIB/doc/gamma_he_ii_4686.html</link>
+     <title>gamma_he_ii_4686.pro (API Documentation for proEQUIB)</title>
+     <description>gamma_he_ii_4686.pro (API Documentation for proEQUIB)</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>3</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://equib.github.io/proEQUIB/doc/redlaw.html</link>
+     <title>redlaw.pro (API Documentation for proEQUIB)</title>
+     <description>redlaw.pro (API Documentation for proEQUIB)</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>3</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://equib.github.io/proEQUIB/doc/redlaw_ccm.html</link>
+     <title>redlaw_ccm.pro (API Documentation for proEQUIB)</title>
+     <description>redlaw_ccm.pro (API Documentation for proEQUIB)</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>3</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://equib.github.io/proEQUIB/doc/redlaw_fm.html</link>
+     <title>redlaw_fm.pro (API Documentation for proEQUIB)</title>
+     <description>redlaw_fm.pro (API Documentation for proEQUIB)</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>3</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://equib.github.io/proEQUIB/doc/redlaw_gal.html</link>
+     <title>redlaw_gal.pro (API Documentation for proEQUIB)</title>
+     <description>redlaw_gal.pro (API Documentation for proEQUIB)</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>3</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://equib.github.io/proEQUIB/doc/redlaw_gal2.html</link>
+     <title>redlaw_gal2.pro (API Documentation for proEQUIB)</title>
+     <description>redlaw_gal2.pro (API Documentation for proEQUIB)</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>3</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://equib.github.io/proEQUIB/doc/redlaw_jbk.html</link>
+     <title>redlaw_jbk.pro (API Documentation for proEQUIB)</title>
+     <description>redlaw_jbk.pro (API Documentation for proEQUIB)</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>3</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://equib.github.io/proEQUIB/doc/redlaw_lmc.html</link>
+     <title>redlaw_lmc.pro (API Documentation for proEQUIB)</title>
+     <description>redlaw_lmc.pro (API Documentation for proEQUIB)</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>3</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://equib.github.io/proEQUIB/doc/redlaw_smc.html</link>
+     <title>redlaw_smc.pro (API Documentation for proEQUIB)</title>
+     <description>redlaw_smc.pro (API Documentation for proEQUIB)</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>3</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://equib.github.io/proEQUIB/doc/dir-overview.html</link>
+     <title>Directory: ./ (API Documentation for proEQUIB)</title>
+     <description>Directory: ./ (API Documentation for proEQUIB)</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>4</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+</channel>
+</rss>
+  
