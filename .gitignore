@@ -1,5 +1,6 @@
 *.gif
 *.png
+*.jpg
 *.ico
 *.fits
 *.gz
@@ -12,4 +13,8 @@
 *.dot
 *.sav
 *.log
+*.pdf
+*.eps
+*.ps
+*.tar.gz
 

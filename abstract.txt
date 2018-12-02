@@ -1,0 +1,4 @@
+proEQUIB: IDL Library for Plasma Diagnostics and Abundance Analysis
+
+proEQUIB is an IDL library for determining physical conditions and chemical abundances from collisionally excited lines and optical recombination lines, and estimating interstellar extinctions from Balmer lines in ionized nebulae.
+
