@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
+
+<url>
+  <loc>https://equib.github.io/proEQUIB/</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>https://equib.github.io/proEQUIB/doc/</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://equib.github.io/proEQUIB/doc/overview.html</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://equib.github.io/proEQUIB/doc/all-files.html</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://equib.github.io/proEQUIB/doc/categories.html</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://equib.github.io/proEQUIB/doc/search.html</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://equib.github.io/proEQUIB/doc/idldoc-index.html</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://equib.github.io/proEQUIB/doc/idldoc-warnings.html</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://equib.github.io/proEQUIB/doc/idldoc-help.html</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://equib.github.io/proEQUIB/doc/index.html</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://equib.github.io/proEQUIB/doc/calc_abund_c_ii_rl.html</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://equib.github.io/proEQUIB/doc/calc_abund_c_iii_rl.html</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://equib.github.io/proEQUIB/doc/calc_abund_he_i_rl.html</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://equib.github.io/proEQUIB/doc/calc_abund_he_ii_rl.html</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://equib.github.io/proEQUIB/doc/calc_abund_n_ii_rl.html</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://equib.github.io/proEQUIB/doc/calc_abund_n_iii_rl.html</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://equib.github.io/proEQUIB/doc/calc_abund_ne_ii_rl.html</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://equib.github.io/proEQUIB/doc/calc_abund_o_ii_rl.html</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://equib.github.io/proEQUIB/doc/calc_abundance.html</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://equib.github.io/proEQUIB/doc/calc_density.html</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://equib.github.io/proEQUIB/doc/calc_emissivity.html</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://equib.github.io/proEQUIB/doc/calc_populations.html</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://equib.github.io/proEQUIB/doc/calc_temperature.html</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://equib.github.io/proEQUIB/doc/deredden_flux.html</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://equib.github.io/proEQUIB/doc/deredden_relflux.html</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://equib.github.io/proEQUIB/doc/gamma_hb_4861.html</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://equib.github.io/proEQUIB/doc/gamma_he_ii_4686.html</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://equib.github.io/proEQUIB/doc/redlaw.html</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://equib.github.io/proEQUIB/doc/redlaw_ccm.html</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://equib.github.io/proEQUIB/doc/redlaw_fm.html</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://equib.github.io/proEQUIB/doc/redlaw_gal.html</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://equib.github.io/proEQUIB/doc/redlaw_gal2.html</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://equib.github.io/proEQUIB/doc/redlaw_jbk.html</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://equib.github.io/proEQUIB/doc/redlaw_lmc.html</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://equib.github.io/proEQUIB/doc/redlaw_smc.html</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://equib.github.io/proEQUIB/doc/dir-overview.html</loc>
+  <lastmod>2018-12-01T07:54:57+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+
+
+</urlset>
