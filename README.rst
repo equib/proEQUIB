@@ -18,10 +18,19 @@ proEQUIB
     :target: https://github.com/equib/proEQUIB/blob/master/LICENSE
     :alt: GitHub license
 
+.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.1890337.svg
+    :target: https://doi.org/10.5281/zenodo.1890337
+    :alt: Zenodo
+
+.. image:: http://joss.theoj.org/papers/10.21105/joss.00899/status.svg
+    :target: https://doi.org/10.21105/joss.00899
+    :alt: JOSS
+
+
 Description
 ============
 
-The **proEQUIB** library is a collection of `Interactive Data Language <http://www.harrisgeospatial.com/ProductsandSolutions/GeospatialProducts/IDL.aspx>`_ (IDL)/`GNU Data Language <http://gnudatalanguage.sourceforge.net/>`_ (GDL) programs developed to perform plasma diagnostics and abundance analysis using emission line fluxes measured in ionzed nebulae. It uses the `AtomNeb IDL library <https://github.com/atomneb/AtomNeb-idl>`_ to read collision strengths, transition probabilities, and recombination coefficients for collisionally excited lines (CEL) and recombination coefficients for recombination lines (RL). This IDL package can be used to determine interstellar extinctions, electron temperatures, electron densities, and ionic abundances from the measured fluxes of emission lines. It mainly contains the follwing API functions written purely in IDL/GDL: 
+The **proEQUIB** library is a collection of `Interactive Data Language <http://www.harrisgeospatial.com/ProductsandSolutions/GeospatialProducts/IDL.aspx>`_ (IDL)/`GNU Data Language <http://gnudatalanguage.sourceforge.net/>`_ (GDL) programs developed to perform plasma diagnostics and abundance analysis using emission line fluxes measured in ionzed nebulae. It uses the `AtomNeb IDL library <https://github.com/atomneb/AtomNeb-idl>`_ to read collision strengths and transition probabilities for collisionally excited lines (CEL), and recombination coefficients for recombination lines (RL). This IDL package can be used to determine interstellar extinctions, electron temperatures, electron densities, and ionic abundances from the measured fluxes of emission lines. It mainly contains the follwing API functions written purely in IDL/GDL: 
 
 * **API functions for collisionally excited lines (CEL)** have been developed based on the algorithm of the FORTRAN program `EQUIB <http://adsabs.harvard.edu/abs/2016ascl.soft03005H>`_ written in FORTRAN by `Howarth & Adams (1981) <http://adsabs.harvard.edu/abs/1981ucl..rept.....H>`_. The program EQUIB calculates atomic level populations and line emissivities in statistical equilibrium in multi-level atoms for different physical conditions of the stratification layers where the chemical elements are ionized. Using the IDL/GDL implementation of the program `EQUIB <http://adsabs.harvard.edu/abs/2016ascl.soft03005H>`_, electron temperatures, electron densities, and ionic abundances are determined from the measured fluxes of collisionally excited lines.
 
@@ -101,5 +110,6 @@ For more information on how to use the API functions from the proEQUIB libray, p
 
 References
 ==========
-A Danehkar, `PASA, 35, e005, 2018 <http://adsabs.harvard.edu/abs/2018PASA...35....5D>`_
+* Danehkar, A. (2018). proEQUIB: IDL Library for Plasma Diagnostics and Abundance Analysis. *J. Open Source Softw.*, **3**, 899. doi:`10.21105/joss.00899 <https://doi.org/10.21105/joss.00899>`_
 
+* Danehkar, A. (2018). Bi-Abundance Ionisation Structure of the Wolf-Rayet Planetary Nebula PB 8, *PASA*, **35**, e005.  doi:`10.1017/pasa.2018.1 <https://doi.org/10.1017/pasa.2018.1>`_ ads:`2018PASA...35....5D <http://adsabs.harvard.edu/abs/2018PASA...35....5D>`_.
