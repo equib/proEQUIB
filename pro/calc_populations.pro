@@ -1,10 +1,9 @@
 ; docformat = 'rst'
 
 function calc_populations, temperature=temperature, density=density, $
-                           temp_list=temp_list, $ 
-                           Omij=Omij, Aij=Aij, Elj=Elj, $
-                           Glj=Glj, level_num=level_num, $
-                           temp_num=temp_num, irats=irats
+                           elj_data=elj_data, omij_data=omij_data, $
+                           aij_data=aij_data, $
+                           matrix_omij=Omij, level_num=level_num, irats=irats
 ;+
 ;     This function solves atomic level populations in statistical equilibrium 
 ;     for given electron temperature and density.
@@ -17,23 +16,43 @@ function calc_populations, temperature=temperature, density=density, $
 ;                     electron temperature
 ;     density     :   in, required, type=float
 ;                     electron density
-;     temp_list   :   in, required, type=array
-;                     temperature intervals (array)
-;     Omij        :   in, required, type=array/object
+;     elj_data    :   in, required, type=array/object
+;                            energy levels (Ej) data
+;     omij_data   :   in, required, type=array/object
+;                            collision strengths (omega_ij) data
+;     aij_data    :   in, required, type=array/object
+;                            transition probabilities (Aij) data
+;     matrix_omij :   in, type=array/object
 ;                     Collision Strengths (Omega_ij)
-;     Aij         :   in, required, type=array/object
-;                     Transition Probabilities (A_ij)
-;     Elj         :   in, required, type=array
-;                     Energy Levels (E_j)
-;     Glj         :   in, required, type=array
-;                     Ground Levels (G_j)
-;     level_num   :   in, required, type=int
+;     level_num   :   in, type=int
 ;                     Number of levels
-;     temp_num    :   in, required, type=int
-;                     Number of temperature intervals
-;     irats       :     in, required, type=int
+;     irats       :   in, type=int
 ;                     Else Coll. rates = tabulated values * 10 ** irats
 ;
+; :Examples:
+;    For example::
+;
+;     IDL> base_dir = file_dirname(file_dirname((routine_info('$MAIN$', /source)).path))
+;     IDL> data_dir = ['atomic-data', 'chianti70']
+;     IDL> Atom_Elj_file = filepath('AtomElj.fits', root_dir=base_dir, subdir=data_dir )
+;     IDL> Atom_Omij_file = filepath('AtomOmij.fits', root_dir=base_dir, subdir=data_dir )
+;     IDL> Atom_Aij_file = filepath('AtomAij.fits', root_dir=base_dir, subdir=data_dir )
+;     IDL> atom='s'
+;     IDL> ion='ii'
+;     IDL> s_ii_elj=atomneb_read_elj(Atom_Elj_file, atom, ion, level_num=5) ; read Energy Levels (Ej)
+;     IDL> s_ii_omij=atomneb_read_omij(Atom_Omij_file, atom, ion) ; read Collision Strengths (Omegaij)
+;     IDL> s_ii_aij=atomneb_read_aij(Atom_Aij_file, atom, ion) ; read Transition Probabilities (Aij)\
+;     IDL> density = double(1000)
+;     IDL> temperature=double(10000.0);
+;     IDL> Nlj=calc_populations(temperature=temperature, density=density, $
+;     IDL>                      elj_data=s_ii_elj, omij_data=s_ii_omij, $
+;     IDL>                      aij_data=s_ii_aij)
+;     IDL> print, 'Population Level:', Nlj
+;        0.96992865    0.0070037131     0.023061848   2.6592895e-06   3.1276110e-06
+;
+; :Categories:
+;   Plasma Diagnostics, Abundance Analysis, Collisionally Excited Lines
+;   
 ; :Dirs:
 ;  ./
 ;      Subroutines
@@ -73,6 +92,9 @@ function calc_populations, temperature=temperature, density=density, $
 ;
 ;     12/06/2017, A. Danehkar, Cleaning the function, and remove unused varibales
 ;                        from calc_populations().
+;                        
+;     27/06/2019, A. Danehkar, simplify the calc_populations() routine 
+;                        for external usage.
 ;
 ; FORTRAN HISTORY:
 ;
@@ -117,29 +139,45 @@ function calc_populations, temperature=temperature, density=density, $
 ;     This function solves atomic level populations in statistical equilibrium 
 ;     for given electron temperature and density.
 ;
-; CALLING SEQUENCE:
+; CALLING SEQUENCE:       
 ;     Result = calc_populations(TEMPERATURE=temperature, DENSITY=density, $
-;                        TEMP_LIST=temp_list, $ 
-;                        OMIJ=Omij, AIJ=Aij, ELJ=Elj, GLJ=Glj, $
-;                        LEVEL_NUM=level_num, TEMP_NUM=temp_num, 
-;                        IRATS=irats)
+;                           elj_data=elj_data, omij_data=omij_data, $
+;                           aij_data=aij_data, $
+;                           matrix_omij=Omij, level_num=level_num, irats=irats)
 ;
 ; KEYWORD PARAMETERS:
 ;     TEMPERATURE : in, required, type=float, electron temperature
 ;     DENSITY     : in, required, type=float, electron density
-;     TEMP_LIST   : in, required, type=array, temperature intervals (array)
-;     OMIJ        : in, required, type=array/object, Collision Strengths (Omega_ij)
-;     AIJ         : in, required, type=array/object, Transition Probabilities (A_ij)
-;     ELJ         : in, required, type=array, Energy Levels (E_j)
-;     GLJ         : in, required, type=array, Ground Levels (G_j)
-;     LEVEL_NUM   : in, required, type=int, Number of levels
-;     TEMP_NUM    : in, required, type=int, Number of temperature intervals
-;     IRATS       : in, required, type=int, Else Coll. rates = tabulated values * 10 ** irats
+;     ELJ_DATA    : in, required, type=array/object, energy levels (Ej) data
+;     OMIJ_DATA   : in, required, type=array/object, collision strengths (omega_ij) data
+;     AIJ_DATA    : in, required, type=array/object, transition probabilities (Aij) data
+;     OMIJ        : in, type=array/object, Collision Strengths (Omega_ij))
+;     LEVEL_NUM   : in, type=int, Number of levels
+;     IRATS       : in, type=int, Else Coll. rates = tabulated values * 10 ** irats
 ;     
 ; OUTPUTS:  This function returns a array/object as the atomic level populations (N_j)
 ;
 ; PROCEDURE: This function is called by calc_emissivity, calc_temperature and calc_density.
-;
+; 
+; EXAMPLE:
+;     base_dir = file_dirname(file_dirname((routine_info('$MAIN$', /source)).path))
+;     data_dir = ['atomic-data', 'chianti70']
+;     Atom_Elj_file = filepath('AtomElj.fits', root_dir=base_dir, subdir=data_dir )
+;     Atom_Omij_file = filepath('AtomOmij.fits', root_dir=base_dir, subdir=data_dir )
+;     Atom_Aij_file = filepath('AtomAij.fits', root_dir=base_dir, subdir=data_dir )
+;     atom='s'
+;     ion='ii'
+;     s_ii_elj=atomneb_read_elj(Atom_Elj_file, atom, ion, level_num=5) ; read Energy Levels (Ej)
+;     s_ii_omij=atomneb_read_omij(Atom_Omij_file, atom, ion) ; read Collision Strengths (Omegaij)
+;     s_ii_aij=atomneb_read_aij(Atom_Aij_file, atom, ion) ; read Transition Probabilities (Aij)\
+;     density = double(1000)
+;     temperature=double(10000.0);
+;     Nlj=calc_populations(temperature=temperature, density=density, $
+;                          elj_data=s_ii_elj, omij_data=s_ii_omij, $
+;                          aij_data=s_ii_aij)
+;     print, 'Population Level:', Nlj
+;     > 0.96992865    0.0070037131     0.023061848   2.6592895e-06   3.1276110e-06
+;        
 ; MODIFICATION HISTORY:
 ;     15/09/2013, A. Danehkar, Translated from FORTRAN to IDL code.
 ;     20/10/2016, A. Danehkar, Replaced str2int with strnumber.
@@ -158,6 +196,8 @@ function calc_populations, temperature=temperature, density=density, $
 ;                      input elj_data, omij_data, aij_data.
 ;     12/06/2017, A. Danehkar, Cleaning the function, and remove unused varibales
 ;                        from calc_populations().
+;     27/06/2019, A. Danehkar, simplify the calc_populations() routine 
+;                        for external usage.
 ; 
 ; FORTRAN HISTORY:
 ;     03/05/1981, I.D.Howarth,  Version 1.
@@ -193,34 +233,52 @@ function calc_populations, temperature=temperature, density=density, $
     print,'Density is not set'
     return, 0
   endif
-  if keyword_set(temp_list) eq 0 then begin 
-    print,'temp_list is not set'
-    return, 0
-  endif
-  if keyword_set(Omij) eq 0 then begin 
-    print,'Omij is not set'
-    return, 0
-  endif
-  if keyword_set(Aij) eq 0 then begin 
-    print,'Aij is not set'
+  if keyword_set(elj_data) eq 0 then begin 
+    print,'elj_data is not set'
     return, 0
   endif 
-  if keyword_set(Elj) eq 0 then begin 
-    print,'Elj is not set'
+  if keyword_set(omij_data) eq 0 then begin 
+    print,'omij_data is not set'
     return, 0
-  endif  
-  if keyword_set(Glj) eq 0 then begin 
-    print,'Glj is not set'
+  endif 
+  if keyword_set(aij_data) eq 0 then begin 
+    print,'aij_data is not set'
     return, 0
-  endif  
+  endif
   if keyword_set(level_num) eq 0 then begin 
-    print,'level_num is not set'
-    return, 0
+    temp=size(elj_data,/DIMENSIONS)
+    level_num=temp[0]
   endif
-  if keyword_set(temp_num) eq 0 then begin 
-    print,'temp_num is not set'
-    return, 0
-  endif 
+  if keyword_set(matrix_omij) eq 0 then begin 
+    temp=size(omij_data[0].strength,/DIMENSIONS)
+    temp_num=temp[0] ; Number of temperature intervals
+    temp=size(omij_data,/DIMENSIONS)
+    omij_num=temp[0]
+    Omij=dblarr(temp_num,level_num,level_num)   
+    for k = 1, omij_num-1 do begin
+      I = omij_data[k].level1
+      J = omij_data[k].level2
+      if I le level_num and J le level_num then begin
+        Omij[0:temp_num-1,I-1,J-1] = omij_data[k].strength
+      endif
+    endfor
+  endif else begin
+    Omij=matrix_omij
+  endelse
+  if keyword_set(irats) eq 0 then begin
+    irats=0
+  endif
+    
+  temp_list = omij_data[0].strength
+  temp_list = alog10(temp_list) ; temperature intervals (array)
+  
+  temp=size(omij_data[0].strength,/DIMENSIONS)
+  temp_num=temp[0]
+  
+  Aij =aij_data.AIJ ; Transition Probabilities (A_ij)
+  Elj =elj_data.Ej ; Energy Levels (E_j)
+  Glj =long(elj_data.J_v*2.+1.) ; Ground Levels (G_j)
+  
   DD=double(0)
   I= long(0)
   J= long(0) 
@@ -237,7 +295,7 @@ function calc_populations, temperature=temperature, density=density, $
   QEFF=dblarr(level_num+1,level_num+1) 
   X=dblarr(level_num+1,level_num+1)  
   Y=dblarr(level_num+1)
-  Nlj=dblarr(level_num+1)
+  Nlj=dblarr(level_num)
   
   X[*,*]=double(0.0)
   CS[*,*]=double(0.0)
@@ -329,15 +387,15 @@ function calc_populations, temperature=temperature, density=density, $
   YY = lusol(XX, INDEX, Y[1:level_num1]) ; supported by GDL
   Y[1:level_num1]=YY[0:level_num1-1]
   for I = level_num, 2, -1 do begin
-    Nlj[I] = Y[I-1]
+    Nlj[I-1] = Y[I-1]
   endfor
   pop_sum = 1.D0
   for I = 2, level_num do begin
-    pop_sum = pop_sum + Nlj[I]
+    pop_sum = pop_sum + Nlj[I-1]
   endfor
   for I = 2, level_num do begin
-    Nlj[I] = Nlj[I] / pop_sum
+    Nlj[I-1] = Nlj[I-1] / pop_sum
   endfor
-  Nlj[1] = 1.D0 / pop_sum
+  Nlj[0] = 1.D0 / pop_sum
   return, Nlj
 end

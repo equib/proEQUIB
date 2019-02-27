@@ -19,6 +19,6 @@ end
 pro deredden_flux_ut__define
   compile_opt strictarr
 
-  define = { deredden_flux_ut, inherits MGutLibTestCase }
+  define = { deredden_flux_ut, inherits proEquibUTTestCase}
 end
 

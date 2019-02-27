@@ -18,6 +18,6 @@ end
 pro deredden_relflux_ut__define
   compile_opt strictarr
 
-  define = { deredden_relflux_ut, inherits MGutLibTestCase }
+  define = { deredden_relflux_ut, inherits proEquibUTTestCase}
 end
 

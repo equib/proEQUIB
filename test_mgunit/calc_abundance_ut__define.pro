@@ -40,5 +40,5 @@ end
 pro calc_abundance_ut__define
   compile_opt strictarr
   
-  define = { calc_abundance_ut, inherits MGutLibTestCase }
+  define = { calc_abundance_ut, inherits proEquibUTTestCase}
 end

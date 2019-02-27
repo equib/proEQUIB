@@ -18,6 +18,6 @@ end
 pro redlaw_fm_ut__define
   compile_opt strictarr
 
-  define = { redlaw_fm_ut, inherits MGutLibTestCase }
+  define = { redlaw_fm_ut, inherits proEquibUTTestCase}
 end
 

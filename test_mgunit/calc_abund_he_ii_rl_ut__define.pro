@@ -35,6 +35,6 @@ end
 pro calc_abund_he_ii_rl_ut__define
   compile_opt strictarr
 
-  define = { calc_abund_he_ii_rl_ut, inherits MGutLibTestCase }
+  define = { calc_abund_he_ii_rl_ut, inherits proEquibUTTestCase}
 end
 

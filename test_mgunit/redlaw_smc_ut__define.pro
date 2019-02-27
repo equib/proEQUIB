@@ -17,6 +17,6 @@ end
 pro redlaw_smc_ut__define
   compile_opt strictarr
 
-  define = { redlaw_smc_ut, inherits MGutLibTestCase }
+  define = { redlaw_smc_ut, inherits proEquibUTTestCase}
 end
 

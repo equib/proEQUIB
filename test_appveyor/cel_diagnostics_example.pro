@@ -44,6 +44,13 @@ density=calc_density(line_flux_ratio=line_flux_ratio, temperature=temperature, $
                      aij_data=s_ii_aij)
 print, "Electron Density:", density
 
+density = double(1000)
+temperature=double(10000.0);
+Nlj=calc_populations(temperature=temperature, density=density, $
+                     elj_data=s_ii_elj, omij_data=s_ii_omij, $
+                     aij_data=s_ii_aij)
+print, 'Population Level:', Nlj
+
 ; --- End $MAIN$ program. ---------------
 exit
 

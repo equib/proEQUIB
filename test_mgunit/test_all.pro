@@ -7,6 +7,7 @@ mgunit, ['redlaw_ut', 'redlaw_gal_ut', 'redlaw_gal2_ut', 'redlaw_ccm_ut', $
         'deredden_relflux_ut', 'deredden_flux_ut', $
         'calc_abundance_ut', 'calc_emissivity_ut', $
         'calc_temperature_ut', 'calc_density_ut', $
+        'calc_populations_ut', $
         'calc_abund_he_i_rl_ut', 'calc_abund_he_ii_rl_ut', $
         'calc_abund_c_ii_rl_ut', 'calc_abund_c_iii_rl_ut', $
         'calc_abund_n_ii_rl_ut', 'calc_abund_n_iii_rl_ut', $
@@ -18,6 +19,7 @@ mgunit, ['redlaw_ut', 'redlaw_gal_ut', 'redlaw_gal2_ut', 'redlaw_ccm_ut', $
         'deredden_relflux_ut', 'deredden_flux_ut', $
         'calc_abundance_ut', 'calc_emissivity_ut', $
         'calc_temperature_ut', 'calc_density_ut', $
+        'calc_populations_ut', $
         'calc_abund_he_i_rl_ut', 'calc_abund_he_ii_rl_ut', $
         'calc_abund_c_ii_rl_ut', 'calc_abund_c_iii_rl_ut', $
         'calc_abund_n_ii_rl_ut', 'calc_abund_n_iii_rl_ut', $

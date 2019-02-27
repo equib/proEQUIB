@@ -96,6 +96,9 @@ function calc_temperature, line_flux_ratio=line_flux_ratio, density=density, $
 ;     
 ;     12/06/2017, A. Danehkar, Cleaning the function, and remove unused varibales
 ;                        from calc_temperature().
+;                        
+;     27/06/2019, A. Danehkar, fix a bug in the atomic level assumption, and 
+;                        use the simplified calc_populations() routine.
 ;
 ; FORTRAN HISTORY:
 ;
@@ -203,6 +206,8 @@ function calc_temperature, line_flux_ratio=line_flux_ratio, density=density, $
 ;                      input elj_data, omij_data, aij_data.
 ;     12/06/2017, A. Danehkar, Cleaning the function, and remove unused varibales
 ;                        from calc_temperature().
+;     27/06/2019, A. Danehkar, fix a bug in the atomic level assumption, and 
+;                        use the simplified calc_populations() routine.
 ; 
 ; FORTRAN HISTORY:
 ;     03/05/1981, I.D.Howarth,  Version 1.
@@ -283,15 +288,9 @@ function calc_temperature, line_flux_ratio=line_flux_ratio, density=density, $
   temp=size(omij_data,/DIMENSIONS)
   omij_num=temp[0]
   
-  Glj=lonarr(level_num)
-
-  Nlj=dblarr(level_num)
   WAVA=dblarr(level_num+1)
   WAVB=dblarr(level_num+1)
-  Omij=dblarr(temp_num,level_num,level_num)   
-  Aij=dblarr(level_num,level_num)   
-  Elj=dblarr(level_num)   
-  temp_list=dblarr(temp_num)
+  Omij=dblarr(temp_num,level_num,level_num)
   check_value=dblarr(3+1)
      
   LABEL1=STRARR(level_num+1)
@@ -330,8 +329,6 @@ function calc_temperature, line_flux_ratio=line_flux_ratio, density=density, $
     ;if lower_levels_i ge 2*lower_levels_num then break;
   endfor
   IRATS=0
-  temp_list = omij_data[0].strength
-  temp_list = alog10(temp_list)
   for k = 1, omij_num-1 do begin
     I = omij_data[k].level1
     J = omij_data[k].level2
@@ -339,10 +336,10 @@ function calc_temperature, line_flux_ratio=line_flux_ratio, density=density, $
       Omij[0:temp_num-1,I-1,J-1] = omij_data[k].strength
     endif
   endfor
-  level_max=max([max(ITRANA),max(ITRANB)])
+  ;level_max=max([max(ITRANA),max(ITRANB)]) ! mistake
+  level_max=level_num
   Aij =aij_data.AIJ
   Elj =elj_data.Ej
-  Glj =long(elj_data.J_v*2.+1.)
   ; set temperature iterations
   ; start of iterations
   ; ****************************
@@ -386,10 +383,9 @@ function calc_temperature, line_flux_ratio=line_flux_ratio, density=density, $
           retunr, 0
         endif
         Nlj=calc_populations(temperature=temperature, density=density, $
-                           temp_list=temp_list, $ 
-                           Omij=Omij, Aij=Aij, Elj=Elj, $
-                           Glj=Glj, level_num=level_max, $
-                           temp_num=temp_num, irats=irats)
+                             elj_data=elj_data, omij_data=omij_data, $
+                             aij_data=aij_data, $
+                             matrix_omij=Omij, level_num=level_max, irats=irats)
         
         ; Search ITRANA, ITRANB for transitions & sum up   
         emis_sum_a=double(0.0)
@@ -401,7 +397,7 @@ function calc_temperature, line_flux_ratio=line_flux_ratio, density=density, $
           if (Aij[J-1,I-1] ne 0.D0) then begin
             EJI = Elj[J-1] - Elj[I-1]
             WAV = 1.D8 / EJI
-            emissivity_line=Nlj[J]*Aij[J-1,I-1]*h_Planck*c_Speed*1.e8/WAV
+            emissivity_line=Nlj[J-1]*Aij[J-1,I-1]*h_Planck*c_Speed*1.e8/WAV
             emis_sum_a=emis_sum_a+emissivity_line
           endif
         endfor
@@ -412,7 +408,7 @@ function calc_temperature, line_flux_ratio=line_flux_ratio, density=density, $
           if (Aij[J-1,I-1] ne 0.D0) then begin
             EJI = Elj[J-1] - Elj[I-1]
             WAV = 1.D8 / EJI
-            emissivity_line=Nlj[J]*Aij[J-1,I-1]*h_Planck*c_Speed*1.e8/WAV
+            emissivity_line=Nlj[J-1]*Aij[J-1,I-1]*h_Planck*c_Speed*1.e8/WAV
             emis_sum_b=emis_sum_b+emissivity_line
           endif
         endfor

@@ -17,6 +17,6 @@ end
 pro redlaw_gal2_ut__define
   compile_opt strictarr
 
-  define = { redlaw_gal2_ut, inherits MGutLibTestCase }
+  define = { redlaw_gal2_ut, inherits proEquibUTTestCase}
 end
 

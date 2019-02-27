@@ -96,6 +96,8 @@ function calc_emissivity, temperature=temperature, density=density, $
 ;
 ;     12/06/2017, A. Danehkar, Cleaning the function, and remove unused varibales
 ;                        from calc_emissivity().
+;                        
+;     27/06/2019, A. Danehkar, use the simplified calc_populations() routine.
 ;
 ; FORTRAN HISTORY:
 ;
@@ -203,6 +205,7 @@ function calc_emissivity, temperature=temperature, density=density, $
 ;                      input elj_data, omij_data, aij_data.
 ;     12/06/2017, A. Danehkar, Cleaning the function, and remove unused varibales
 ;                        from calc_emissivity().
+;     27/06/2019, A. Danehkar, use the simplified calc_populations() routine.
 ;
 ; FORTRAN HISTORY:
 ;     03/05/1981, I.D.Howarth,  Version 1.
@@ -230,7 +233,7 @@ function calc_emissivity, temperature=temperature, density=density, $
 ;     2006, B.Ercolano,    Converted to F90.
 ;- 
   common share1, Atomic_Data_Path
-
+  
   h_Planck = 6.62606957e-27 ; erg s
   c_Speed = 2.99792458e10 ; cm/s                    
   if keyword_set(temperature) eq 0 then begin 
@@ -262,8 +265,6 @@ function calc_emissivity, temperature=temperature, density=density, $
       return, 0
   endif
   
-  level_num= long(0) 
-  temp_num= long(0) 
   IRATS= long(0) 
   ITEMP= long(0) 
   IKT= long(0) 
@@ -271,24 +272,6 @@ function calc_emissivity, temperature=temperature, density=density, $
   EJI=double(0)
   WAV=double(0)
   
-  temp=size(elj_data,/DIMENSIONS)
-  level_num=temp[0]
-  temp=size(omij_data[0].strength,/DIMENSIONS)
-  temp_num=temp[0]
-  temp=size(omij_data,/DIMENSIONS)
-  omij_num=temp[0]
-  
-  Glj=lonarr(level_num)
-  
-  Nlj=dblarr(level_num+1)
-  Omij=dblarr(temp_num,level_num,level_num)   
-  Aij=dblarr(level_num+1,level_num+1)   
-  Elj=dblarr(level_num)   
-  Temp_List=dblarr(temp_num)
-  
-  LABEL1=STRARR(level_num+1) 
-  
-  Glj[*]=0
   levels_str=strsplit(atomic_levels, ',', ESCAPE='/', /EXTRACT)
   temp=size(levels_str, /N_ELEMENTS)
   levels_num=long(temp[0]/2)
@@ -304,27 +287,18 @@ function calc_emissivity, temperature=temperature, density=density, $
     ;if levels_i ge 2*levels_num then break
   endfor
   irats=0
-  Temp_List = omij_data[0].strength
-  Temp_List = alog10(Temp_List)
-  for k = 1, omij_num-1 do begin
-    I = omij_data[k].level1
-    J = omij_data[k].level2
-    if I le level_num and J le level_num then begin
-      Omij[0:temp_num-1,I-1,J-1] = omij_data[k].strength
-    endif
-  endfor
   Aij =aij_data.AIJ
   Elj =elj_data.Ej
-  Glj =long(elj_data.J_v*2.+1.)
   
   if (temperature le 0.D0) or (density le 0.D0) then begin
       print,'temperature = ', temperature, ', density = ', density
       return, 0
   endif
-
-  Nlj=calc_populations(temperature=temperature, density=density, temp_list=temp_list, $
-                       Omij=Omij, Aij=Aij, Elj=Elj, Glj=Glj, $
-                       level_num=level_num, temp_num=temp_num, irats=irats)
+  
+  Nlj=calc_populations(temperature=temperature, density=density, $
+                       elj_data=elj_data, omij_data=omij_data, $
+                       aij_data=aij_data, $
+                       irats=irats)
   
   emissivity_all=double(0.0)
   for IKT=1, levels_num do begin 
@@ -334,7 +308,7 @@ function calc_emissivity, temperature=temperature, density=density, $
     if (Aij[J-1,I-1] ne 0.D0) then begin
       EJI = Elj[J-1] - Elj[I-1]
       WAV = 1.D8 / EJI
-      emissivity_line=Nlj[J]*Aij[J-1,I-1]*h_Planck*c_Speed*1.e8/(WAV*density)
+      emissivity_line=Nlj[J-1]*Aij[J-1,I-1]*h_Planck*c_Speed*1.e8/(WAV*density)
       emissivity_all=emissivity_all+emissivity_line
     endif
   endfor

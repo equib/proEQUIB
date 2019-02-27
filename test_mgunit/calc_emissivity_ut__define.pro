@@ -32,7 +32,7 @@ end
 pro calc_emissivity_ut__define
   compile_opt strictarr
 
-  define = { calc_emissivity_ut, inherits MGutLibTestCase }
+  define = { calc_emissivity_ut, inherits proEquibUTTestCase}
 end
 
 

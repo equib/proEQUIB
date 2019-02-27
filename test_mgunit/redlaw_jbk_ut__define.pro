@@ -17,6 +17,6 @@ end
 pro redlaw_jbk_ut__define
   compile_opt strictarr
 
-  define = { redlaw_jbk_ut, inherits MGutLibTestCase }
+  define = { redlaw_jbk_ut, inherits proEquibUTTestCase}
 end
 

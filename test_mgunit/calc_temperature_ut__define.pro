@@ -31,6 +31,6 @@ end
 pro calc_temperature_ut__define
   compile_opt strictarr
 
-  define = { calc_temperature_ut, inherits MGutLibTestCase }
+  define = { calc_temperature_ut, inherits proEquibUTTestCase}
 end
 
