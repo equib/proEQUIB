@@ -51,7 +51,7 @@ print, 'N(O^2+)/N(H+):', Abb5007
 Nlj=calc_populations(temperature=temperature, density=density, $
                      elj_data=o_iii_elj, omij_data=o_iii_omij, $
                      aij_data=o_iii_aij)
-print, 'Population Level:', Nlj
+print, 'Atomic Level Populations:', Nlj
 
 ; --- End $MAIN$ program. ---------------
 exit

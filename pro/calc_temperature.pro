@@ -385,7 +385,7 @@ function calc_temperature, line_flux_ratio=line_flux_ratio, density=density, $
         Nlj=calc_populations(temperature=temperature, density=density, $
                              elj_data=elj_data, omij_data=omij_data, $
                              aij_data=aij_data, $
-                             matrix_omij=Omij, level_num=level_max, irats=irats)
+                             coeff_omij=Omij, level_num=level_max, irats=irats)
         
         ; Search ITRANA, ITRANB for transitions & sum up   
         emis_sum_a=double(0.0)

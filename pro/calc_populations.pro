@@ -3,7 +3,7 @@
 function calc_populations, temperature=temperature, density=density, $
                            elj_data=elj_data, omij_data=omij_data, $
                            aij_data=aij_data, $
-                           matrix_omij=Omij, level_num=level_num, irats=irats
+                           coeff_omij=coeff_omij, level_num=level_num, irats=irats
 ;+
 ;     This function solves atomic level populations in statistical equilibrium 
 ;     for given electron temperature and density.
@@ -22,7 +22,7 @@ function calc_populations, temperature=temperature, density=density, $
 ;                            collision strengths (omega_ij) data
 ;     aij_data    :   in, required, type=array/object
 ;                            transition probabilities (Aij) data
-;     matrix_omij :   in, type=array/object
+;     coeff_omij  :   in, type=array/object
 ;                     Collision Strengths (Omega_ij)
 ;     level_num   :   in, type=int
 ;                     Number of levels
@@ -47,8 +47,8 @@ function calc_populations, temperature=temperature, density=density, $
 ;     IDL> Nlj=calc_populations(temperature=temperature, density=density, $
 ;     IDL>                      elj_data=s_ii_elj, omij_data=s_ii_omij, $
 ;     IDL>                      aij_data=s_ii_aij)
-;     IDL> print, 'Population Level:', Nlj
-;        0.96992865    0.0070037131     0.023061848   2.6592895e-06   3.1276110e-06
+;     IDL> print, 'Atomic Level Populations:', Nlj
+;        Atomic Level Populations:    0.96992865    0.0070037131     0.023061848   2.6592895e-06   3.1276110e-06
 ;
 ; :Categories:
 ;   Plasma Diagnostics, Abundance Analysis, Collisionally Excited Lines
@@ -141,9 +141,9 @@ function calc_populations, temperature=temperature, density=density, $
 ;
 ; CALLING SEQUENCE:       
 ;     Result = calc_populations(TEMPERATURE=temperature, DENSITY=density, $
-;                           elj_data=elj_data, omij_data=omij_data, $
-;                           aij_data=aij_data, $
-;                           matrix_omij=Omij, level_num=level_num, irats=irats)
+;                           ELJ_DATA=elj_data, OMIJ_DATA=omij_data, $
+;                           AIJ_DATA=aij_data, $
+;                           COEFF_OMIJ=coeff_omij, LEVEL_NUM=level_num, IRATS=irats)
 ;
 ; KEYWORD PARAMETERS:
 ;     TEMPERATURE : in, required, type=float, electron temperature
@@ -151,7 +151,7 @@ function calc_populations, temperature=temperature, density=density, $
 ;     ELJ_DATA    : in, required, type=array/object, energy levels (Ej) data
 ;     OMIJ_DATA   : in, required, type=array/object, collision strengths (omega_ij) data
 ;     AIJ_DATA    : in, required, type=array/object, transition probabilities (Aij) data
-;     OMIJ        : in, type=array/object, Collision Strengths (Omega_ij))
+;     COEFF_OMIJ  : in, type=array/object, Collision Strengths (Omega_ij))
 ;     LEVEL_NUM   : in, type=int, Number of levels
 ;     IRATS       : in, type=int, Else Coll. rates = tabulated values * 10 ** irats
 ;     
@@ -175,8 +175,8 @@ function calc_populations, temperature=temperature, density=density, $
 ;     Nlj=calc_populations(temperature=temperature, density=density, $
 ;                          elj_data=s_ii_elj, omij_data=s_ii_omij, $
 ;                          aij_data=s_ii_aij)
-;     print, 'Population Level:', Nlj
-;     > 0.96992865    0.0070037131     0.023061848   2.6592895e-06   3.1276110e-06
+;      print, 'Atomic Level Populations:', Nlj
+;     > Atomic Level Populations:   0.96992865    0.0070037131     0.023061848   2.6592895e-06   3.1276110e-06
 ;        
 ; MODIFICATION HISTORY:
 ;     15/09/2013, A. Danehkar, Translated from FORTRAN to IDL code.
@@ -249,153 +249,106 @@ function calc_populations, temperature=temperature, density=density, $
     temp=size(elj_data,/DIMENSIONS)
     level_num=temp[0]
   endif
-  if keyword_set(matrix_omij) eq 0 then begin 
-    temp=size(omij_data[0].strength,/DIMENSIONS)
-    temp_num=temp[0] ; Number of temperature intervals
+  temp=size(omij_data[0].strength,/DIMENSIONS)
+  T_num=temp[0] ; Number of temperature intervals
+  if keyword_set(coeff_omij) eq 0 then begin
     temp=size(omij_data,/DIMENSIONS)
     omij_num=temp[0]
-    Omij=dblarr(temp_num,level_num,level_num)   
+    Omij=dblarr(T_num,level_num,level_num)   
     for k = 1, omij_num-1 do begin
       I = omij_data[k].level1
       J = omij_data[k].level2
       if I le level_num and J le level_num then begin
-        Omij[0:temp_num-1,I-1,J-1] = omij_data[k].strength
+        Omij[0:T_num-1,I-1,J-1] = omij_data[k].strength
       endif
     endfor
   endif else begin
-    Omij=matrix_omij
+    Omij=coeff_omij
   endelse
   if keyword_set(irats) eq 0 then begin
     irats=0
   endif
-    
-  temp_list = omij_data[0].strength
-  temp_list = alog10(temp_list) ; temperature intervals (array)
   
-  temp=size(omij_data[0].strength,/DIMENSIONS)
-  temp_num=temp[0]
+  T_lin_list = omij_data[0].strength
+  T_log_list = alog10(T_lin_list) ; temperature intervals (array)
   
   Aij =aij_data.AIJ ; Transition Probabilities (A_ij)
   Elj =elj_data.Ej ; Energy Levels (E_j)
   Glj =long(elj_data.J_v*2.+1.) ; Ground Levels (G_j)
   
-  DD=double(0)
-  I= long(0)
-  J= long(0) 
-  K= long(0)
-  IM1= long(0) 
-  JM1= long(0) 
-  DELTEK=double(0)
-  EXPE=double(0)
-  pop_sum=double(0)
-  VALUE=double(0)
-  
-  CS=dblarr(level_num+1,level_num+1)
-  QQ=dblarr(temp_num+1)   
-  QEFF=dblarr(level_num+1,level_num+1) 
-  X=dblarr(level_num+1,level_num+1)  
-  Y=dblarr(level_num+1)
+  Q_vector=dblarr(T_num)   
+  Q_eff=dblarr(level_num,level_num) 
+  X=dblarr(level_num,level_num)  
+  Y=dblarr(level_num)
   Nlj=dblarr(level_num)
   
   X[*,*]=double(0.0)
-  CS[*,*]=double(0.0)
-  QEFF[*,*]=double(0.0)
+  Q_eff[*,*]=double(0.0)
   Y[*]=double(0.0)
-    
-  level_num1 = level_num - 1
+  Nlj[*]=double(0.0)
   
-  TLOGT = alog10(temperature)
-  TEMP2= sqrt(temperature)
+  T_log = alog10(temperature)
   
-  ;IOPT=0
-  if (temp_num eq 1) then begin
+  if (T_num eq 1) then begin
     print, 'Coll. strengths available for 1 Te only - assuming const'
   endif else begin
-    if (temp_num eq 2) then begin
+    if (T_num eq 2) then begin
       print, 'Coll. strengths available for 2 Te only - linear interp'
     endif
   endelse
   
   for I = 2, level_num do begin
     for J = I, level_num do begin
-      ;Negative!
-      DELTEK = (Elj[I-2]-Elj[J-1])*1.4388463D0
-      EXPE = exp(DELTEK/temperature)
-      for IT = 1, temp_num do begin
-        if (irats eq 0.D+00) then begin
-          QQ[IT] = Omij[IT-1,I-2,J-1]
-        endif else begin
-          ;Take out the exp. depend.
-          QQ[IT] = Omij[IT-1,I-2,J-1] / EXPE
-          ; before interpolation
-        endelse
-      endfor
-      if (temp_num eq 1) then begin
-        DD = QQ[1]
+      d_E = (Elj[I-2]-Elj[J-1])*1.4388463D0 ;It is negative!
+      exp_dE_T = exp(d_E/temperature)
+      if (irats eq 0.D+00) then begin
+        Q_vector[*] = Omij[*,I-2,J-1]
       endif else begin
-        if (temp_num eq 2) then begin
-          DD = QQ[1] +  (QQ[2] - QQ[1])/(temp_list[2-1] - temp_list[1-1]) * (TLOGT - temp_list[1-1])
+        Q_vector[*] = Omij[*,I-2,J-1] / exp_dE_T ;Take out the exp. before interpolation
+      endelse
+      if (T_num eq 1) then begin
+        Q_interp = Q_vector[0]
+      endif else begin
+        if (T_num eq 2) then begin
+          Q_interp = Q_vector[0] +  (Q_vector[1] - Q_vector[0])/(T_log_list[1] - T_log_list[0]) * (T_log - T_log_list[0])
         endif else begin
-          ;DD=interpol(QQ[1:temp_num], T[1:temp_num], TLOGT,/SPLINE)
-          deriv1 = spl_init(temp_list[0:temp_num-1], QQ[1:temp_num])
-          DD=spl_interp(temp_list[0:temp_num-1], QQ[1:temp_num], deriv1, TLOGT)
+          ;Q_interp=interpol(Q_vector[1:T_num], T[1:T_num], T_log,/SPLINE)
+          Q_init = spl_init(T_log_list[0:T_num-1], Q_vector[0:T_num-1])
+          Q_interp=spl_interp(T_log_list[0:T_num-1], Q_vector[0:T_num-1], Q_init, T_log)
         endelse
       endelse
       if (irats eq 0.D+00) then begin
-        CS[I-1,J] = DD
+        Q_eff[I-2,J-1] = 8.63D-06*Q_interp * exp_dE_T / (double(Glj[I-2])*sqrt(temperature))
+        Q_eff[J-1,I-2] = 8.63D-06*Q_interp / (double(Glj[J-1])*sqrt(temperature))
       endif else begin
-        CS[I-1,J] = DD * EXPE
-      endelse
-      if (irats eq 0.D+00) then begin
-        QEFF[I-1,J] = 8.63D-06*CS[I-1,J] * EXPE / (Glj[I-2]*TEMP2)
-        QEFF[J,I-1] = 8.63D-06 * CS[I-1,J] / (Glj[J-1]*TEMP2)
-      endif else begin
-        QEFF[I-1,J] = CS[I-1,J] * 10.^irats
-        ; Be careful
-        QEFF[J,I-1] = Glj[I-2] * QEFF[I-1,J] / (EXPE * Glj[J-1])
-        ; G integer!
+        Q_eff[I-2,J-1] = Q_interp * exp_dE_T * 10.^irats
+        Q_eff[J-1,I-2] = double(Glj[I-2]) * Q_eff[I-2,J-1] / (exp_dE_T * double(Glj[J-1])) ; Be careful G integer!
       endelse
     endfor
   endfor
   for I = 2, level_num do begin
     for J = 1, level_num do begin
       if (J ne I) then begin
-        X[I,J] = X[I,J] + density * QEFF[J,I]
-        X[I,I] = X[I,I] - density * QEFF[I,J]
+        X[I-1,J-1] = X[I-1,J-1] + density * Q_eff[J-1,I-1]
+        X[I-1,I-1] = X[I-1,I-1] - density * Q_eff[I-1,J-1]
         if (J gt I) then begin
-          X[I,J] = X[I,J] + Aij[J-1,I-1]
+          X[I-1,J-1] = X[I-1,J-1] + Aij[J-1,I-1]
         endif else begin 
-          X[I,I] = X[I,I] - Aij[I-1,J-1]
+          X[I-1,I-1] = X[I-1,I-1] - Aij[I-1,J-1]
         endelse
       endif
     endfor
   endfor
-  for I = 2, level_num do begin
-    IM1 = I - 1
-    VALUE = 0.D0 - X[I,1]
-    Y[IM1] = VALUE
-    for J = 2, level_num do begin
-      JM1 = J - 1
-      VALUE = X[I,J]
-      X[IM1,JM1] = VALUE
-    endfor
-  endfor
+  Y[0:level_num-2] = 0.D0 - X[1:level_num-1,0]
+  X[0:level_num-2,0:level_num-2] = X[1:level_num-1,1:level_num-1]
   ; Solve matrices for populations
-  ; YY=la_linear_equation(transpose(X[1:level_num1,1:level_num1]), Y[1:level_num1]); not work in GDL
-  XX=transpose(X[1:level_num1,1:level_num1])
+  ; YY=la_linear_equation(transpose(X[0:level_num-2,0:level_num-2]), Y[0:level_num-2]); this function does not work in GDL!
+  XX=transpose(X[0:level_num - 2,0:level_num - 2])
   ludc, XX, INDEX  ; supported by GDL
-  YY = lusol(XX, INDEX, Y[1:level_num1]) ; supported by GDL
-  Y[1:level_num1]=YY[0:level_num1-1]
-  for I = level_num, 2, -1 do begin
-    Nlj[I-1] = Y[I-1]
-  endfor
-  pop_sum = 1.D0
-  for I = 2, level_num do begin
-    pop_sum = pop_sum + Nlj[I-1]
-  endfor
-  for I = 2, level_num do begin
-    Nlj[I-1] = Nlj[I-1] / pop_sum
-  endfor
-  Nlj[0] = 1.D0 / pop_sum
+  YY = lusol(XX, INDEX, Y[0:level_num - 2]) ; supported by GDL
+  Nlj[1:level_num-1] = YY[0:level_num-2]
+  Nlj[0] = 1.D0
+  pop_sum = double(total(Nlj[0:level_num-1]))
+  Nlj[0:level_num-1] = Nlj[0:level_num-1] / pop_sum
   return, Nlj
 end

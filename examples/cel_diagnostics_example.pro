@@ -47,7 +47,7 @@ temperature=double(10000.0);
 Nlj=calc_populations(temperature=temperature, density=density, $
                      elj_data=s_ii_elj, omij_data=s_ii_omij, $
                      aij_data=s_ii_aij)
-print, 'Population Level:', Nlj
+print, 'Atomic Level Populations:', Nlj
 
 ; --- End $MAIN$ program. ---------------
 exit
