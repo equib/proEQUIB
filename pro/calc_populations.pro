@@ -48,7 +48,7 @@ function calc_populations, temperature=temperature, density=density, $
 ;     IDL>                      elj_data=s_ii_elj, omij_data=s_ii_omij, $
 ;     IDL>                      aij_data=s_ii_aij)
 ;     IDL> print, 'Atomic Level Populations:', Nlj
-;        Atomic Level Populations:    0.96992865    0.0070037131     0.023061848   2.6592895e-06   3.1276110e-06
+;        Atomic Level Populations:    0.96992832    0.0070036315     0.023062261   2.6593671e-06   3.1277019e-06
 ;
 ; :Categories:
 ;   Plasma Diagnostics, Abundance Analysis, Collisionally Excited Lines
@@ -176,7 +176,7 @@ function calc_populations, temperature=temperature, density=density, $
 ;                          elj_data=s_ii_elj, omij_data=s_ii_omij, $
 ;                          aij_data=s_ii_aij)
 ;      print, 'Atomic Level Populations:', Nlj
-;     > Atomic Level Populations:   0.96992865    0.0070037131     0.023061848   2.6592895e-06   3.1276110e-06
+;     > Atomic Level Populations:   0.96992832    0.0070036315     0.023062261   2.6593671e-06   3.1277019e-06
 ;        
 ; MODIFICATION HISTORY:
 ;     15/09/2013, A. Danehkar, Translated from FORTRAN to IDL code.
@@ -225,6 +225,10 @@ function calc_populations, temperature=temperature, density=density, $
 ;     2006, B.Ercolano,    Converted to F90.
 ;- 
   
+  h_Planck = 4.13566766225e-15 ; eV.s ;6.62606957e-27 ; erg.s
+  c_Speed = 2.99792458e10 ; cm/s
+  k_B = 8.617330350e-5 ; eV/K ; 1.3806485279e-16 ; erg/K
+
   if keyword_set(temperature) eq 0 then begin 
     print,'Temperature is not set'
     return, 0
@@ -273,7 +277,7 @@ function calc_populations, temperature=temperature, density=density, $
   T_log_list = alog10(T_lin_list) ; temperature intervals (array)
   
   Aij =aij_data.AIJ ; Transition Probabilities (A_ij)
-  Elj =elj_data.Ej ; Energy Levels (E_j)
+  Elj =elj_data.Ej ; Energy Levels (E_j) in cm-1
   Glj =long(elj_data.J_v*2.+1.) ; Ground Levels (G_j)
   
   Q_vector=dblarr(T_num)   
@@ -299,30 +303,30 @@ function calc_populations, temperature=temperature, density=density, $
   
   for I = 2, level_num do begin
     for J = I, level_num do begin
-      d_E = (Elj[I-2]-Elj[J-1])*1.4388463D0 ;It is negative!
-      exp_dE_T = exp(d_E/temperature)
+      d_E = double(Elj[J-1]-Elj[I-2])*h_Planck*c_Speed ; delta Energy in eV; convert from cm-1 to eV
+      exp_dE_kT = exp(-d_E/(k_B*temperature)) ; Maxwell-Boltzmann distribution      
       if (irats eq 0.D+00) then begin
         Q_vector[*] = Omij[*,I-2,J-1]
       endif else begin
-        Q_vector[*] = Omij[*,I-2,J-1] / exp_dE_T ;Take out the exp. before interpolation
+        Q_vector[*] = Omij[*,I-2,J-1] / exp_dE_kT ;Take out the exp. before interpolation
       endelse
       if (T_num eq 1) then begin
-        Q_interp = Q_vector[0]
+        Upsilon = Q_vector[0]
       endif else begin
         if (T_num eq 2) then begin
-          Q_interp = Q_vector[0] +  (Q_vector[1] - Q_vector[0])/(T_log_list[1] - T_log_list[0]) * (T_log - T_log_list[0])
+          Upsilon = Q_vector[0] +  (Q_vector[1] - Q_vector[0])/(T_log_list[1] - T_log_list[0]) * (T_log - T_log_list[0])
         endif else begin
-          ;Q_interp=interpol(Q_vector[1:T_num], T[1:T_num], T_log,/SPLINE)
+          ;Upsilon=interpol(Q_vector[1:T_num], T[1:T_num], T_log,/SPLINE)
           Q_init = spl_init(T_log_list[0:T_num-1], Q_vector[0:T_num-1])
-          Q_interp=spl_interp(T_log_list[0:T_num-1], Q_vector[0:T_num-1], Q_init, T_log)
+          Upsilon=spl_interp(T_log_list[0:T_num-1], Q_vector[0:T_num-1], Q_init, T_log)
         endelse
       endelse
       if (irats eq 0.D+00) then begin
-        Q_eff[I-2,J-1] = 8.63D-06*Q_interp * exp_dE_T / (double(Glj[I-2])*sqrt(temperature))
-        Q_eff[J-1,I-2] = 8.63D-06*Q_interp / (double(Glj[J-1])*sqrt(temperature))
+        Q_eff[I-2,J-1] = 8.629D-06*Upsilon*exp_dE_kT / (double(Glj[I-2])*sqrt(temperature))
+        Q_eff[J-1,I-2] = 8.629D-06*Upsilon / (double(Glj[J-1])*sqrt(temperature))
       endif else begin
-        Q_eff[I-2,J-1] = Q_interp * exp_dE_T * 10.^irats
-        Q_eff[J-1,I-2] = double(Glj[I-2]) * Q_eff[I-2,J-1] / (exp_dE_T * double(Glj[J-1])) ; Be careful G integer!
+        Q_eff[I-2,J-1] = Upsilon*exp_dE_kT*10.^irats
+        Q_eff[J-1,I-2] = double(Glj[I-2])*Q_eff[I-2,J-1] / (exp_dE_kT*double(Glj[J-1])) ; Be careful G integer!
       endelse
     endfor
   endfor

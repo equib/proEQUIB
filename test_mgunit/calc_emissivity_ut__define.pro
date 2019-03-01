@@ -24,7 +24,7 @@ function calc_emissivity_ut::test_basic
                            elj_data=o_iii_elj, omij_data=o_iii_omij, $
                            aij_data=o_iii_aij)
   result= long(emis*1e24)
-  assert, result eq 3603, 'incorrect result: %d', result
+  assert, result eq 3604, 'incorrect result: %d', result
   
   return, 1
 end
