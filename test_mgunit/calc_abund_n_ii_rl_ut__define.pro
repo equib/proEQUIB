@@ -1,7 +1,7 @@
 function calc_abund_n_ii_rl_ut::test_basic
   compile_opt strictarr
   
-  base_dir = file_dirname(file_dirname((routine_info('calc_abundance_ut__define', /source)).path))
+  base_dir = file_dirname(file_dirname((routine_info('calc_abund_n_ii_rl_ut__define', /source)).path))
   data_rc_dir = ['externals', 'atomneb', 'atomic-data-rc']
   Atom_RC_All_file= filepath('rc_collection.fits', root_dir=base_dir, subdir=data_rc_dir )
   Atom_RC_He_I_file= filepath('rc_he_ii_PFSD12.fits', root_dir=base_dir, subdir=data_rc_dir )

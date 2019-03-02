@@ -61,7 +61,7 @@ function calc_abundance, temperature=temperature, density=density, $
 ;     IDL>                        elj_data=o_iii_elj, omij_data=o_iii_omij, $
 ;     IDL>                        aij_data=o_iii_aij, h_i_aeff_data=hi_rc_data[0].Aeff)
 ;     IDL> print, 'N(O^2+)/N(H+):', Abb5007
-;        N(O^2+)/N(H+):   0.00041256865                    
+;        N(O^2+)/N(H+):   0.00041256231                   
 ;
 ; :Categories:
 ;   Abundance Analysis, Collisionally Excited Lines
@@ -204,7 +204,7 @@ function calc_abundance, temperature=temperature, density=density, $
 ;                            elj_data=o_iii_elj, omij_data=o_iii_omij, $
 ;                            aij_data=o_iii_aij, h_i_aeff_data=hi_rc_data[0].Aeff)
 ;     print, 'N(O^2+)/N(H+):', Abb5007
-;     > N(O^2+)/N(H+):   0.00041256865
+;     > N(O^2+)/N(H+):   0.00041256231
 ;
 ; MODIFICATION HISTORY:
 ;     15/09/2013, A. Danehkar, Translated from FORTRAN to IDL code. 

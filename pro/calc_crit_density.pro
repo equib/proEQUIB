@@ -1,29 +1,25 @@
 ; docformat = 'rst'
 
-function calc_populations, temperature=temperature, density=density, $
-                           elj_data=elj_data, omij_data=omij_data, $
-                           aij_data=aij_data, $
-                           coeff_omij=coeff_omij, level_num=level_num, irats=irats
+function calc_crit_density, temperature=temperature, $
+                            elj_data=elj_data, omij_data=omij_data, $
+                            aij_data=aij_data, $
+                            level_num=level_num, IRATS=irats
 ;+
-;     This function solves atomic level populations in statistical equilibrium 
-;     for given electron temperature and density.
+;     This function calculates critical densities in statistical equilibrium 
+;     for given electron temperature.
 ;
 ; :Returns:
-;    type=array/object. This function returns the atomic level populations.
+;    type=array/object. This function returns the critical densities.
 ;
 ; :Keywords:
 ;     temperature :   in, required, type=float
 ;                     electron temperature
-;     density     :   in, required, type=float
-;                     electron density
 ;     elj_data    :   in, required, type=array/object
 ;                            energy levels (Ej) data
 ;     omij_data   :   in, required, type=array/object
 ;                            collision strengths (omega_ij) data
 ;     aij_data    :   in, required, type=array/object
 ;                            transition probabilities (Aij) data
-;     coeff_omij  :   in, type=array/object
-;                     Collision Strengths (Omega_ij)
 ;     level_num   :   in, type=int
 ;                     Number of levels
 ;     irats       :   in, type=int
@@ -42,13 +38,12 @@ function calc_populations, temperature=temperature, density=density, $
 ;     IDL> s_ii_elj=atomneb_read_elj(Atom_Elj_file, atom, ion, level_num=5) ; read Energy Levels (Ej)
 ;     IDL> s_ii_omij=atomneb_read_omij(Atom_Omij_file, atom, ion) ; read Collision Strengths (Omegaij)
 ;     IDL> s_ii_aij=atomneb_read_aij(Atom_Aij_file, atom, ion) ; read Transition Probabilities (Aij)\
-;     IDL> density = double(1000)
-;     IDL> temperature=double(10000.0);
-;     IDL> Nlj=calc_populations(temperature=temperature, density=density, $
-;     IDL>                      elj_data=s_ii_elj, omij_data=s_ii_omij, $
-;     IDL>                      aij_data=s_ii_aij)
-;     IDL> print, 'Atomic Level Populations:', Nlj
-;        Atomic Level Populations:    0.96992832    0.0070036315     0.023062261   2.6593671e-06   3.1277019e-06
+;     IDL> temperature=double(10000.0)
+;     IDL> N_crit=calc_crit_density(temperature=temperature, $
+;     IDL>                          elj_data=s_ii_elj, omij_data=s_ii_omij, $
+;     IDL>                          aij_data=s_ii_aij)
+;     IDL> print, 'Critical Densities:', N_crit
+;        Critical Densities:       0.0000000       5007.8396       1732.8414       1072685.0       2220758.1
 ;
 ; :Categories:
 ;   Plasma Diagnostics, Abundance Analysis, Collisionally Excited Lines
@@ -96,6 +91,9 @@ function calc_populations, temperature=temperature, density=density, $
 ;     27/02/2019, A. Danehkar, simplify the calc_populations() routine 
 ;                        for external usage.
 ;
+;     01/03/2019, A. Danehkar, create the calc_crit_density() routine 
+;                        from the calc_populations() routine.
+;
 ; FORTRAN HISTORY:
 ;
 ;     03/05/1981, I.D.Howarth,  Version 1.
@@ -134,30 +132,26 @@ function calc_populations, temperature=temperature, density=density, $
 
 ;+
 ; NAME:
-;     calc_populations
+;     calc_crit_density
 ; PURPOSE:
-;     This function solves atomic level populations in statistical equilibrium 
-;     for given electron temperature and density.
+;     This function calculates critical densities in statistical equilibrium 
+;     for given electron temperature.
 ;
-; CALLING SEQUENCE:       
-;     Result = calc_populations(TEMPERATURE=temperature, DENSITY=density, $
+; CALLING SEQUENCE:   
+;     Result = calc_crit_density(TEMPERATURE=temperature, $
 ;                           ELJ_DATA=elj_data, OMIJ_DATA=omij_data, $
 ;                           AIJ_DATA=aij_data, $
-;                           COEFF_OMIJ=coeff_omij, LEVEL_NUM=level_num, IRATS=irats)
+;                           LEVEL_NUM=level_num, IRATS=irats)
 ;
 ; KEYWORD PARAMETERS:
 ;     TEMPERATURE : in, required, type=float, electron temperature
-;     DENSITY     : in, required, type=float, electron density
 ;     ELJ_DATA    : in, required, type=array/object, energy levels (Ej) data
 ;     OMIJ_DATA   : in, required, type=array/object, collision strengths (omega_ij) data
 ;     AIJ_DATA    : in, required, type=array/object, transition probabilities (Aij) data
-;     COEFF_OMIJ  : in, type=array/object, Collision Strengths (Omega_ij))
 ;     LEVEL_NUM   : in, type=int, Number of levels
 ;     IRATS       : in, type=int, Else Coll. rates = tabulated values * 10 ** irats
 ;     
-; OUTPUTS:  This function returns a array/object as the atomic level populations (N_j).
-;
-; PROCEDURE: This function is called by calc_emissivity, calc_temperature and calc_density.
+; OUTPUTS:  This function returns a array/object as the critical densities (N_crit).
 ; 
 ; EXAMPLE:
 ;     base_dir = file_dirname(file_dirname((routine_info('$MAIN$', /source)).path))
@@ -170,14 +164,13 @@ function calc_populations, temperature=temperature, density=density, $
 ;     s_ii_elj=atomneb_read_elj(Atom_Elj_file, atom, ion, level_num=5) ; read Energy Levels (Ej)
 ;     s_ii_omij=atomneb_read_omij(Atom_Omij_file, atom, ion) ; read Collision Strengths (Omegaij)
 ;     s_ii_aij=atomneb_read_aij(Atom_Aij_file, atom, ion) ; read Transition Probabilities (Aij)\
-;     density = double(1000)
 ;     temperature=double(10000.0);
-;     Nlj=calc_populations(temperature=temperature, density=density, $
-;                          elj_data=s_ii_elj, omij_data=s_ii_omij, $
-;                          aij_data=s_ii_aij)
-;      print, 'Atomic Level Populations:', Nlj
-;     > Atomic Level Populations:   0.96992832    0.0070036315     0.023062261   2.6593671e-06   3.1277019e-06
-;        
+;     N_crit=calc_crit_density(temperature=temperature, $
+;                              elj_data=s_ii_elj, omij_data=s_ii_omij, $
+;                              aij_data=s_ii_aij)
+;     print, 'Critical Densities:', N_crit
+;     > Critical Densities:       0.0000000       5007.8396       1732.8414       1072685.0       2220758.1
+;     
 ; MODIFICATION HISTORY:
 ;     15/09/2013, A. Danehkar, Translated from FORTRAN to IDL code.
 ;     20/10/2016, A. Danehkar, Replaced str2int with strnumber.
@@ -198,6 +191,8 @@ function calc_populations, temperature=temperature, density=density, $
 ;                        from calc_populations().
 ;     27/02/2019, A. Danehkar, simplify the calc_populations() routine 
 ;                        for external usage.
+;     01/03/2019, A. Danehkar, create the calc_crit_density() routine 
+;                        from the calc_populations() routine.
 ; 
 ; FORTRAN HISTORY:
 ;     03/05/1981, I.D.Howarth,  Version 1.
@@ -239,10 +234,6 @@ function calc_populations, temperature=temperature, density=density, $
     print,'Temperature is not set'
     return, 0
   endif
-  if keyword_set(density) eq 0 then begin 
-    print,'Density is not set'
-    return, 0
-  endif
   if keyword_set(elj_data) eq 0 then begin 
     print,'elj_data is not set'
     return, 0
@@ -261,20 +252,16 @@ function calc_populations, temperature=temperature, density=density, $
   endif
   temp=size(omij_data[0].strength,/DIMENSIONS)
   T_num=temp[0] ; Number of temperature intervals
-  if keyword_set(coeff_omij) eq 0 then begin
-    temp=size(omij_data,/DIMENSIONS)
-    omij_num=temp[0]
-    Omij=dblarr(T_num,level_num,level_num)   
-    for k = 1, omij_num-1 do begin
-      I = omij_data[k].level1
-      J = omij_data[k].level2
-      if I le level_num and J le level_num then begin
-        Omij[0:T_num-1,I-1,J-1] = omij_data[k].strength
-      endif
-    endfor
-  endif else begin
-    Omij=coeff_omij
-  endelse
+  temp=size(omij_data,/DIMENSIONS)
+  omij_num=temp[0]
+  Omij=dblarr(T_num,level_num,level_num)   
+  for k = 1, omij_num-1 do begin
+    I = omij_data[k].level1
+    J = omij_data[k].level2
+    if I le level_num and J le level_num then begin
+      Omij[0:T_num-1,I-1,J-1] = omij_data[k].strength
+    endif
+  endfor
   if keyword_set(irats) eq 0 then begin
     irats=0
   endif
@@ -342,42 +329,8 @@ function calc_populations, temperature=temperature, density=density, $
   endfor
   ; Calculate the critical densities
   ; N_crit_i = Sum_{j} (Aij) / Sum_{j} (Qij) 
-  ;A_i_sum = TOTAL(Aij, 2) ; Sum each of the columns in Aij
-  ;Q_i_sum = TOTAL(Qij, 2) ; Sum each of the columns in Qij
-  ;N_crit=A_i_tot/Q_i_tot ; critical densities
-  for I = 2, level_num do begin
-    for J = 1, level_num do begin
-      if (J ne I) then begin
-        ; the equations for the equilibrium level populations:
-        ; collisional de-excitation eqs -  collisional excitation eqs = 0
-        ; Sum_{j ne i} (Ne * Nj * Qji) + Sum_{j > i} (Nj Aji) 
-        ;    - (Sum_{j ne i} (Ne * Ni * Qij) + Sum_{j < i} (Ni Aij)) = 0
-        Equilib_Eqs[I-1,J-1] = Equilib_Eqs[I-1,J-1] + density * Qij[J-1,I-1] ; collisional de-excitation
-        Equilib_Eqs[I-1,I-1] = Equilib_Eqs[I-1,I-1] - density * Qij[I-1,J-1] ; collisional excitation
-        if (J gt I) then begin
-          Equilib_Eqs[I-1,J-1] = Equilib_Eqs[I-1,J-1] + Aij[J-1,I-1] ; collisional de-excitation
-        endif else begin 
-          Equilib_Eqs[I-1,I-1] = Equilib_Eqs[I-1,I-1] - Aij[I-1,J-1] ; collisional excitation
-        endelse
-      endif
-    endfor
-  endfor
-  B0 = double(-Equilib_Eqs[1:level_num-1,0])
-  Equilib_Eqs[0:level_num-2,0:level_num-2] = Equilib_Eqs[1:level_num-1,1:level_num-1]
-  A0=transpose(Equilib_Eqs[0:level_num - 2,0:level_num - 2])
-  ; Solve the equations for the equilibrium level populations
-  ; A.X = B
-  ; A: Matrix for the equilibrium level populations equations (i,j), Equilib_Eqs[*,*]
-  ; B: Vector for the equilibrium level populations equations (i,j=0), Equilib_Eqs[*,0]
-  ; X: Ionic population density (j), Nj
-  ; X=la_linear_equation(A0, B0[0:level_num-2]); this function does not work in GDL!
-  ludc, A0, Index0  ; Decompose A0; supported by GDL
-  ; obtain the ionic population densities (j)
-  X0 = lusol(A0, Index0, B0[0:level_num - 2]) ; Compute the solution X; supported by GDL
-  ; Calculate the atomic level populations (Nlj) from the ionic population densities (Nj)
-  Nlj[1:level_num-1] = X0[0:level_num-2]
-  Nlj[0] = 1.D0
-  N_tot = double(total(Nlj[0:level_num-1]))
-  Nlj[0:level_num-1] = Nlj[0:level_num-1] / N_tot
-  return, Nlj
+  A_i_sum = TOTAL(Aij, 2) ; Sum each of the columns in Aij
+  Q_i_sum = TOTAL(Qij, 2) ; Sum each of the columns in Qij
+  N_crit = A_i_sum/Q_i_sum ; critical densities
+  return, N_crit
 end

@@ -1,7 +1,7 @@
 function calc_emissivity_ut::test_basic
   compile_opt strictarr
   
-  base_dir = file_dirname(file_dirname((routine_info('calc_abundance_ut__define', /source)).path))
+  base_dir = file_dirname(file_dirname((routine_info('calc_emissivity_ut__define', /source)).path))
   data_dir = ['externals', 'atomneb', 'atomic-data', 'chianti70']
   Atom_Elj_file = filepath('AtomElj.fits', root_dir=base_dir, subdir=data_dir )
   Atom_Omij_file = filepath('AtomOmij.fits', root_dir=base_dir, subdir=data_dir )

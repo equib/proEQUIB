@@ -48,7 +48,7 @@ function calc_emissivity, temperature=temperature, density=density, $
 ;     IDL>                           elj_data=o_iii_elj, omij_data=o_iii_omij, $
 ;     IDL>                           aij_data=o_iii_aij
 ;     IDL> print, 'Emissivity(O III 5007):', emiss5007
-;        Emissivity(O III 5007):   3.6040458e-21
+;        Emissivity(O III 5007):   3.6041012e-21
 ;
 ; :Categories:
 ;   Abundance Analysis, Collisionally Excited Lines
@@ -182,7 +182,7 @@ function calc_emissivity, temperature=temperature, density=density, $
 ;                               elj_data=o_iii_elj, omij_data=o_iii_omij, $
 ;                               aij_data=o_iii_aij
 ;     print, 'Emissivity(O III 5007):', emiss5007
-;     > Emissivity(O III 5007):   3.6040458e-21
+;     > Emissivity(O III 5007):   3.6041012e-21
 ; 
 ; MODIFICATION HISTORY:
 ;     15/09/2013, A. Danehkar, Translated from FORTRAN to IDL code.

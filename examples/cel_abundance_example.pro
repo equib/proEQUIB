@@ -50,6 +50,12 @@ Nlj=calc_populations(temperature=temperature, density=density, $
                      aij_data=o_iii_aij)
 print, 'Atomic Level Populations:', Nlj
 
+
+N_crit=calc_crit_density(temperature=temperature, $
+                         elj_data=o_iii_elj, omij_data=o_iii_omij, $
+                         aij_data=o_iii_aij)
+print, 'Critical Densities:', N_crit
+
 ; --- End $MAIN$ program. ---------------
 exit
 
