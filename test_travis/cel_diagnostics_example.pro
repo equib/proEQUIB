@@ -57,6 +57,11 @@ N_crit=calc_crit_density(temperature=temperature, $
                          aij_data=s_ii_aij)
 print, 'Critical Densities:', N_crit
 
+temperature=double(10000.0)
+Omij_T=get_omij_temp(temperature=temperature, omij_data=s_ii_omij)
+print, 'Effective Collision Strengths: '
+print, Omij_T
+
 ; --- End $MAIN$ program. ---------------
 exit
 

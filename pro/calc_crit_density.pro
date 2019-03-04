@@ -3,7 +3,7 @@
 function calc_crit_density, temperature=temperature, $
                             elj_data=elj_data, omij_data=omij_data, $
                             aij_data=aij_data, $
-                            level_num=level_num, IRATS=irats
+                            level_num=level_num, irats=irats
 ;+
 ;     This function calculates critical densities in statistical equilibrium 
 ;     for given electron temperature.
@@ -93,6 +93,8 @@ function calc_crit_density, temperature=temperature, $
 ;
 ;     01/03/2019, A. Danehkar, create the calc_crit_density() routine 
 ;                        from the calc_populations() routine.
+;                        
+;     04/03/2019, A. Danehkar, use the get_omij_temp() routine.
 ;
 ; FORTRAN HISTORY:
 ;
@@ -193,6 +195,7 @@ function calc_crit_density, temperature=temperature, $
 ;                        for external usage.
 ;     01/03/2019, A. Danehkar, create the calc_crit_density() routine 
 ;                        from the calc_populations() routine.
+;     04/03/2019, A. Danehkar, use the get_omij_temp() routine.
 ; 
 ; FORTRAN HISTORY:
 ;     03/05/1981, I.D.Howarth,  Version 1.
@@ -291,38 +294,20 @@ function calc_crit_density, temperature=temperature, $
       print, 'Coll. strengths available for 2 Te only - linear interp'
     endif
   endelse
-  ; Derive the interpolated effective collision strengths (Upsilon) from collision strengths data (Omij)
-  ; Obtain collisional de-excitation and excitation rates (Qij) from the effective collision strengths (Upsilon)
+  ; Derive the interpolated effective collision strengths (Omij_T) from collision strengths data (Omij)
+  ; Obtain collisional de-excitation and excitation rates (Qij) from the effective collision strengths (Omij_T)
+  Omij_T=get_omij_temp(temperature=temperature, omij_data=omij_data, level_num=level_num, irats=irats)
   for I = 2, level_num do begin
     for J = I, level_num do begin
       d_E = double(Ej[J-1]-Ej[I-2])*h_Planck*c_Speed ; delta Energy in eV; convert from cm-1 to eV
       ; Calculate the Boltzmann factor
-      exp_dE_kT = exp(-d_E/(k_B*temperature)) ; Maxwell-Boltzmann distribution      
+      exp_dE_kT = exp(-d_E/(k_B*temperature)) ; Maxwell-Boltzmann distribution
+      ; Obtain collisional de-excitation and excitation rates from the effective collision strengths Omij_T
       if (irats eq 0) then begin
-        Qj[*] = Omij[*,I-2,J-1]
+        Qij[I-2,J-1] = Beta1*Omij_T[I-2,J-1]*exp_dE_kT / (double(Gj[I-2])*sqrt(temperature)) ; collisional excitation rates
+        Qij[J-1,I-2] = Beta1*Omij_T[I-2,J-1] / (double(Gj[J-1])*sqrt(temperature)) ; collisional de-excitation rates
       endif else begin
-        Qj[*] = Omij[*,I-2,J-1] / exp_dE_kT ;Take out the exp. before interpolation
-      endelse
-      if (T_num eq 1) then begin
-        Upsilon = Qj[0]
-      endif else begin
-        if (T_num eq 2) then begin
-          Upsilon = Qj[0] +  (Qj[1] - Qj[0])/(T_log_list[1] - T_log_list[0]) * (T_log - T_log_list[0])
-        endif else begin
-          ;Upsilon=interpol(Qj[1:T_num], T[1:T_num], T_log,/SPLINE)
-          ; Calculate interpolating cubic spline
-          Qj_2 = spl_init(T_log_list[0:T_num-1], Qj[0:T_num-1])
-          ; Calculate the interpolated Upsilon values corresponding to T_log
-          ; Obtain the effective collision strengths Upsilon
-          Upsilon=spl_interp(T_log_list[0:T_num-1], Qj[0:T_num-1], Qj_2, T_log)
-        endelse
-      endelse
-      ; Obtain collisional de-excitation and excitation rates from the effective collision strengths Upsilon
-      if (irats eq 0) then begin
-        Qij[I-2,J-1] = Beta1*Upsilon*exp_dE_kT / (double(Gj[I-2])*sqrt(temperature)) ; collisional excitation rates
-        Qij[J-1,I-2] = Beta1*Upsilon / (double(Gj[J-1])*sqrt(temperature)) ; collisional de-excitation rates
-      endif else begin
-        Qij[I-2,J-1] = Upsilon*exp_dE_kT*10.^irats ; collisional excitation rates
+        Qij[I-2,J-1] = Omij_T[I-2,J-1]*exp_dE_kT*10.^irats ; collisional excitation rates
         Qij[J-1,I-2] = double(Gj[I-2])*Qij[I-2,J-1] / (exp_dE_kT*double(Gj[J-1])) ; collisional de-excitation rates
       endelse
     endfor
