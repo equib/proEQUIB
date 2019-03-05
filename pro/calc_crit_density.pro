@@ -50,7 +50,7 @@ function calc_crit_density, temperature=temperature, $
 ;   
 ; :Dirs:
 ;  ./
-;      Subroutines
+;      Main routines
 ;
 ; :Author:
 ;   Ashkbiz Danehkar

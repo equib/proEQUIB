@@ -5,7 +5,7 @@ function get_omij_temp, temperature=temperature, $
                         level_num=level_num, irats=irats
 ;+
 ;     This function derives the effective collision strengths (Omij_T) from 
-;     the collision strengths (omega_ij) data for the given temperature(s)
+;     the collision strengths (omega_ij) data for the given temperature.
 ;
 ; :Returns:
 ;    type=array/object. This function returns the effective collision strengths (Omij_T).
@@ -119,7 +119,7 @@ function get_omij_temp, temperature=temperature, $
         if (T_num eq 2) then begin
           Omij_T[I-1,J-1] = Qj[0] +  (Qj[1] - Qj[0])/(T_log_list[1] - T_log_list[0]) * (T_log - T_log_list[0])
         endif else begin
-          ;Omij_T=interpol(Qj[1:T_num], T[1:T_num], T_log,/SPLINE)
+          ;Qj_T=interpol(Qj, T_log_list, T_log, /SPLINE)
           ; Calculate interpolating cubic spline
           Qj_2 = spl_init(T_log_list, Qj)
           ; Calculate the interpolated Omij_T values corresponding to T_log
