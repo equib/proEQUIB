@@ -14,7 +14,7 @@ proEQUIB
     :target: http://mybinder.org/repo/equib/proequib
     :alt: Binder
 
-.. image:: https://img.shields.io/aur/license/yaourt.svg
+.. image:: https://img.shields.io/badge/license-GPL-blue.svg
     :target: https://github.com/equib/proEQUIB/blob/master/LICENSE
     :alt: GitHub license
 
