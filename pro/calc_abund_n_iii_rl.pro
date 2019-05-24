@@ -137,6 +137,35 @@ function calc_abund_n_iii_rl, temperature=temperature, density=density, $
   h_Planck = 6.62606957e-27 ; erg s
   c_Speed = 2.99792458e10 ; cm/s 
   
+  if keyword_set(temperature) eq 0 then begin 
+    print,'Temperature is not set'
+    return, 0
+  endif
+  if keyword_set(density) eq 0 then begin 
+    print,'Density is not set'
+    return, 0
+  endif
+  if keyword_set(n_iii_rc_data) eq 0 then begin 
+    print,'N III recombination coefficients (n_iii_rc_data) are not set'
+    return, 0
+  endif
+  if keyword_set(h_i_aeff_data) eq 0 then begin 
+    print,'H I recombination coefficients (h_i_aeff_data) are not set'
+    return, 0
+  endif
+  if keyword_set(wavelength) eq 0 then begin 
+    print,'Wavelength is not given'
+    return, 0
+  endif
+  if keyword_set(line_flux) eq 0 then begin 
+    print,'Line flux intensity (line_flux) is not given'
+    return, 0
+  endif  
+  if (temperature le 0.D0) or (density le 0.D0) then begin
+      print,'temperature = ', temperature, ', density = ', density
+      return, 0
+  endif
+  
   TEh2=double(temperature)
   NEh2=double(density)
   abund=1.0

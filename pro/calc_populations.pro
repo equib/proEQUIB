@@ -317,7 +317,7 @@ function calc_populations, temperature=temperature, density=density, $
     endfor
   endfor
   ; Calculate the critical densities
-  ; N_crit_i = Sum_{j} (Aij) / Sum_{j} (Qij) 
+  ; N_crit_i = Sum_{j} (Aij) / Sum_{j} (Qij)
   ;A_i_sum = TOTAL(Aij, 2) ; Sum each of the columns in Aij
   ;Q_i_sum = TOTAL(Qij, 2) ; Sum each of the columns in Qij
   ;N_crit=A_i_tot/Q_i_tot ; critical densities
@@ -326,13 +326,13 @@ function calc_populations, temperature=temperature, density=density, $
       if (J ne I) then begin
         ; the equations for the equilibrium level populations:
         ; collisional de-excitation eqs -  collisional excitation eqs = 0
-        ; Sum_{j ne i} (Ne * Nj * Qji) + Sum_{j > i} (Nj Aji) 
+        ; Sum_{j ne i} (Ne * Nj * Qji) + Sum_{j > i} (Nj Aji)
         ;    - (Sum_{j ne i} (Ne * Ni * Qij) + Sum_{j < i} (Ni Aij)) = 0
         Equilib_Eqs[I-1,J-1] = Equilib_Eqs[I-1,J-1] + density * Qij[J-1,I-1] ; collisional de-excitation
         Equilib_Eqs[I-1,I-1] = Equilib_Eqs[I-1,I-1] - density * Qij[I-1,J-1] ; collisional excitation
         if (J gt I) then begin
           Equilib_Eqs[I-1,J-1] = Equilib_Eqs[I-1,J-1] + Aij[J-1,I-1] ; collisional de-excitation
-        endif else begin 
+        endif else begin
           Equilib_Eqs[I-1,I-1] = Equilib_Eqs[I-1,I-1] - Aij[I-1,J-1] ; collisional excitation
         endelse
       endif

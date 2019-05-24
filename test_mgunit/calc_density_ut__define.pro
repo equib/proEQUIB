@@ -24,7 +24,7 @@ function calc_density_ut::test_basic
                        aij_data=s_ii_aij)
       
   result= long(density*1e2)
-  assert, result eq 231263, 'incorrect result: %d', result
+  assert, result eq 231261, 'incorrect result: %d', result
   
   return, 1
 end

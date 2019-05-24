@@ -3,7 +3,9 @@
 function calc_density, line_flux_ratio=line_flux_ratio, temperature=temperature, $
                        upper_levels=upper_levels, lower_levels=lower_levels, $
                        elj_data=elj_data, omij_data=omij_data, $
-                       aij_data=aij_data
+                       aij_data=aij_data, $
+                       low_density=low_density, high_density=high_density, num_density=num_density, $
+                       min_temperature=min_temperature
 ;+
 ;     This function determines electron density from given 
 ;     flux intensity ratio for specified ion with upper level(s)
@@ -29,6 +31,14 @@ function calc_density, line_flux_ratio=line_flux_ratio, temperature=temperature,
 ;                            collision strengths (omega_ij) data
 ;     aij_data         :     in, required, type=array/object
 ;                            transition probabilities (Aij) data
+;     low_density      :     in, optional, type=float
+;                            lower density range
+;     high_density      :     in, optional, type=float
+;                            upper density range
+;     num_density      :     in, optional, type=integer
+;                            number of the iteration step
+;     min_temperature  :     in, optional, type=float
+;                            minimum temperature
 ;
 ; :Examples:
 ;    For example::
@@ -97,10 +107,12 @@ function calc_density, line_flux_ratio=line_flux_ratio, temperature=temperature,
 ;     12/06/2017, A. Danehkar, Cleaning the function, and remove unused varibales
 ;                        from calc_density().
 ;     
-;     27/06/2019, A. Danehkar, fix a bug in the atomic level assumption, and 
+;     27/02/2019, A. Danehkar, fix a bug in the atomic level assumption, and 
 ;                        use the simplified calc_populations() routine.
 ;            
 ;     04/03/2019, A. Danehkar, use the get_omij_temp() routine.
+;     
+;     24/05/2019, A. Danehkar, add the optional density range.
 ;
 ; FORTRAN HISTORY:
 ;
@@ -153,7 +165,9 @@ function calc_density, line_flux_ratio=line_flux_ratio, temperature=temperature,
 ;     Result = calc_density(LINE_FLUX_RATIO=line_flux_ratio, TEMPERATURE=temperature, $
 ;                           UPPER_LEVELS=upper_levels, LOWER_LEVELS=lower_levels, $
 ;                           ELJ_DATA=elj_data, OMIJ_DATA=omij_data, $
-;                           AIJ_DATA=aij_data)
+;                           AIJ_DATA=aij_data, $
+;                           LOW_DENSITY=low_density, HIGH_DENSITY=high_density, $
+;                           NUM_DENSITY=num_density, min_temperature=min_temperature)
 ;
 ; KEYWORD PARAMETERS:
 ;     LINE_FLUX_RATIO  :     in, required, type=float, flux intensity ratio
@@ -163,6 +177,10 @@ function calc_density, line_flux_ratio=line_flux_ratio, temperature=temperature,
 ;     ELJ_DATA         :     in, required, type=array/object, energy levels (Ej) data
 ;     OMIJ_DATA        :     in, required, type=array/object, collision strengths (omega_ij) data
 ;     AIJ_DATA         :     in, required, type=array/object, transition probabilities (Aij) data
+;     LOW_DENSITY      :     in, optional, type=float, lower density range
+;     HIGH_DENSITY      :     in, optional, type=float, upper density range
+;     NUM_DENSITY      :     in, optional, type=integer, number of the iteration step
+;     min_temperature  :     in, optional, type=float, minimum temperature
 ;     
 ; OUTPUTS:  This function returns a double as the electron density.
 ; 
@@ -208,9 +226,10 @@ function calc_density, line_flux_ratio=line_flux_ratio, temperature=temperature,
 ;                      input elj_data, omij_data, aij_data.
 ;     12/06/2017, A. Danehkar, Cleaning the function, and remove unused varibales
 ;                        from calc_density().
-;     27/06/2019, A. Danehkar, fix a bug in the atomic level assumption, and 
+;     27/02/2019, A. Danehkar, fix a bug in the atomic level assumption, and 
 ;                        use the simplified calc_populations() routine.   
 ;     04/03/2019, A. Danehkar, use the get_omij_temp() routine.
+;     24/05/2019, A. Danehkar, add the optional density range.
 ; 
 ; FORTRAN HISTORY:
 ;     03/05/1981, I.D.Howarth,  Version 1.
@@ -241,6 +260,59 @@ function calc_density, line_flux_ratio=line_flux_ratio, temperature=temperature,
   
   h_Planck = 6.62606957e-27 ; erg s
   c_Speed = 2.99792458e10 ; cm/s 
+  
+  if keyword_set(line_flux_ratio) eq 0 then begin 
+    print,'flux intensity ratio is not given'
+    return, 0
+  endif
+  if keyword_set(temperature) eq 0 then begin 
+    print,'Temperature is not set'
+    return, 0
+  endif
+  if keyword_set(elj_data) eq 0 then begin 
+    print,'Energy Levels data (elj_data) are not set'
+    return, 0
+  endif
+  if keyword_set(omij_data) eq 0 then begin 
+    print,'Collision Strengths (omij_data) are not set'
+    return, 0
+  endif
+  if keyword_set(aij_data) eq 0 then begin 
+    print,'Transition Probabilities (aij_data) are not set'
+    return, 0
+  endif
+  if keyword_set(upper_levels) eq 0 then begin 
+    print,'Upper levels (upper_levels) are not given'
+    return, 0
+  endif
+  if keyword_set(lower_levels) eq 0 then begin 
+    print,'Lower levels (lower_levels) are not given'
+    return, 0
+  endif
+  if (temperature le 0.D0) then begin
+      print,'temperature = ', temperature
+      return, 0
+  endif
+  if keyword_set(low_density) then begin
+    dens_min=low_density
+  endif else begin
+    dens_min=1.0
+  endelse
+  if keyword_set(high_density) then begin
+    dens_max=high_density
+  endif else begin
+    dens_max=100000.0
+  endelse
+  if keyword_set(num_density) then begin
+    dens_num=num_density
+  endif else begin
+    dens_num=4
+  endelse
+  if keyword_set(min_temperature) then begin
+    temp_min=min_temperature
+  endif else begin
+    temp_min=5000.0
+  endelse
   
   iteration= long(0)
   
@@ -319,25 +391,24 @@ function calc_density, line_flux_ratio=line_flux_ratio, temperature=temperature,
   Aij =aij_data.AIJ
   Elj =elj_data.Ej
   TempI=temperature
-  if (tempi lt 5000) then tempi=5000 ; add
+  if (tempi lt temp_min) then tempi=temp_min ; add
+  
   Omij_T=get_omij_temp(temperature=tempi, omij_data=omij_data, level_num=level_num, irats=irats)
   ; set density iterations
   ; start of iterations
   ; ****************************
   for iteration = 1, 9 do begin
     if (iteration eq 1) then begin
-      densi=0.0
+      densi=dens_min
     endif else begin
       densi=check_value[0]
     endelse
-    IND=4
-    DINC=(100000.0)/((IND-1)^(iteration))
-;    IND=8
-;    DINC=(1000000.0)/((IND-1)^(iteration))
-;    IND=12
-;    DINC=(1000000.0)/((IND-1)^(iteration))
+    IND=dens_num
+    DINC=(dens_max-dens_min)/((IND-1)^(iteration))
+    ;IND=8
+    ;DINC=(1000000.0)/((IND-1)^(iteration))
     results=dblarr(2,IND)
-    if (densi le 0) then densi=1
+    if (densi le dens_min) then densi=dens_min
     ; Start of density iteration
     for JJD = 1, IND  do begin
       density=DENSI+(JJD-1)*DINC
