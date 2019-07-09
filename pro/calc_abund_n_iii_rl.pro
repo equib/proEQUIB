@@ -3,7 +3,6 @@
 function calc_abund_n_iii_rl, temperature=temperature, density=density, $
                       wavelength=wavelength, line_flux=line_flux, $
                       n_iii_rc_data=n_iii_rc_data, h_i_aeff_data=h_i_aeff_data
-;
 ;+
 ;     This function determines the ionic abundance from the observed 
 ;     flux intensity for the given wavelength of N III recombination line 

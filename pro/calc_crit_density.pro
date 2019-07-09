@@ -88,13 +88,13 @@ function calc_crit_density, temperature=temperature, $
 ;     12/06/2017, A. Danehkar, Cleaning the function, and remove unused varibales
 ;                        from calc_populations().
 ;                        
-;     27/02/2019, A. Danehkar, simplify the calc_populations() routine 
+;     27/02/2019, A. Danehkar, Simplify the calc_populations() routine 
 ;                        for external usage.
 ;
-;     01/03/2019, A. Danehkar, create the calc_crit_density() routine 
+;     01/03/2019, A. Danehkar, Create the calc_crit_density() routine 
 ;                        from the calc_populations() routine.
 ;                        
-;     04/03/2019, A. Danehkar, use the get_omij_temp() routine.
+;     04/03/2019, A. Danehkar, Use the get_omij_temp() routine.
 ;
 ; FORTRAN HISTORY:
 ;

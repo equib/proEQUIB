@@ -97,7 +97,7 @@ function calc_emissivity, temperature=temperature, density=density, $
 ;     12/06/2017, A. Danehkar, Cleaning the function, and remove unused varibales
 ;                        from calc_emissivity().
 ;                        
-;     27/06/2019, A. Danehkar, use the simplified calc_populations() routine.
+;     27/06/2019, A. Danehkar, Use the simplified calc_populations() routine.
 ;
 ; FORTRAN HISTORY:
 ;

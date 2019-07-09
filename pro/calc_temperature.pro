@@ -107,12 +107,12 @@ function calc_temperature, line_flux_ratio=line_flux_ratio, density=density, $
 ;     12/06/2017, A. Danehkar, Cleaning the function, and remove unused varibales
 ;                        from calc_temperature().
 ;                        
-;     27/02/2019, A. Danehkar, fix a bug in the atomic level assumption, and 
+;     27/02/2019, A. Danehkar, Fix a bug in the atomic level assumption, and 
 ;                        use the simplified calc_populations() routine.                    
 ;          
-;     04/03/2019, A. Danehkar, use the get_omij_temp() routine.
+;     04/03/2019, A. Danehkar, Use the get_omij_temp() routine.
 ;     
-;     24/05/2019, A. Danehkar, add the optional temperature range.
+;     24/05/2019, A. Danehkar, Add the optional temperature range.
 ;
 ; FORTRAN HISTORY:
 ;

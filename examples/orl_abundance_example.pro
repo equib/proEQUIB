@@ -15,7 +15,7 @@
 
 ; Locate datasets
 base_dir = file_dirname(file_dirname((routine_info('$MAIN$', /source)).path))
-data_rc_dir = ['atomic-data-rc']
+data_rc_dir = ['externals','atomneb','atomic-data-rc']
 Atom_RC_All_file= filepath('rc_collection.fits', root_dir=base_dir, subdir=data_rc_dir )
 Atom_RC_He_I_file= filepath('rc_he_ii_PFSD12.fits', root_dir=base_dir, subdir=data_rc_dir )
 Atom_RC_PPB91_file= filepath('rc_PPB91.fits', root_dir=base_dir, subdir=data_rc_dir )
@@ -135,5 +135,5 @@ Abund_ne_ii=calc_abund_ne_ii_rl(temperature=temperature, density=density, $
 print, 'N(Ne^2+)/N(H+):', Abund_ne_ii
 
 ; --- End $MAIN$ program. ---------------
-exit
-
+;exit
+end

@@ -10,10 +10,16 @@
 
 ; Locate datasets
 base_dir = file_dirname(file_dirname((routine_info('$MAIN$', /source)).path))
-data_dir = ['atomic-data', 'chianti70']
+data_dir = ['externals','atomneb','atomic-data','chianti70']
+data_rc_dir = ['externals','atomneb','atomic-data-rc']
 Atom_Elj_file = filepath('AtomElj.fits', root_dir=base_dir, subdir=data_dir )
 Atom_Omij_file = filepath('AtomOmij.fits', root_dir=base_dir, subdir=data_dir )
 Atom_Aij_file = filepath('AtomAij.fits', root_dir=base_dir, subdir=data_dir )
+Atom_RC_SH95_file= filepath('rc_SH95.fits', root_dir=base_dir, subdir=data_rc_dir )
+
+atom='h'
+ion='ii' ; H I Rec
+hi_rc_data=atomneb_read_aeff_sh95(Atom_RC_SH95_file, atom, ion)
 
 atom='s'
 ion='ii'
@@ -60,6 +66,11 @@ Omij_T=get_omij_temp(temperature=temperature, omij_data=s_ii_omij)
 print, 'Effective Collision Strengths: '
 print, Omij_T
 
+print_ionic, temperature=temperature, density=density, $, $
+             elj_data=s_ii_elj, omij_data=s_ii_omij, $
+             aij_data=s_ii_aij, h_i_aeff_data=hi_rc_data[0].Aeff
+  
 ; --- End $MAIN$ program. ---------------
-exit
+;exit
+end
 

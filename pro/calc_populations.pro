@@ -94,10 +94,10 @@ function calc_populations, temperature=temperature, density=density, $
 ;     12/06/2017, A. Danehkar, Cleaning the function, and remove unused varibales
 ;                        from calc_populations().
 ;                        
-;     27/02/2019, A. Danehkar, simplify the calc_populations() routine 
+;     27/02/2019, A. Danehkar, Simplify the calc_populations() routine 
 ;                        for external usage.
 ;                            
-;     04/03/2019, A. Danehkar, use the get_omij_temp() routine.
+;     04/03/2019, A. Danehkar, Use the get_omij_temp() routine.
 ;
 ; FORTRAN HISTORY:
 ;
