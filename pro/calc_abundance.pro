@@ -77,7 +77,7 @@ function calc_abundance, temperature=temperature, density=density, $
 ;   This library is released under a GNU General Public License.
 ; 
 ; :Version:
-;   0.0.6
+;   0.3.0
 ;   
 ; :History:
 ;     15/09/2013, A. Danehkar, Translated from FORTRAN to IDL code. 
@@ -300,7 +300,7 @@ function calc_abundance, temperature=temperature, density=density, $
 ;  WAVHB=4861.33D ;4861.D0
 ;  emissivity_Hbeta=AHB*h_Planck*c_Speed*1.e8/WAVHB ; N(H+) * N(e-) (erg/s) 
   ; emissivity_Hbeta=1.387D-25*T4^(-0.983D0)* 10.D0^(-0.0424D0/T4) ;  Brocklehurst (1971); Aller (1984)
-  emissivity_Hbeta=10.0^gamma_hb_4861(temperature=temperature,density=density,h_i_aeff_data=h_i_aeff_data)
+  emissivity_Hbeta=calc_emiss_h_beta(temperature=temperature,density=density,h_i_aeff_data=h_i_aeff_data)
   
   emissivity_all=double(0.0)
   emissivity_all=calc_emissivity(temperature=temperature, density=density, $

@@ -77,7 +77,7 @@ function deredden_relflux, wavelength, relflux, m_ext, ext_law=ext_law, rv=rv, f
 ;   This library is released under a GNU General Public License.
 ;
 ; :Version:
-;   0.0.1
+;   0.3.0
 ;
 ; :History:
 ;     31/08/2012, A. Danehkar, IDL code.

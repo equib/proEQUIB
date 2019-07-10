@@ -1,16 +1,16 @@
 ; docformat = 'rst'
 
-function calc_abund_he_i_rl, temperature=temperature, density=density, $
-                      linenum=linenum, line_flux=line_flux, $
-                      he_i_aeff_data=he_i_aeff_data, h_i_aeff_data=h_i_aeff_data
+function calc_emiss_he_i_rl, temperature=temperature, density=density, $
+                      linenum=linenum, $
+                      he_i_aeff_data=he_i_aeff_data
 ;+
-;     This function determines the ionic abundance from the observed 
-;     flux intensity for the given wavelength of He I recombination line 
+;     This function calculates the emissivity 
+;     for the given wavelength of He I recombination line 
 ;     by using the recombination coefficients from Porter et al. 
 ;     2012MNRAS.425L..28P.
 ;
 ; :Returns:
-;    type=double. This function returns the ionic abundanc.
+;    type=double. This function returns the line emissivity.
 ;
 ; :Keywords:
 ;     temperature    :    in, required, type=float
@@ -46,8 +46,6 @@ function calc_abund_he_i_rl, temperature=temperature, density=density, $
 ;                         line flux intensity
 ;     he_i_aeff_data :    in, required, type=array/object
 ;                         He I recombination coefficients
-;     h_i_aeff_data  :    in, required, type=array/object
-;                         H I recombination coefficients
 ;
 ; :Examples:
 ;    For example::
@@ -56,26 +54,22 @@ function calc_abund_he_i_rl, temperature=temperature, density=density, $
 ;     IDL> data_rc_dir = ['atomic-data-rc']
 ;     IDL> Atom_RC_He_I_file= filepath('rc_he_ii_PFSD12.fits', root_dir=base_dir, subdir=data_rc_dir )
 ;     IDL> Atom_RC_SH95_file= filepath('rc_SH95.fits', root_dir=base_dir, subdir=data_rc_dir )
-;     IDL> atom='h'
-;     IDL> ion='ii' ; H I
-;     IDL> h_i_rc_data=atomneb_read_aeff_sh95(Atom_RC_SH95_file, atom, ion)
-;     IDL> h_i_aeff_data=h_i_rc_data[0].Aeff
+;     IDL> 
 ;     IDL> atom='he'
 ;     IDL> ion='ii' ; He I
 ;     IDL> he_i_rc_data=atomneb_read_aeff_he_i_pfsd12(Atom_RC_He_I_file, atom, ion)
 ;     IDL> he_i_aeff_data=he_i_rc_data[0].Aeff
 ;     IDL> temperature=double(10000.0)
 ;     IDL> density=double(5000.0)
-;     IDL> he_i_4471_flux= 2.104
 ;     IDL> linenum=10; 4471.50
-;     IDL> Abund_he_i=calc_abund_he_i_rl(temperature=temperature, density=density, $
-;                                       linenum=linenum, line_flux=he_i_4471_flux, $
-;                                       he_i_aeff_data=he_i_aeff_data, h_i_aeff_data=h_i_aeff_data)
-;     IDL> print, 'N(He^+)/N(H^+):', Abund_he_i
-;        N(He^+)/N(H^+):     0.040848393
+;     IDL> emiss_he_i=calc_emiss_he_i_rl(temperature=temperature, density=density, $
+;                                       linenum=linenum, $
+;                                       he_i_aeff_data=he_i_aeff_data)
+;     IDL> print, 'Emissivity:', emiss_he_i
+;        Emissivity:   6.3822830e-26
 ;
 ; :Categories:
-;   Abundance Analysis, Recombination Lines
+;   Abundance Analysis, Recombination Lines, Emissivity
 ;
 ; :Dirs:
 ;  ./
@@ -115,27 +109,53 @@ function calc_abund_he_i_rl, temperature=temperature, density=density, $
     print,'He I recombination coefficients (he_i_aeff_data) are not set'
     return, 0
   endif
-  if keyword_set(h_i_aeff_data) eq 0 then begin 
-    print,'H I recombination coefficients (h_i_aeff_data) are not set'
-    return, 0
-  endif
   if keyword_set(linenum) eq 0 then begin 
     print,'Line Number for Wavelength is not given'
     return, 0
   endif
-  if keyword_set(line_flux) eq 0 then begin 
-    print,'Line flux intensity (line_flux) is not given'
-    return, 0
-  endif  
   if (temperature le 0.D0) or (density le 0.D0) then begin
       print,'temperature = ', temperature, ', density = ', density
       return, 0
   endif
-  emissivity_Hbeta=calc_emiss_h_beta(temperature=temperature,density=density,h_i_aeff_data=h_i_aeff_data)
   
-  emissivity=calc_emiss_he_i_rl(temperature=temperature, density=density, linenum=linenum, $
-                                he_i_aeff_data=he_i_aeff_data)
-  abund = (emissivity_Hbeta/emissivity)*double(line_flux/100.0)
+  TEh2=double(temperature)
+  NEh2=double(density)
+  line1=long(linenum-1)
+  emissivity=double(0.0)
   
-  return,abund
+  ; hei_ems=read_porter()
+  hei_ems=dblarr(21,14) ;(21,14,44)
+  temp1=dblarr(46)
+  
+  nlines = 294 
+  
+  for i=0, nlines-1 do begin 
+    temp1=he_i_aeff_data[*,i]
+    tpos=nint((temp1[0]/1000)-5)
+    npos=nint(alog10(temp1[1])-1)
+    hei_ems[tpos,npos]=temp1[line1+2];temp[2:45]
+  endfor
+
+  
+  ; restrict to the density & temperature ranges to 2012MNRAS.425L..28P  
+  if (NEh2 lt 1.e1) then NEh2=1.e1
+  if (NEh2 gt 1.e14) then NEh2=1.e14
+  if (TEh2 lt 5000) then TEh2=5000.
+  if (TEh2 gt 25000) then TEh2=25000.
+  
+  ; get logarithmic density
+  dens_log=alog10(NEh2)
+  
+  dens_grid=double(indgen(14) + 1)
+  temp_grid=double(1000*(indgen(21) + 5))
+
+  hei_ems1=hei_ems[*,*]
+  ; Bilinearly interpolate density & temperature
+  ; emiss_log =_interp2d(hei_ems1, temp_grid, dens_grid, TEh2, dens_log, [101,101], /cubic, /quintic);, /trigrid) not work on GDL
+  emiss_log=_interp_2d(hei_ems1, TEh2, dens_log, temp_grid, dens_grid)
+    
+  ; wavl=he_i_aeff_data_Wavelength[line1]
+  emissivity= 10.d^(emiss_log)
+  
+  return,emissivity
 end

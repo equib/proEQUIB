@@ -38,7 +38,7 @@ function redlaw_ccm, wavelength, rv=rv
 ;   This library is released under a GNU General Public License.
 ;
 ; :Version:
-;   0.0.1
+;   0.3.0
 ;
 ; :History:
 ;     Based on Formulae by Cardelli, Clayton & Mathis 1989, ApJ 345, 245-256.

@@ -51,7 +51,7 @@ function calc_emissivity, temperature=temperature, density=density, $
 ;        Emissivity(O III 5007):   3.6041012e-21
 ;
 ; :Categories:
-;   Abundance Analysis, Collisionally Excited Lines
+;   Abundance Analysis, Collisionally Excited Lines, Emissivity
 ;
 ; :Dirs:
 ;  ./
@@ -64,7 +64,7 @@ function calc_emissivity, temperature=temperature, density=density, $
 ;   This library is released under a GNU General Public License.
 ;
 ; :Version:
-;   0.0.6
+;   0.3.0
 ;
 ; :History:
 ;     15/09/2013, A. Danehkar, Translated from FORTRAN to IDL code.

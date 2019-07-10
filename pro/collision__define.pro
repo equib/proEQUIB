@@ -1,6 +1,7 @@
 ; docformat = 'rst'
 
 ;+
+;     "Unit for Collisionally Excited Lines": 
 ;     This obejct library can be used
 ;     to determine electron temperature, electron density, 
 ;     ionic abundance from the observed flux of collisionally 
@@ -332,12 +333,6 @@ function collision::calc_temperature, line_flux_ratio=line_flux_ratio, density=d
 ;                            upper atomic level(s) e.g '1,2/', '1,2,1,3/'
 ;     lower_levels     :     in, required, type=string
 ;                            lower atomic level(s) e.g '1,2/', '1,2,1,3/'
-;     elj_data         :     in, required, type=array/object
-;                            energy levels (Ej) data
-;     omij_data        :     in, required, type=array/object
-;                            collision strengths (omega_ij) data
-;     aij_data         :     in, required, type=array/object
-;                            transition probabilities (Aij) data
 ;     low_temperature  :     in, optional, type=float
 ;                            lower temperature range
 ;     high_temperature  :     in, optional, type=float
@@ -350,26 +345,18 @@ function collision::calc_temperature, line_flux_ratio=line_flux_ratio, density=d
 ; :Examples:
 ;    For example::
 ;
-;     IDL> base_dir = file_dirname(file_dirname((routine_info('$MAIN$', /source)).path))
-;     IDL> data_dir = ['atomic-data', 'chianti70']
-;     IDL> Atom_Elj_file = filepath('AtomElj.fits', root_dir=base_dir, subdir=data_dir )
-;     IDL> Atom_Omij_file = filepath('AtomOmij.fits', root_dir=base_dir, subdir=data_dir )
-;     IDL> Atom_Aij_file = filepath('AtomAij.fits', root_dir=base_dir, subdir=data_dir )
-;     IDL> atom='s'
-;     IDL> ion='ii'
-;     IDL> s_ii_elj=atomneb_read_elj(Atom_Elj_file, atom, ion, level_num=5) ; read Energy Levels (Ej)
-;     IDL> s_ii_omij=atomneb_read_omij(Atom_Omij_file, atom, ion) ; read Collision Strengths (Omegaij)
-;     IDL> s_ii_aij=atomneb_read_aij(Atom_Aij_file, atom, ion) ; read Transition Probabilities (Aij)
+;     IDL> s2=obj_new('collision')
+;     IDL> s2->set,['s','ii']
+;     IDL> 
 ;     IDL> upper_levels='1,2,1,3/'
 ;     IDL> lower_levels='1,5/'
 ;     IDL> density = double(2550)
 ;     IDL> line_flux_ratio=double(10.753)
-;     IDL> temperature=calc_temperature(line_flux_ratio=line_flux_ratio, density=density, $
-;     IDL>                              upper_levels=upper_levels, lower_levels=lower_levels, $
-;     IDL>                              elj_data=s_ii_elj, omij_data=s_ii_omij, $
-;     IDL>                              aij_data=s_ii_aij)
+;     IDL> temperature=s2->calc_temperature(line_flux_ratio=line_flux_ratio, density=density, $
+;     IDL>   upper_levels=upper_levels, lower_levels=lower_levels)
 ;     IDL> print, "Electron Temperature:", temperature
 ;        Electron Temperature:       7920.2865
+;     
 ;
 ; :Categories:
 ;   Plasma Diagnostics, Collisionally Excited Lines
@@ -420,6 +407,8 @@ function collision::calc_temperature, line_flux_ratio=line_flux_ratio, density=d
 ;     04/03/2019, A. Danehkar, use the get_omij_temp() routine.
 ;     
 ;     24/05/2019, A. Danehkar, add the optional temperature range.
+;     
+;     08/07/2019, A. Danehkar, Move to object-oriented programming (OOP).
 ;
 ; FORTRAN HISTORY:
 ;
@@ -488,11 +477,6 @@ function collision::calc_density, line_flux_ratio=line_flux_ratio, temperature=t
 ;                            upper atomic level(s) e.g '1,2/', '1,2,1,3/'
 ;     lower_levels     :     in, required, type=string
 ;                            lower atomic level(s) e.g '1,2/', '1,2,1,3/'
-;     elj_data         :     in, required, type=array/object
-;                            energy levels (Ej) data
-;     omij_data        :     in, required, type=array/object
-;                            collision strengths (omega_ij) data
-;     aij_data         :     in, required, type=array/object
 ;                            transition probabilities (Aij) data
 ;     low_density      :     in, optional, type=float
 ;                            lower density range
@@ -506,26 +490,19 @@ function collision::calc_density, line_flux_ratio=line_flux_ratio, temperature=t
 ; :Examples:
 ;    For example::
 ;
-;     IDL> base_dir = file_dirname(file_dirname((routine_info('$MAIN$', /source)).path))
-;     IDL> data_dir = ['atomic-data', 'chianti70']
-;     IDL> Atom_Elj_file = filepath('AtomElj.fits', root_dir=base_dir, subdir=data_dir )
-;     IDL> Atom_Omij_file = filepath('AtomOmij.fits', root_dir=base_dir, subdir=data_dir )
-;     IDL> Atom_Aij_file = filepath('AtomAij.fits', root_dir=base_dir, subdir=data_dir )
-;     IDL> atom='s'
-;     IDL> ion='ii'
-;     IDL> s_ii_elj=atomneb_read_elj(Atom_Elj_file, atom, ion, level_num=5) ; read Energy Levels (Ej)
-;     IDL> s_ii_omij=atomneb_read_omij(Atom_Omij_file, atom, ion) ; read Collision Strengths (Omegaij)
-;     IDL> s_ii_aij=atomneb_read_aij(Atom_Aij_file, atom, ion) ; read Transition Probabilities (Aij)\
+;     IDL> s2=obj_new('collision')
+;     IDL> s2->set,['s','ii']
+;     IDL> 
 ;     IDL> upper_levels='1,2/'
 ;     IDL> lower_levels='1,3/'
+;     IDL> diagtype='D'
 ;     IDL> temperature=double(7000.0);
 ;     IDL> line_flux_ratio=double(1.506);
-;     IDL> density=calc_density(line_flux_ratio=line_flux_ratio, temperature=temperature, $
-;     IDL>                      upper_levels=upper_levels, lower_levels=lower_levels, $
-;     IDL>                      elj_data=s_ii_elj, omij_data=s_ii_omij, $
-;     IDL>                      aij_data=s_ii_aij)
+;     IDL> density=s2->calc_density(line_flux_ratio=line_flux_ratio, temperature=temperature, $
+;     IDL>   upper_levels=upper_levels, lower_levels=lower_levels)
 ;     IDL> print, "Electron Density:", density
-;        Electron Density:       2312.6395
+;        Electron Density:       2312.6164
+;     
 ;
 ; :Categories:
 ;   Plasma Diagnostics, Collisionally Excited Lines
@@ -577,6 +554,8 @@ function collision::calc_density, line_flux_ratio=line_flux_ratio, temperature=t
 ;
 ;     24/05/2019, A. Danehkar, add the optional density range.
 ;
+;     08/07/2019, A. Danehkar, Move to object-oriented programming (OOP).
+;
 ; FORTRAN HISTORY:
 ;
 ;     03/05/1981, I.D.Howarth,  Version 1.
@@ -624,7 +603,124 @@ end
 function collision::calc_populations, temperature=temperature, density=density, $
                                 eff_Omij=eff_Omij, $
                                 level_num=level_num, irats=irats
-  
+;+
+;     This function solves atomic level populations in statistical equilibrium 
+;     for given electron temperature and density.
+;
+; :Returns:
+;    type=array/object. This function returns the atomic level populations.
+;
+; :Keywords:
+;     temperature :   in, required, type=float
+;                     electron temperature
+;     density     :   in, required, type=float
+;                     electron density
+;     eff_Omij    :   in, type=array/object
+;                     effective collision strengths (Omij_T) at given temperature
+;     level_num   :   in, type=int
+;                     Number of levels
+;     irats       :   in, type=int
+;                     Else Coll. rates = tabulated values * 10 ** irats
+;
+; :Examples:
+;    For example::
+;
+;     IDL> s2=obj_new('collision')
+;     IDL> s2->set,['s','ii']
+;     IDL> 
+;     IDL> density = double(1000)
+;     IDL> temperature=double(10000.0);
+;     IDL> Nlj=s2->calc_populations(temperature=temperature, density=density)
+;     IDL> print, 'Atomic Level Populations:', Nlj
+;        Atomic Level Populations:      0.96992796    0.0070037404     0.023062517   2.6594158e-06   3.1277593e-06
+;     
+;
+; :Categories:
+;   Plasma Diagnostics, Abundance Analysis, Collisionally Excited Lines
+;   
+; :Dirs:
+;  ./
+;      Subroutines
+;
+; :Author:
+;   Ashkbiz Danehkar
+;
+; :Copyright:
+;   This library is released under a GNU General Public License.
+;
+; :Version:
+;   0.0.6
+;
+; :History:
+;     15/09/2013, A. Danehkar, Translated from FORTRAN to IDL code.
+;
+;     20/10/2016, A. Danehkar, Replaced str2int with strnumber.
+;
+;     20/10/2016, A. Danehkar, Replaced CFY, SPLMAT, and CFD with
+;          IDL function INTERPOL( /SPLINE).
+;
+;     20/10/2016, A. Danehkar, Replaced LUSLV with IDL LAPACK function
+;                       LA_LINEAR_EQUATION.
+;
+;     15/11/2016, A. Danehkar, Replaced LA_LINEAR_EQUATION (not work in GDL)
+;           with IDL function LUDC & LUSOL.
+;
+;     19/11/2016, A. Danehkar, Replaced INTERPOL (not accurate) with
+;                    SPL_INIT & SPL_INTERP.
+;
+;     20/11/2016, A. Danehkar, Made a new function calc_populations()
+;       for solving atomic level populations and separated it from
+;       calc_abundance(), calc_density() and calc_temperature().
+;
+;     10/03/2017, A. Danehkar, Integration with AtomNeb, now uses atomic data
+;                      input elj_data, omij_data, aij_data.
+;
+;     12/06/2017, A. Danehkar, Cleaning the function, and remove unused varibales
+;                        from calc_populations().
+;                        
+;     27/02/2019, A. Danehkar, Simplify the calc_populations() routine 
+;                        for external usage.
+;                            
+;     04/03/2019, A. Danehkar, Use the get_omij_temp() routine.
+;
+;     08/07/2019, A. Danehkar, Move to object-oriented programming (OOP).
+;
+; FORTRAN HISTORY:
+;
+;     03/05/1981, I.D.Howarth,  Version 1.
+;
+;     05/05/1981, I.D.Howarth,  Minibug fixed!
+;
+;     07/05/1981, I.D.Howarth,  Now takes collision rates or strengths.
+;
+;     03/08/1981, S.Adams,      Interpolates collision strengths.
+;
+;     07/08/1981, S.Adams,      Input method changed.
+;
+;     19/11/1984, R.E.S.Clegg,  SA files entombed in scratch disk. Logical
+;                               filenames given to SA's data files.
+;
+;     08/1995, D.P.Ruffle, Changed input file format. Increased matrices.
+;
+;     02/1996, X.W.Liu,   Tidy up. SUBROUTINES SPLMAT, HGEN, CFY and CFD
+;                         modified such that matrix sizes (i.e. maximum
+;                         of Te and maximum no of levels) can now be cha
+;                         by modifying the parameters NDIM1, NDIM2 and N
+;                         in the Main program. EASY!
+;                         Now takes collision rates as well.
+;                         All variables are declared explicitly
+;                         Generate two extra files (ionpop.lis and ionra
+;                         of plain stream format for plotting.
+;
+;     06/1996, C.J.Pritchet, Changed input data format for cases IBIG=1,2.
+;                         Fixed readin bug for IBIG=2 case.
+;                         Now reads reformatted upsilons (easier to see
+;                         and the 0 0 0 data end is excluded for these c
+;                         The A values have a different format for IBIG=.
+;
+;     2006, B.Ercolano,   Converted to F90.
+;-
+
   value=calc_populations(temperature=temperature, density=density, $
                          elj_data=*(self.data_elj), omij_data=*(self.data_omij), $
                          aij_data=*(self.data_aij), $
@@ -645,12 +741,6 @@ function collision::calc_crit_density, temperature=temperature, $
 ; :Keywords:
 ;     temperature :   in, required, type=float
 ;                     electron temperature
-;     elj_data    :   in, required, type=array/object
-;                            energy levels (Ej) data
-;     omij_data   :   in, required, type=array/object
-;                            collision strengths (omega_ij) data
-;     aij_data    :   in, required, type=array/object
-;                            transition probabilities (Aij) data
 ;     level_num   :   in, type=int
 ;                     Number of levels
 ;     irats       :   in, type=int
@@ -659,20 +749,11 @@ function collision::calc_crit_density, temperature=temperature, $
 ; :Examples:
 ;    For example::
 ;
-;     IDL> base_dir = file_dirname(file_dirname((routine_info('$MAIN$', /source)).path))
-;     IDL> data_dir = ['atomic-data', 'chianti70']
-;     IDL> Atom_Elj_file = filepath('AtomElj.fits', root_dir=base_dir, subdir=data_dir )
-;     IDL> Atom_Omij_file = filepath('AtomOmij.fits', root_dir=base_dir, subdir=data_dir )
-;     IDL> Atom_Aij_file = filepath('AtomAij.fits', root_dir=base_dir, subdir=data_dir )
-;     IDL> atom='s'
-;     IDL> ion='ii'
-;     IDL> s_ii_elj=atomneb_read_elj(Atom_Elj_file, atom, ion, level_num=5) ; read Energy Levels (Ej)
-;     IDL> s_ii_omij=atomneb_read_omij(Atom_Omij_file, atom, ion) ; read Collision Strengths (Omegaij)
-;     IDL> s_ii_aij=atomneb_read_aij(Atom_Aij_file, atom, ion) ; read Transition Probabilities (Aij)\
+;     IDL> s2=obj_new('collision')
+;     IDL> s2->set,['s','ii']
+;     IDL> 
 ;     IDL> temperature=double(10000.0)
-;     IDL> N_crit=calc_crit_density(temperature=temperature, $
-;     IDL>                          elj_data=s_ii_elj, omij_data=s_ii_omij, $
-;     IDL>                          aij_data=s_ii_aij)
+;     IDL> N_crit=s2->calc_crit_density(temperature=temperature)
 ;     IDL> print, 'Critical Densities:', N_crit
 ;        Critical Densities:       0.0000000       5007.8396       1732.8414       1072685.0       2220758.1
 ;
@@ -726,6 +807,8 @@ function collision::calc_crit_density, temperature=temperature, $
 ;                        from the calc_populations() routine.
 ;
 ;     04/03/2019, A. Danehkar, use the get_omij_temp() routine.
+;
+;     08/07/2019, A. Danehkar, Move to object-oriented programming (OOP).
 ;
 ; FORTRAN HISTORY:
 ;
@@ -786,36 +869,24 @@ function collision::calc_emissivity, temperature=temperature, density=density, $
 ;                         electron density
 ;     atomic_levels :     In, required, type=string
 ;                         level(s) e.g '1,2/', '1,2,1,3/'
-;     elj_data      :     in, required, type=array/object
-;                         energy levels (Ej) data
-;     omij_data     :     in, required, type=array/object
-;                         collision strengths (omega_ij) data
-;     aij_data      :     in, required, type=array/object
-;                         transition probabilities (Aij) data
 ;
 ; :Examples:
 ;    For example::
 ;
-;     IDL> base_dir = file_dirname(file_dirname((routine_info('$MAIN$', /source)).path))
-;     IDL> data_dir = ['atomic-data', 'chianti70']
-;     IDL> Atom_Elj_file = filepath('AtomElj.fits', root_dir=base_dir, subdir=data_dir )
-;     IDL> Atom_Omij_file = filepath('AtomOmij.fits', root_dir=base_dir, subdir=data_dir )
-;     IDL> Atom_Aij_file = filepath('AtomAij.fits', root_dir=base_dir, subdir=data_dir )
-;     IDL> atom='o'
-;     IDL> ion='iii'
-;     IDL> o_iii_elj=atomneb_read_elj(Atom_Elj_file, atom, ion, level_num=5) ; read Energy Levels (Ej)
-;     IDL> o_iii_omij=atomneb_read_omij(Atom_Omij_file, atom, ion) ; read Collision Strengths (Omegaij)
-;     IDL> o_iii_aij=atomneb_read_aij(Atom_Aij_file, atom, ion) ; read Transition Probabilities (Aij)
+;     IDL> o3=obj_new('collision')
+;     IDL> o3->set,['o','iii']
+;     IDL> 
+;     IDL> levels5007='3,4/'
 ;     IDL> temperature=double(10000.0)
 ;     IDL> density=double(5000.0)
-;     IDL> atomic_levels='3,4/'
-;     IDL> emiss5007=double(0.0)
-;     IDL> emiss5007=calc_emissivity(temperature=temperature, density=density, $
-;     IDL>                           atomic_levels=atomic_levels, $
-;     IDL>                           elj_data=o_iii_elj, omij_data=o_iii_omij, $
-;     IDL>                           aij_data=o_iii_aij
-;     IDL> print, 'Emissivity(O III 5007):', emiss5007
+;     IDL> iobs5007=double(1200.0)
+;     IDL> Abb5007=double(0.0)
+;     IDL> 
+;     IDL> emis=o3->calc_emissivity(temperature=temperature, density=density, $
+;     IDL>   atomic_levels=levels5007)
+;     IDL> print, 'Emissivity(O III 5007):', emis
 ;        Emissivity(O III 5007):   3.6041012e-21
+;     
 ;
 ; :Categories:
 ;   Abundance Analysis, Collisionally Excited Lines
@@ -865,6 +936,8 @@ function collision::calc_emissivity, temperature=temperature, density=density, $
 ;                        from calc_emissivity().
 ;
 ;     27/06/2019, A. Danehkar, use the simplified calc_populations() routine.
+;
+;     08/07/2019, A. Danehkar, Move to object-oriented programming (OOP).
 ;
 ; FORTRAN HISTORY:
 ;
@@ -929,45 +1002,24 @@ function collision::calc_abundance, temperature=temperature, density=density, $
 ;                         line flux intensity
 ;     atomic_levels :     in, required, type=string
 ;                         level(s) e.g '1,2/', '1,2,1,3/'
-;     elj_data      :     in, required, type=array/object
-;                         energy levels (Ej) data
-;     omij_data     :     in, required, type=array/object
-;                         collision strengths (omega_ij) data
-;     aij_data      :     in, required, type=array/object
-;                         transition probabilities (Aij) data
-;     h_i_aeff_data :     in, required, type=array/object
-;                         H I recombination coefficients
 ;
 ; :Examples:
 ;    For example::
 ;
-;     IDL> base_dir = file_dirname(file_dirname((routine_info('$MAIN$', /source)).path))
-;     IDL> data_dir = ['atomic-data', 'chianti70']
-;     IDL> Atom_Elj_file = filepath('AtomElj.fits', root_dir=base_dir, subdir=data_dir )
-;     IDL> Atom_Omij_file = filepath('AtomOmij.fits', root_dir=base_dir, subdir=data_dir )
-;     IDL> Atom_Aij_file = filepath('AtomAij.fits', root_dir=base_dir, subdir=data_dir )
-;     IDL> data_rc_dir = ['atomic-data-rc']
-;     IDL> Atom_RC_SH95_file= filepath('rc_SH95.fits', root_dir=base_dir, subdir=data_rc_dir )
-;     IDL> atom='o'
-;     IDL> ion='iii'
-;     IDL> o_iii_elj=atomneb_read_elj(Atom_Elj_file, atom, ion, level_num=5) ; read Energy Levels (Ej)
-;     IDL> o_iii_omij=atomneb_read_omij(Atom_Omij_file, atom, ion) ; read Collision Strengths (Omegaij)
-;     IDL> o_iii_aij=atomneb_read_aij(Atom_Aij_file, atom, ion) ; read Transition Probabilities (Aij)
-;     IDL> atom='h'
-;     IDL> ion='ii' ; H I
-;     IDL> hi_rc_data=atomneb_read_aeff_sh95(Atom_RC_SH95_file, atom, ion)
-;     IDL> h_i_aeff_data=hi_rc_data[0].Aeff
+;     IDL> o3=obj_new('collision')
+;     IDL> o3->set,['o','iii']
+;     IDL> 
+;     IDL> levels5007='3,4/'
 ;     IDL> temperature=double(10000.0)
 ;     IDL> density=double(5000.0)
-;     IDL> atomic_levels='3,4/'
 ;     IDL> iobs5007=double(1200.0)
 ;     IDL> Abb5007=double(0.0)
-;     IDL> Abb5007=calc_abundance(temperature=temperature, density=density, $
-;     IDL>                        line_flux=iobs5007, atomic_levels=atomic_levels,$
-;     IDL>                        elj_data=o_iii_elj, omij_data=o_iii_omij, $
-;     IDL>                        aij_data=o_iii_aij, h_i_aeff_data=hi_rc_data[0].Aeff)
+;     IDL> 
+;     IDL> Abb5007=o3->calc_abundance(temperature=temperature, density=density, $
+;     IDL>   line_flux=iobs5007, atomic_levels=levels5007)
 ;     IDL> print, 'N(O^2+)/N(H+):', Abb5007
 ;        N(O^2+)/N(H+):   0.00041256231
+;     
 ;
 ; :Categories:
 ;   Abundance Analysis, Collisionally Excited Lines
@@ -1015,6 +1067,8 @@ function collision::calc_abundance, temperature=temperature, density=density, $
 ;
 ;     12/06/2017, A. Danehkar, Cleaning the function, and remove unused varibales
 ;                        from calc_abundance().
+;
+;     08/07/2019, A. Danehkar, Move to object-oriented programming (OOP).
 ;
 ; FORTRAN HISTORY:
 ;
@@ -1074,14 +1128,6 @@ pro collision::print_ionic, temperature=temperature, density=density, $
 ;                       electron temperature
 ;     density       :   in, required, type=float
 ;                       electron density
-;     elj_data      :   in, required, type=array/object
-;                       energy levels (Ej) data
-;     omij_data     :   in, required, type=array/object
-;                       collision strengths (omega_ij) data
-;     aij_data      :   in, required, type=array/object
-;                       transition probabilities (Aij) data
-;     h_i_aeff_data :   in, type=array/object
-;                       H I recombination coefficients
 ;     printEmissivity  :   in, type=boolean
 ;                          Set for printing Emissivities
 ;     printPopulations :   in, type=boolean
@@ -1092,57 +1138,48 @@ pro collision::print_ionic, temperature=temperature, density=density, $
 ; :Examples:
 ;    For example::
 ;
-;     IDL> base_dir = file_dirname(file_dirname((routine_info('$MAIN$', /source)).path))
-;     IDL> data_dir = ['atomic-data', 'chianti70']
-;     IDL> Atom_Elj_file = filepath('AtomElj.fits', root_dir=base_dir, subdir=data_dir )
-;     IDL> Atom_Omij_file = filepath('AtomOmij.fits', root_dir=base_dir, subdir=data_dir )
-;     IDL> Atom_Aij_file = filepath('AtomAij.fits', root_dir=base_dir, subdir=data_dir )
-;     IDL> data_rc_dir = ['atomic-data-rc']
-;     IDL> Atom_RC_SH95_file= filepath('rc_SH95.fits', root_dir=base_dir, subdir=data_rc_dir )
-;     IDL> atom='o'
-;     IDL> ion='iii'
-;     IDL> o_iii_elj=atomneb_read_elj(Atom_Elj_file, atom, ion, level_num=5) ; read Energy Levels (Ej)
-;     IDL> o_iii_omij=atomneb_read_omij(Atom_Omij_file, atom, ion) ; read Collision Strengths (Omegaij)
-;     IDL> o_iii_aij=atomneb_read_aij(Atom_Aij_file, atom, ion) ; read Transition Probabilities (Aij)
-;     IDL> atom='h'
-;     IDL> ion='ii' ; H I
-;     IDL> hi_rc_data=atomneb_read_aeff_sh95(Atom_RC_SH95_file, atom, ion)
-;     IDL> temperature=double(10000.0);
-;     IDL> density = double(1000.)
-;     IDL> print_ionic, temperature=temperature, density=density, $, $
-;     IDL>              elj_data=o_iii_elj, omij_data=o_iii_omij, $
-;     IDL>              aij_data=o_iii_aij, h_i_aeff_data=hi_rc_data[0].Aeff
+;     IDL> o3=obj_new('collision')
+;     IDL> o3->set,['o','iii']
+;     IDL>
+;     IDL> levels5007='3,4/'
+;     IDL> temperature=double(10000.0)
+;     IDL> density=double(5000.0)
+;     IDL> iobs5007=double(1200.0)
+;     IDL> Abb5007=double(0.0)
+;     IDL> 
+;     IDL> o3->print_ionic, temperature=temperature, density=density
 ;        Temperature =   10000.0 K
-;        Density =    1000.0 cm-3
+;        Density =    5000.0 cm-3
 ;
 ;        Level    Populations   Critical Densities
-;        Level 1:   3.063E-01   0.000E+00
-;        Level 2:   4.896E-01   4.908E+02
-;        Level 3:   2.041E-01   3.419E+03
-;        Level 4:   4.427E-05   6.853E+05
-;        Level 5:   2.985E-09   2.547E+07
+;        Level 1:   1.556E-01   0.000E+00
+;        Level 2:   4.269E-01   4.908E+02
+;        Level 3:   4.172E-01   3.419E+03
+;        Level 4:   2.221E-04   6.853E+05
+;        Level 5:   1.522E-08   2.547E+07
 ;
-;         2.597E-05
-;             88.34um
-;            (2-->1)
-;         2.859E-22
+;        2.597E-05
+;        88.34um
+;        (2-->1)
+;        4.986E-23
 ;
-;         0.000E+00   9.632E-05
-;             32.66um      51.81um
-;            (3-->1)     (3-->2)
-;         0.000E+00   7.536E-22
+;        0.000E+00   9.632E-05
+;        32.66um      51.81um
+;        (3-->1)     (3-->2)
+;        0.000E+00   3.081E-22
 ;
-;         2.322E-06   6.791E-03   2.046E-02
-;           4932.60A    4960.29A    5008.24A
-;            (4-->1)     (4-->2)     (4-->3)
-;         4.140E-25   1.204E-21   3.593E-21
+;        2.322E-06   6.791E-03   2.046E-02
+;        4932.60A    4960.29A    5008.24A
+;        (4-->1)     (4-->2)     (4-->3)
+;        4.153E-25   1.208E-21   3.604E-21
 ;
-;         0.000E+00   2.255E-01   6.998E-04   1.685E+00
-;           2315.58A    2321.67A    2332.12A    4364.45A
-;            (5-->1)     (5-->2)     (5-->3)     (5-->4)
-;         0.000E+00   5.759E-24   1.779E-26   2.289E-23
+;        0.000E+00   2.255E-01   6.998E-04   1.685E+00
+;        2315.58A    2321.67A    2332.12A    4364.45A
+;        (5-->1)     (5-->2)     (5-->3)     (5-->4)
+;        0.000E+00   5.875E-24   1.815E-26   2.335E-23
 ;
-;        H-beta emissivity: 1.237E-25 N(H+) Ne  [erg/s]
+;        H-beta emissivity: 1.239E-25 N(H+) Ne  [erg/s]
+;
 ;
 ; :Categories:
 ;   Plasma Diagnostics, Abundance Analysis, Collisionally Excited Lines
@@ -1163,6 +1200,7 @@ pro collision::print_ionic, temperature=temperature, density=density, $
 ; :History:
 ;     04/03/2019, A. Danehkar, create the print_ionic() routine.
 ;
+;     08/07/2019, A. Danehkar, Move to object-oriented programming (OOP).
 ;-
     print_ionic, temperature=temperature, density=density, $
                   elj_data=*(self.data_elj), omij_data=*(self.data_omij), $
@@ -1184,8 +1222,6 @@ function collision::get_omij_temp, temperature=temperature, $
 ; :Keywords:
 ;     temperature :   in, required, type=float
 ;                     electron temperature
-;     omij_data   :   in, required, type=array/object
-;                     collision strengths (omega_ij) data
 ;     level_num   :   in, type=int
 ;                     Number of levels
 ;     irats       :   in, type=int
@@ -1194,18 +1230,11 @@ function collision::get_omij_temp, temperature=temperature, $
 ; :Examples:
 ;    For example::
 ;
-;     IDL> base_dir = file_dirname(file_dirname((routine_info('$MAIN$', /source)).path))
-;     IDL> data_dir = ['atomic-data', 'chianti70']
-;     IDL> Atom_Elj_file = filepath('AtomElj.fits', root_dir=base_dir, subdir=data_dir )
-;     IDL> Atom_Omij_file = filepath('AtomOmij.fits', root_dir=base_dir, subdir=data_dir )
-;     IDL> Atom_Aij_file = filepath('AtomAij.fits', root_dir=base_dir, subdir=data_dir )
-;     IDL> atom='s'
-;     IDL> ion='ii'
-;     IDL> s_ii_elj=atomneb_read_elj(Atom_Elj_file, atom, ion, level_num=5) ; read Energy Levels (Ej)
-;     IDL> s_ii_omij=atomneb_read_omij(Atom_Omij_file, atom, ion) ; read Collision Strengths (Omegaij)
-;     IDL> s_ii_aij=atomneb_read_aij(Atom_Aij_file, atom, ion) ; read Transition Probabilities (Aij)\
-;     IDL> temperature=double(10000.0);
-;     IDL> Omij_T=get_omij_temp(temperature=temperature, omij_data=s_ii_omij)
+;     IDL> s2=obj_new('collision')
+;     IDL> s2->set,['s','ii']
+;     IDL>
+;     IDL> temperature=double(10000.0)
+;     IDL> Omij_T=s2->get_omij_temp(temperature=temperature)
 ;     IDL> print, 'Effective Collision Strengths: '
 ;     IDL> print, Omij_T
 ;        Effective Collision Strengths:
@@ -1214,6 +1243,7 @@ function collision::get_omij_temp, temperature=temperature, $
 ;        4.1600000       7.4600000       0.0000000       0.0000000       0.0000000
 ;        1.1700000       1.8000000       2.2000000       0.0000000       0.0000000
 ;        2.3500000       3.0000000       4.9900000       2.7100000       0.0000000
+;     
 ;
 ; :Categories:
 ;   Plasma Diagnostics, Abundance Analysis, Collisionally Excited Lines
@@ -1229,11 +1259,12 @@ function collision::get_omij_temp, temperature=temperature, $
 ;   This library is released under a GNU General Public License.
 ;
 ; :Version:
-;   0.2.0
+;   0.3.0
 ;
 ; :History:
 ;     04/03/2019, A. Danehkar, create the get_omij_temp() routine.
 ;
+;     08/07/2019, A. Danehkar, Move to object-oriented programming (OOP).
 ;-
 
   value=get_omij_temp(temperature=temperature, $

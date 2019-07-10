@@ -77,58 +77,90 @@ density=double(5000.0)
 ; 6678.16: linenum=16
 ; 7065.25: linenum=17
 ; 7281.35: linenum=18
-he_i_4471_flux= 2.104
 linenum=10; 4471.50
+emiss_he_i=calc_emiss_he_i_rl(temperature=temperature, density=density, linenum=linenum, $
+                              he_i_aeff_data=he_i_aeff_data)
+print, 'He I Emissivity:', emiss_he_i
+he_i_4471_flux= 2.104
 Abund_he_i=calc_abund_he_i_rl(temperature=temperature, density=density, $
                               linenum=linenum, line_flux=he_i_4471_flux, $
                               he_i_aeff_data=he_i_aeff_data, h_i_aeff_data=h_i_aeff_data)
 print, 'N(He^+)/N(H^+):', Abund_he_i
 
+emiss_he_ii=calc_emiss_he_ii_rl(temperature=temperature, density=density, $
+                                he_ii_aeff_data=he_ii_aeff_data)
+print, 'He II Emissivity:', emiss_he_ii
 he_ii_4686_flux = 135.833
 Abund_he_ii=calc_abund_he_ii_rl(temperature=temperature, density=density, $
                                 line_flux=he_ii_4686_flux, $
                                 he_ii_aeff_data=he_ii_aeff_data, h_i_aeff_data=h_i_aeff_data)
 print, 'N(He^2+)/N(H^+):', Abund_he_ii
 
-c_ii_6151_flux = 0.028
 wavelength=6151.43
+emiss_c_ii=calc_emiss_c_ii_rl(temperature=temperature, density=density, $
+                            wavelength=wavelength, $
+                           c_ii_rc_data=c_ii_rc_data)
+print, 'C II Emissivity:', emiss_c_ii
+c_ii_6151_flux = 0.028
 Abund_c_ii=calc_abund_c_ii_rl(temperature=temperature, density=density, $
                               wavelength=wavelength, line_flux=c_ii_6151_flux, $
                               c_ii_rc_data=c_ii_rc_data, h_i_aeff_data=h_i_aeff_data)
 print, 'N(C^2+)/N(H+):', Abund_c_ii
 
-c_iii_4647_flux = 0.107
 wavelength=4647.42
+emiss_c_iii=calc_emiss_c_iii_rl(temperature=temperature, density=density, $
+                                wavelength=wavelength, $
+                                c_iii_rc_data=c_iii_rc_data)
+print, 'C III Emissivity:', emiss_c_iii
+c_iii_4647_flux = 0.107
 Abund_c_iii=calc_abund_c_iii_rl(temperature=temperature, density=density, $
                                 wavelength=wavelength, line_flux=c_iii_4647_flux, $
                                 c_iii_rc_data=c_iii_rc_data, h_i_aeff_data=h_i_aeff_data) 
 print, 'N(C^3+)/N(H+):', Abund_c_iii
 
-n_ii_4442_flux = 0.017
 wavelength=4442.02
+emiss_n_ii=calc_emiss_n_ii_rl(temperature=temperature, density=density, $
+                              wavelength=wavelength, $
+                              n_ii_rc_br=n_ii_rc_data_br, n_ii_rc_data=n_ii_rc_data)
+print, 'N II Emissivity:', emiss_n_ii
+n_ii_4442_flux = 0.017
 Abund_n_ii=calc_abund_n_ii_rl(temperature=temperature, density=density, $
                               wavelength=wavelength, line_flux=n_ii_4442_flux, $
                               n_ii_rc_br=n_ii_rc_data_br, n_ii_rc_data=n_ii_rc_data, $
                               h_i_aeff_data=h_i_aeff_data)
 print, 'N(N^2+)/N(H+):', Abund_n_ii
 
-n_iii_4641_flux = 0.245
+
 wavelength=4640.64
+emiss_n_iii=calc_emiss_n_iii_rl(temperature=temperature, density=density, $
+                                wavelength=wavelength, $
+                                n_iii_rc_data=n_iii_rc_data)
+print, 'N III Emissivity:', emiss_n_iii
+n_iii_4641_flux = 0.245
 Abund_n_iii=calc_abund_n_iii_rl(temperature=temperature, density=density, $
                                 wavelength=wavelength, line_flux=n_iii_4641_flux, $
                                 n_iii_rc_data=n_iii_rc_data, h_i_aeff_data=h_i_aeff_data)
 print, 'N(N^3+)/N(H+):', Abund_n_iii
 
-o_ii_4614_flux = 0.009
+
 wavelength=4613.68
+emiss_o_ii=calc_emiss_o_ii_rl(temperature=temperature, density=density, $
+                              wavelength=wavelength, $
+                              o_ii_rc_br=o_ii_rc_data_br, o_ii_rc_data=o_ii_rc_data)
+print, 'O II Emissivity:', emiss_o_ii
+o_ii_4614_flux = 0.009
 Abund_o_ii=calc_abund_o_ii_rl(temperature=temperature, density=density, $
                               wavelength=wavelength, line_flux=o_ii_4614_flux, $
                               o_ii_rc_br=o_ii_rc_data_br, o_ii_rc_data=o_ii_rc_data, $ 
                               h_i_aeff_data=h_i_aeff_data)                      
 print, 'N(O^2+)/N(H+):', Abund_o_ii
 
-ne_ii_3777_flux = 0.056
 wavelength=3777.14
+emiss_ne_ii=calc_emiss_ne_ii_rl(temperature=temperature, density=density, $
+                                wavelength=wavelength, $
+                                ne_ii_rc_data=ne_ii_rc_data)
+print, 'Ne II Emissivity:', emiss_ne_ii
+ne_ii_3777_flux = 0.056
 Abund_ne_ii=calc_abund_ne_ii_rl(temperature=temperature, density=density, $
                                 wavelength=wavelength, line_flux=ne_ii_3777_flux, $
                                 ne_ii_rc_data=ne_ii_rc_data, h_i_aeff_data=h_i_aeff_data)

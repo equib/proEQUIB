@@ -34,7 +34,7 @@ function redlaw_gal2, wavelength
 ;   This library is released under a GNU General Public License.
 ;
 ; :Version:
-;   0.0.1
+;   0.3.0
 ;
 ; :History:
 ;     Based on Savage & Mathis 1979, ARA&A, vol. 17, 73-111

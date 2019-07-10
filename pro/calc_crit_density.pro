@@ -59,7 +59,7 @@ function calc_crit_density, temperature=temperature, $
 ;   This library is released under a GNU General Public License.
 ;
 ; :Version:
-;   0.0.6
+;   0.3.0
 ;
 ; :History:
 ;     15/09/2013, A. Danehkar, Translated from FORTRAN to IDL code.

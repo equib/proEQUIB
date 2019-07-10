@@ -30,7 +30,7 @@ function find_aeff_sh95_column, lo_lev, hi_lev, lev_num
 ;   This library is released under a GNU General Public License.
 ;
 ; :Version:
-;   0.0.1
+;   0.3.0
 ;
 ; :History:
 ;     Based on H I emissivities

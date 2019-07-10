@@ -71,7 +71,7 @@ function redlaw, wavelength, ext_law=ext_law, rv=rv, fmlaw=fmlaw
 ;   This library is released under a GNU General Public License.
 ;
 ; :Version:
-;   0.0.1
+;   0.3.0
 ;
 ; :History:
 ;     Originally from IRAF STSDAS SYNPHOT redlaw.x, ebmvxfunc.x

@@ -54,7 +54,7 @@ function redlaw_fm, wavelength, rv=rv, fmlaw=fmlaw
 ;   This library is released under a GNU General Public License.
 ;
 ; :Version:
-;   0.0.1
+;   0.3.0
 ;
 ; :History:
 ;     Based on Formulae by Fitzpatrick 1999, PASP, 11, 63

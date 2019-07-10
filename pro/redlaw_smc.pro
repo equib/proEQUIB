@@ -34,7 +34,7 @@ function redlaw_smc, wavelength
 ;   This library is released under a GNU General Public License.
 ;
 ; :Version:
-;   0.0.1
+;   0.3.0
 ;
 ; :History:
 ;     Based on Prevot et al. (1984), A&A, 132, 389-392

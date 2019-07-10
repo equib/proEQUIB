@@ -33,7 +33,7 @@ function redlaw_jbk, wavelength
 ;   This library is released under a GNU General Public License.
 ;
 ; :Version:
-;   0.0.1
+;   0.3.0
 ;
 ; :History:
 ;     Based on Whitford (1958), extended to the UV by Seaton (1977), 

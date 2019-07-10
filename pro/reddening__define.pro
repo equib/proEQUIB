@@ -1,6 +1,7 @@
 ; docformat = 'rst'
 
 ;+
+;     "Unit for Reddening and Dereddening": 
 ;     This obejct library can be used to determine the reddening 
 ;     law function of the line at the given wavelength
 ;     for the used extinction law.
@@ -72,14 +73,13 @@
 ;   This library is released under a GNU General Public License.
 ;
 ; :Version:
-;   0.2.0
+;   0.3.0
 ;
 ; :History:
 ;     Originally from IRAF STSDAS SYNPHOT redlaw.x, ebmvxfunc.x
 ;
 ;     31/08/2012, A. Danehkar, Converted to IDL code.
 ;     
-;
 ;     08/07/2019, A. Danehkar, Move to object-oriented programming (OOP).
 ;-
 function reddening::init
@@ -140,11 +140,16 @@ function reddening::redlaw, wavelength, ext_law=ext_law, rv=rv, fmlaw=fmlaw
 ; :Examples:
 ;    For example::
 ;
+;     IDL> ext=obj_new('reddening')
 ;     IDL> wavelength=6563.0
+;     IDL> m_ext=1.0
+;     IDL> flux=1.0
 ;     IDL> R_V=3.1
-;     IDL> fl=redlaw(wavelength, rv=R_V)
+;     IDL> 
+;     IDL> fl=ext->redlaw(wavelength, rv=R_V)
 ;     IDL> print, 'fl(6563)', fl
 ;        fl(6563)     -0.32013816
+;     
 ;
 ; :Categories:
 ;   Interstellar Extinction
@@ -166,6 +171,8 @@ function reddening::redlaw, wavelength, ext_law=ext_law, rv=rv, fmlaw=fmlaw
 ;     Originally from IRAF STSDAS SYNPHOT redlaw.x, ebmvxfunc.x
 ;
 ;     31/08/2012, A. Danehkar, Converted to IDL code.
+;     
+;     08/07/2019, A. Danehkar, Move to object-oriented programming (OOP).
 ;-
     value=redlaw(wavelength, ext_law=ext_law, rv=rv, fmlaw=fmlaw)
     return, value
@@ -192,11 +199,16 @@ function reddening::redlaw_gal, wavelength, rv=rv
 ; :Examples:
 ;    For example::
 ;
+;     IDL> ext=obj_new('reddening')
 ;     IDL> wavelength=6563.0
+;     IDL> m_ext=1.0
+;     IDL> flux=1.0
 ;     IDL> R_V=3.1
-;     IDL> fl=redlaw_gal(wavelength, rv=R_V)
+;     IDL> 
+;     IDL> fl=ext->redlaw_gal(wavelength, rv=R_V)
 ;     IDL> print, 'fl(6563)', fl
 ;        fl(6563)     -0.32013816
+;     
 ;
 ; :Categories:
 ;   Interstellar Extinction
@@ -223,6 +235,8 @@ function reddening::redlaw_gal, wavelength, rv=rv
 ;     Originally from IRAF STSDAS SYNPHOT ebmvxfunc.x, pyneb.extinction
 ;
 ;     31/08/2012, A. Danehkar, Converted to IDL code.
+;     
+;     08/07/2019, A. Danehkar, Move to object-oriented programming (OOP).
 ;-
     value=redlaw_gal(wavelength, rv=rv)
     return, value
@@ -243,10 +257,16 @@ function reddening::redlaw_gal2, wavelength
 ; :Examples:
 ;    For example::
 ;
+;     IDL> ext=obj_new('reddening')
 ;     IDL> wavelength=6563.0
-;     IDL> fl=redlaw_gal2(wavelength)
+;     IDL> m_ext=1.0
+;     IDL> flux=1.0
+;     IDL> R_V=3.1
+;     IDL> 
+;     IDL> fl=ext->redlaw_gal2(wavelength)
 ;     IDL> print, 'fl(6563)', fl
 ;        fl(6563)     -0.30925984
+;     
 ;
 ; :Categories:
 ;   Interstellar Extinction
@@ -274,6 +294,8 @@ function reddening::redlaw_gal2, wavelength
 ;     04/03/1995, R. A. Shaw, Return A(lambda)/A(V) instead.
 ;
 ;     31/08/2012, A. Danehkar, Converted to IDL code.
+;     
+;     08/07/2019, A. Danehkar, Move to object-oriented programming (OOP).
 ;-
     value=redlaw_gal2(wavelength)
     return, value
@@ -297,11 +319,16 @@ function reddening::redlaw_ccm, wavelength, rv=rv
 ; :Examples:
 ;    For example::
 ;
+;     IDL> ext=obj_new('reddening')
 ;     IDL> wavelength=6563.0
+;     IDL> m_ext=1.0
+;     IDL> flux=1.0
 ;     IDL> R_V=3.1
-;     IDL> fl=redlaw_ccm(wavelength, rv=R_V)
+;     IDL>   
+;     IDL> fl=ext->redlaw_ccm(wavelength, rv=R_V)
 ;     IDL> print, 'fl(6563)', fl
 ;        fl(6563)     -0.29756615
+;     
 ;
 ; :Categories:
 ;   Interstellar Extinction
@@ -329,6 +356,8 @@ function reddening::redlaw_ccm, wavelength, rv=rv
 ;         in onedspec.deredden.
 ;
 ;     31/08/2012, A. Danehkar, Converted to IDL code.
+;     
+;     08/07/2019, A. Danehkar, Move to object-oriented programming (OOP).
 ;-
     value=redlaw_ccm(wavelength, rv=rv)
     return, value
@@ -348,10 +377,16 @@ function reddening::redlaw_jbk, wavelength
 ; :Examples:
 ;    For example::
 ;
+;     IDL> ext=obj_new('reddening')
 ;     IDL> wavelength=6563.0
-;     IDL> fl=redlaw_jbk(wavelength)
+;     IDL> m_ext=1.0
+;     IDL> flux=1.0
+;     IDL> R_V=3.1
+;     IDL> 
+;     IDL> fl=ext->redlaw_jbk(wavelength)
 ;     IDL> print, 'fl(6563)', fl
 ;        fl(6563)     -0.33113684
+;     
 ;
 ; :Categories:
 ;   Interstellar Extinction
@@ -378,6 +413,8 @@ function reddening::redlaw_jbk, wavelength
 ;     13/05/1993, R. A. Shaw, Initial IRAF implementation.
 ;
 ;     31/08/2012, A. Danehkar, Converted to IDL code.
+;     
+;     08/07/2019, A. Danehkar, Move to object-oriented programming (OOP).
 ;-
     value=redlaw_jbk(wavelength)
     return, value
@@ -417,11 +454,17 @@ function reddening::redlaw_fm, wavelength, rv=rv, fmlaw=fmlaw
 ; :Examples:
 ;    For example::
 ;
+;     IDL> ext=obj_new('reddening')
 ;     IDL> wavelength=6563.0
+;     IDL> m_ext=1.0
+;     IDL> flux=1.0
 ;     IDL> R_V=3.1
-;     IDL> fl=redlaw_fm(wavelength, rv=R_V)
+;     IDL> 
+;     IDL> fmlaw='AVGLMC'
+;     IDL> fl=ext->redlaw_fm(wavelength, fmlaw=fmlaw, rv=R_V)
 ;     IDL> print, 'fl(6563)', fl
-;        fl(6563)     -0.35054942
+;        fl(6563)     -0.35053032
+;     
 ;
 ; :Categories:
 ;   Interstellar Extinction
@@ -447,6 +490,8 @@ function reddening::redlaw_fm, wavelength, rv=rv, fmlaw=fmlaw
 ;     Adopted from NASA IDL Library & PyAstronomy.
 ;
 ;     30/12/2016, A. Danehkar, Revised in IDL code.
+;     
+;     08/07/2019, A. Danehkar, Move to object-oriented programming (OOP).
 ;-
     value=redlaw_fm(wavelength, rv=rv, fmlaw=fmlaw)
     return, value
@@ -467,10 +512,16 @@ function reddening::redlaw_smc, wavelength
 ; :Examples:
 ;    For example::
 ;
+;     IDL> ext=obj_new('reddening')
 ;     IDL> wavelength=6563.0
-;     IDL> fl=redlaw_smc(wavelength)
+;     IDL> m_ext=1.0
+;     IDL> flux=1.0
+;     IDL> R_V=3.1
+;     IDL>  
+;     IDL> fl=ext->redlaw_smc(wavelength)
 ;     IDL> print, 'fl(6563)', fl
 ;        fl(6563)     -0.22659261
+;     
 ;
 ; :Categories:
 ;   Interstellar Extinction
@@ -499,6 +550,8 @@ function reddening::redlaw_smc, wavelength
 ;     04/03/1995, R. A. Shaw, Return A(lambda)/A(V) instead.
 ;
 ;     31/08/2012, A. Danehkar, Converted to IDL code.
+;     
+;     08/07/2019, A. Danehkar, Move to object-oriented programming (OOP).
 ;-
     value=redlaw_smc(wavelength)
     return, value
@@ -519,10 +572,16 @@ function reddening::redlaw_lmc, wavelength
 ; :Examples:
 ;    For example::
 ;
+;     IDL> ext=obj_new('reddening')
 ;     IDL> wavelength=6563.0
-;     IDL> fl=redlaw_lmc(wavelength)
+;     IDL> m_ext=1.0
+;     IDL> flux=1.0
+;     IDL> R_V=3.1
+;     IDL>   
+;     IDL> fl=ext->redlaw_lmc(wavelength)
 ;     IDL> print, 'fl(6563)', fl
 ;        fl(6563)     -0.30871187
+;     
 ;
 ; :Categories:
 ;   Interstellar Extinction
@@ -551,6 +610,8 @@ function reddening::redlaw_lmc, wavelength
 ;     14/03/1995, R. A. Shaw, Return A(lambda)/A(V) instead.
 ;
 ;     31/08/2012, A. Danehkar, Converted to IDL code.
+;     
+;     08/07/2019, A. Danehkar, Move to object-oriented programming (OOP).
 ;-
     value=redlaw_lmc(wavelength)
     return, value
@@ -612,14 +673,16 @@ function reddening::deredden_flux, wavelength, flux, m_ext, ext_law=ext_law, rv=
 ; :Examples:
 ;    For example::
 ;
+;     IDL> ext=obj_new('reddening')
 ;     IDL> wavelength=6563.0
-;     IDL> ext_law='GAL'
-;     IDL> R_V=3.1
 ;     IDL> m_ext=1.0
 ;     IDL> flux=1.0
-;     IDL> flux_deredden=deredden_flux(wavelength, flux, m_ext, ext_law=ext_law, rv=R_V) ; deredden absolute flux intensity
-;     IDL> print, 'dereddened flux(6563):', flux_deredden
-;        dereddened flux(6563):       4.7847785
+;     IDL> R_V=3.1
+;     IDL> 
+;     IDL> flux_deredden=ext->deredden_flux(wavelength, flux, m_ext, ext_law=ext_law, rv=R_V)
+;     IDL> print, 'dereddened flux(6563)', flux_deredden
+;        dereddened flux(6563)       4.7847785
+;     
 ;
 ; :Categories:
 ;   Interstellar Extinction
@@ -639,6 +702,8 @@ function reddening::deredden_flux, wavelength, flux, m_ext, ext_law=ext_law, rv=
 ;
 ; :History:
 ;     31/08/2012, A. Danehkar, IDL code.
+;     
+;     08/07/2019, A. Danehkar, Move to object-oriented programming (OOP).
 ;-
     value=deredden_flux(wavelength, flux, m_ext, ext_law=ext_law, rv=rv, fmlaw=fmlaw)
     return, value
@@ -698,14 +763,18 @@ function reddening::deredden_relflux, wavelength, relflux, m_ext, ext_law=ext_la
 ; :Examples:
 ;    For example::
 ;
+;     IDL> ext=obj_new('reddening')
 ;     IDL> wavelength=6563.0
-;     IDL> ext_law='GAL'
-;     IDL> R_V=3.1
 ;     IDL> m_ext=1.0
 ;     IDL> flux=1.0
-;     IDL> flux_deredden=deredden_relflux(wavelength, flux, m_ext, ext_law=ext_law, rv=R_V) ; deredden absolute flux intensity
-;     IDL> print, 'dereddened relative flux(6563):', flux_deredden
-;        dereddened relative flux(6563):       0.47847785
+;     IDL> R_V=3.1
+;     IDL> 
+;     IDL> ext_law='GAL'
+;     IDL> R_V=3.1
+;     IDL> flux_deredden=ext->deredden_relflux(wavelength, flux, m_ext, ext_law=ext_law, rv=R_V)
+;     IDL> print, 'dereddened flux(6563)', flux_deredden
+;        dereddened flux(6563)      0.47847785
+;     
 ;
 ; :Categories:
 ;   Interstellar Extinction
@@ -725,6 +794,8 @@ function reddening::deredden_relflux, wavelength, relflux, m_ext, ext_law=ext_la
 ;
 ; :History:
 ;     31/08/2012, A. Danehkar, IDL code.
+;     
+;     08/07/2019, A. Danehkar, Move to object-oriented programming (OOP).
 ;-
     value=deredden_relflux(wavelength, relflux, m_ext, ext_law=ext_law, rv=rv, fmlaw=fmlaw)
     return, value

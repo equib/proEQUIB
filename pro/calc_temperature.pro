@@ -78,7 +78,7 @@ function calc_temperature, line_flux_ratio=line_flux_ratio, density=density, $
 ;   This library is released under a GNU General Public License.
 ;
 ; :Version:
-;   0.0.6
+;   0.3.0
 ;
 ; :History:
 ;     15/09/2013, A. Danehkar, Translated from FORTRAN to IDL code.

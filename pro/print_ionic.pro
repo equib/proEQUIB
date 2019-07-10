@@ -100,7 +100,7 @@ pro print_ionic, temperature=temperature, density=density, $
 ;   This library is released under a GNU General Public License.
 ;
 ; :Version:
-;   0.0.1
+;   0.3.0
 ;
 ; :History:
 ;     04/03/2019, A. Danehkar, create the print_ionic() routine.
@@ -213,7 +213,7 @@ pro print_ionic, temperature=temperature, density=density, $
     endfor
     if keyword_set(h_i_aeff_data) eq 1 then begin
        if keyword_set(temperature) eq 1 and keyword_set(density) eq 1 then begin
-         emissivity_Hbeta=10.0^gamma_hb_4861(temperature=temperature,density=density,h_i_aeff_data=h_i_aeff_data)
+         emissivity_Hbeta=calc_emiss_h_beta(temperature=temperature,density=density,h_i_aeff_data=h_i_aeff_data)
          Emissivity_str=STRING(emissivity_Hbeta,FORMAT='(E10.3)')
          print, "H-beta emissivity:", Emissivity_str, " N(H+) Ne  [erg/s]"
        endif else begin

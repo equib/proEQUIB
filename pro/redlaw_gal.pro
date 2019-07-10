@@ -39,7 +39,7 @@ function redlaw_gal, wavelength, rv=rv
 ;   This library is released under a GNU General Public License.
 ;
 ; :Version:
-;   0.0.1
+;   0.3.0
 ;
 ; :History:
 ;     Based on the UV Formulae from Seaton 1979, MNRAS, 187, 73
