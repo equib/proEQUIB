@@ -6,7 +6,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
-    <title>calc_abund_ne_ii_rl.pro (API Documentation for proEQUIB)</title>
+    <title>calc_crit_density.pro (API Documentation for proEQUIB)</title>
 
     
 
@@ -160,7 +160,7 @@
 
     <script type="text/javascript">
       function setTitle() {
-        parent.document.title="calc_abund_ne_ii_rl.pro (API Documentation for proEQUIB)";
+        parent.document.title="calc_crit_density.pro (API Documentation for proEQUIB)";
       }
     </script>
   </head>
@@ -234,7 +234,7 @@
 
     <div class="content">
       <h2 class="directory">./</h2>
-      <h1 class="basename">calc_abund_ne_ii_rl.pro<span class="file-attributes"></span></h1>
+      <h1 class="basename">calc_crit_density.pro<span class="file-attributes"></span></h1>
       
 
       
@@ -270,20 +270,18 @@
         
 
         
-        <div class="routine-details details" id="calc_abund_ne_ii_rl">
-          <h2 class="routine-name"><a href="#root" class="top">top</a> calc_abund_ne_ii_rl<span class="routine-attributes"></span></h2>
+        <div class="routine-details details" id="calc_crit_density">
+          <h2 class="routine-name"><a href="#root" class="top">top</a> calc_crit_density<span class="routine-attributes"></span></h2>
 
           
-          <p class="small categories">Abundance Analysis, Recombination Lines</p>
+          <p class="small categories">Plasma Diagnostics, Abundance Analysis, Collisionally Excited Lines</p>
           
 
-          <p class="syntax"><code><span class="var">result</span> = calc_abund_ne_ii_rl(<span class="argument"><a href="#calc_abund_ne_ii_rl:k:temperature">temperature</a>=<span class="var">float</span></span><span class="argument">, <a href="#calc_abund_ne_ii_rl:k:density">density</a>=<span class="var">float</span></span><span class="argument">, <a href="#calc_abund_ne_ii_rl:k:wavelength">wavelength</a>=<span class="var">float</span></span><span class="argument">, <a href="#calc_abund_ne_ii_rl:k:line_flux">line_flux</a>=<span class="var">float</span></span><span class="argument">, <a href="#calc_abund_ne_ii_rl:k:ne_ii_rc_data">ne_ii_rc_data</a>=<span class="var">array/object</span></span><span class="argument">, <a href="#calc_abund_ne_ii_rl:k:h_i_aeff_data">h_i_aeff_data</a>=<span class="var">array/object</span></span>)</code></p>
+          <p class="syntax"><code><span class="var">result</span> = calc_crit_density(<span class="argument"><a href="#calc_crit_density:k:temperature">temperature</a>=<span class="var">float</span></span><span class="argument">, <a href="#calc_crit_density:k:elj_data">elj_data</a>=<span class="var">array/object</span></span><span class="argument">, <a href="#calc_crit_density:k:omij_data">omij_data</a>=<span class="var">array/object</span></span><span class="argument">, <a href="#calc_crit_density:k:aij_data">aij_data</a>=<span class="var">array/object</span></span><span class="argument">, <a href="#calc_crit_density:k:level_num">level_num</a>=<span class="var">int</span></span><span class="argument">, <a href="#calc_crit_density:k:irats">irats</a>=<span class="var">int</span></span>)</code></p>
 
           
-          <div ><p>     This function determines the ionic abundance from the observed
-     flux intensity for the given wavelength of Ne II recombination line
-     by using the recombination coefficients from
-     Kisielius et al. (1998) & Storey (unpublished).
+          <div ><p>     This function calculates critical densities in statistical equilibrium
+     for given electron temperature.
 </p>
 
 <p></p>
@@ -293,7 +291,7 @@
 
           
           <h3>Return value</h3>
-            <div class="small"><p>    type=double. This function returns the ionic abundanc.
+            <div class="small"><p>    type=array/object. This function returns the critical densities.
 </p>
 
 <p></p>
@@ -307,38 +305,38 @@
           <h3>Keywords</h3>
             <dl>
               
-              <dt id="calc_abund_ne_ii_rl:k:temperature">temperature <span class="smaller">in required type=float </span></dt>
-              <dd class="small"><p>                         electron temperature
+              <dt id="calc_crit_density:k:temperature">temperature <span class="smaller">in required type=float </span></dt>
+              <dd class="small"><p>                     electron temperature
 </p>
 
 </dd>
               
-              <dt id="calc_abund_ne_ii_rl:k:density">density <span class="smaller">in required type=float </span></dt>
-              <dd class="small"><p>                         electron density
+              <dt id="calc_crit_density:k:elj_data">elj_data <span class="smaller">in required type=array/object </span></dt>
+              <dd class="small"><p>                            energy levels (Ej) data
 </p>
 
 </dd>
               
-              <dt id="calc_abund_ne_ii_rl:k:wavelength">wavelength <span class="smaller">in required type=float </span></dt>
-              <dd class="small"><p>                         Line Wavelength in Angstrom
+              <dt id="calc_crit_density:k:omij_data">omij_data <span class="smaller">in required type=array/object </span></dt>
+              <dd class="small"><p>                            collision strengths (omega_ij) data
 </p>
 
 </dd>
               
-              <dt id="calc_abund_ne_ii_rl:k:line_flux">line_flux <span class="smaller">in required type=float </span></dt>
-              <dd class="small"><p>                         line flux intensity
+              <dt id="calc_crit_density:k:aij_data">aij_data <span class="smaller">in required type=array/object </span></dt>
+              <dd class="small"><p>                            transition probabilities (Aij) data
 </p>
 
 </dd>
               
-              <dt id="calc_abund_ne_ii_rl:k:ne_ii_rc_data">ne_ii_rc_data <span class="smaller">in required type=array/object </span></dt>
-              <dd class="small"><p>                         Ne II recombination coefficients
+              <dt id="calc_crit_density:k:level_num">level_num <span class="smaller">in type=int </span></dt>
+              <dd class="small"><p>                     Number of levels
 </p>
 
 </dd>
               
-              <dt id="calc_abund_ne_ii_rl:k:h_i_aeff_data">h_i_aeff_data <span class="smaller">in required type=array/object </span></dt>
-              <dd class="small"><p>                         H I recombination coefficients
+              <dt id="calc_crit_density:k:irats">irats <span class="smaller">in type=int </span></dt>
+              <dd class="small"><p>                     Else Coll. rates = tabulated values * 10 ** irats
 </p>
 
 <p></p>
@@ -352,25 +350,21 @@
           <h3>Examples</h3>
           <div><p>    For example:
 <div><div><code class="listing"><span class="code-prompt">IDL&gt;</span> base_dir = file_dirname(file_dirname((routine_info('$MAIN$', /source)).path))
-<span class="code-prompt">IDL&gt;</span> data_rc_dir = ['atomic-data-rc']
-<span class="code-prompt">IDL&gt;</span> Atom_RC_All_file= filepath('rc_collection.fits', root_dir=base_dir, subdir=data_rc_dir )
-<span class="code-prompt">IDL&gt;</span> Atom_RC_SH95_file= filepath('rc_SH95.fits', root_dir=base_dir, subdir=data_rc_dir )
-<span class="code-prompt">IDL&gt;</span> atom='h'
-<span class="code-prompt">IDL&gt;</span> ion='ii' ; H I
-<span class="code-prompt">IDL&gt;</span> h_i_rc_data=atomneb_read_aeff_sh95(Atom_RC_SH95_file, atom, ion)
-<span class="code-prompt">IDL&gt;</span> h_i_aeff_data=h_i_rc_data[0].Aeff
-<span class="code-prompt">IDL&gt;</span> atom='ne'
-<span class="code-prompt">IDL&gt;</span> ion='iii' ; Ne II
-<span class="code-prompt">IDL&gt;</span> ne_ii_rc_data=atomneb_read_aeff_collection(Atom_RC_All_file, atom, ion)
+<span class="code-prompt">IDL&gt;</span> data_dir = ['atomic-data', 'chianti70']
+<span class="code-prompt">IDL&gt;</span> Atom_Elj_file = filepath('AtomElj.fits', root_dir=base_dir, subdir=data_dir )
+<span class="code-prompt">IDL&gt;</span> Atom_Omij_file = filepath('AtomOmij.fits', root_dir=base_dir, subdir=data_dir )
+<span class="code-prompt">IDL&gt;</span> Atom_Aij_file = filepath('AtomAij.fits', root_dir=base_dir, subdir=data_dir )
+<span class="code-prompt">IDL&gt;</span> atom='s'
+<span class="code-prompt">IDL&gt;</span> ion='ii'
+<span class="code-prompt">IDL&gt;</span> s_ii_elj=atomneb_read_elj(Atom_Elj_file, atom, ion, level_num=5) ; read Energy Levels (Ej)
+<span class="code-prompt">IDL&gt;</span> s_ii_omij=atomneb_read_omij(Atom_Omij_file, atom, ion) ; read Collision Strengths (Omegaij)
+<span class="code-prompt">IDL&gt;</span> s_ii_aij=atomneb_read_aij(Atom_Aij_file, atom, ion) ; read Transition Probabilities (Aij)\
 <span class="code-prompt">IDL&gt;</span> temperature=double(10000.0)
-<span class="code-prompt">IDL&gt;</span> density=double(5000.0)
-<span class="code-prompt">IDL&gt;</span> ne_ii_3777_flux = 0.056
-<span class="code-prompt">IDL&gt;</span> wavelength=3777.14
-<span class="code-prompt">IDL&gt;</span> Abund_ne_ii=calc_abund_ne_ii_rl(temperature=temperature, density=density, $
-<span class="code-prompt">IDL&gt;</span>                                 wavelength=wavelength, line_flux=ne_ii_3777_flux, $
-<span class="code-prompt">IDL&gt;</span>                                 ne_ii_rc_data=ne_ii_rc_data, h_i_aeff_data=h_i_aeff_data)
-<span class="code-prompt">IDL&gt;</span> print, 'N(Ne^2+)/N(H+):', Abund_ne_ii
-<span class="code-output">   N(Ne^2+)/N(H+):    0.00043376850</span>
+<span class="code-prompt">IDL&gt;</span> N_crit=calc_crit_density(temperature=temperature, $
+<span class="code-prompt">IDL&gt;</span>                          elj_data=s_ii_elj, omij_data=s_ii_omij, $
+<span class="code-prompt">IDL&gt;</span>                          aij_data=s_ii_aij)
+<span class="code-prompt">IDL&gt;</span> print, 'Critical Densities:', N_crit
+<span class="code-output">   Critical Densities:       0.0000000       5007.8396       1732.8414       1072685.0       2220758.1</span>
 </code></div></div></p>
 
 </div>
@@ -402,25 +396,96 @@
 
               
                 <dt>History:</dt>
-                <dd><p>     Based on effective radiative recombination coefficients for Ne II lines
-     from Kisielius et al. 1998A&AS..133..257K & Storey (unpublished).
+                <dd><p>     15/09/2013, A. Danehkar, Translated from FORTRAN to IDL code.
 </p>
 
-<p>     Adopted from MOCASSIN, Ercolano et al. 2005MNRAS.362.1038E.
+<p>     20/10/2016, A. Danehkar, Replaced str2int with strnumber.
 </p>
 
-<p>     02/2003, Yong Zhang, scripts added to MOCASSIN.
+<p>     20/10/2016, A. Danehkar, Replaced CFY, SPLMAT, and CFD with
+          IDL function INTERPOL( /SPLINE).
 </p>
 
-<p>     14/05/2013, A. Danehkar, Translated to IDL code.
+<p>     20/10/2016, A. Danehkar, Replaced LUSLV with IDL LAPACK function
+                       LA_LINEAR_EQUATION.
 </p>
 
-<p>     10/04/2017, A. Danehkar, Integration with AtomNeb.
+<p>     15/11/2016, A. Danehkar, Replaced LA_LINEAR_EQUATION (not work in GDL)
+           with IDL function LUDC & LUSOL.
 </p>
 
-<p>     10/07/2019, A. Danehkar, Made a new function calc_emiss_ne_ii_rl()
-                      for calculating line emissivities and separated it
-                      from calc_abund_ne_ii_rl().
+<p>     19/11/2016, A. Danehkar, Replaced INTERPOL (not accurate) with
+                    SPL_INIT & SPL_INTERP.
+</p>
+
+<p>     20/11/2016, A. Danehkar, Made a new function calc_populations()
+       for solving atomic level populations and separated it from
+       calc_abundance(), calc_density() and calc_temperature().
+</p>
+
+<p>     10/03/2017, A. Danehkar, Integration with AtomNeb, now uses atomic data
+                      input elj_data, omij_data, aij_data.
+</p>
+
+<p>     12/06/2017, A. Danehkar, Cleaning the function, and remove unused varibales
+                        from calc_populations().
+</p>
+
+<p>     27/02/2019, A. Danehkar, Simplify the calc_populations() routine
+                        for external usage.
+</p>
+
+<p>     01/03/2019, A. Danehkar, Create the calc_crit_density() routine
+                        from the calc_populations() routine.
+</p>
+
+<p>     04/03/2019, A. Danehkar, Use the get_omij_temp() routine.
+</p>
+
+<p> FORTRAN HISTORY:
+</p>
+
+<p>     03/05/1981, I.D.Howarth,  Version 1.
+</p>
+
+<p>     05/05/1981, I.D.Howarth,  Minibug fixed!
+</p>
+
+<p>     07/05/1981, I.D.Howarth,  Now takes collision rates or strengths.
+</p>
+
+<p>     03/08/1981, S.Adams,      Interpolates collision strengths.
+</p>
+
+<p>     07/08/1981, S.Adams,      Input method changed.
+</p>
+
+<p>     19/11/1984, R.E.S.Clegg,  SA files entombed in scratch disk. Logical
+                               filenames given to SA's data files.
+</p>
+
+<p>     08/1995, D.P.Ruffle, Changed input file format. Increased matrices.
+</p>
+
+<p>     02/1996, X.W.Liu,   Tidy up. SUBROUTINES SPLMAT, HGEN, CFY and CFD
+                         modified such that matrix sizes (i.e. maximum
+                         of Te and maximum no of levels) can now be cha
+                         by modifying the parameters NDIM1, NDIM2 and N
+                         in the Main program. EASY!
+                         Now takes collision rates as well.
+                         All variables are declared explicitly
+                         Generate two extra files (ionpop.lis and ionra
+                         of plain stream format for plotting.
+</p>
+
+<p>     06/1996, C.J.Pritchet, Changed input data format for cases IBIG=1,2.
+                         Fixed readin bug for IBIG=2 case.
+                         Now reads reformatted upsilons (easier to see
+                         and the 0 0 0 data end is excluded for these c
+                         The A values have a different format for IBIG=.
+</p>
+
+<p>     2006, B.Ercolano,   Converted to F90.
 </p>
 
 </dd>
@@ -454,12 +519,12 @@
         <table class="attribute small" summary="File attributes">
           <tr>
             <td class="name">Modification date:</td>
-            <td>Wed Jul 10 17:45:11 2019</td>
+            <td>Wed Jul 10 17:45:36 2019</td>
           </tr>
 
           <tr>
             <td class="name">Lines:</td>
-            <td>37</td>
+            <td>86</td>
           </tr>
 
           
