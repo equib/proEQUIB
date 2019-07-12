@@ -5,8 +5,8 @@
 ;     calc_density function from proEQUIB
 ; 
 ; --- Begin $MAIN$ program. ---------------
-; g
-; 
+;
+;
 
 ; Locate datasets
 ;base_dir = file_dirname(file_dirname((routine_info('$MAIN$', /source)).path))
@@ -35,7 +35,6 @@ print, "Electron Temperature:", temperature
 
 upper_levels='1,2/'   
 lower_levels='1,3/'
-diagtype='D'
 temperature=double(7000.0);
 line_flux_ratio=double(1.506);
 density=calc_density(line_flux_ratio=line_flux_ratio, temperature=temperature, $

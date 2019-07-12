@@ -101,11 +101,6 @@ Installation in GDL
 
 * This package requires GDL version 0.9.8 or later.
 
-Documentation
-=============
-
-For more information on how to use the API functions from the proEQUIB libray, please read the `API Documentation  <https://equib.github.io/proEQUIB/doc>`_ published on `equib.github.io/proEQUIB <https://equib.github.io/proEQUIB>`_.
-
 How to Use
 ==========
 
@@ -602,6 +597,12 @@ The Documentation of the IDL functions provides in detail in the *API Documentat
       which gives::
       
         dereddened flux(6563)      0.47847785
+
+
+Documentation
+=============
+
+For more information on how to use the API functions from the proEQUIB libray, please read the `API Documentation  <https://equib.github.io/proEQUIB/doc>`_ published on `equib.github.io/proEQUIB <https://equib.github.io/proEQUIB>`_.
 
 
 References

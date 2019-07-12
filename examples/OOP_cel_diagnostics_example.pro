@@ -33,7 +33,6 @@ print, "Electron Temperature:", temperature
 
 upper_levels='1,2/'
 lower_levels='1,3/'
-diagtype='D'
 temperature=double(7000.0);
 line_flux_ratio=double(1.506);
 density=s2->calc_density(line_flux_ratio=line_flux_ratio, temperature=temperature, $
