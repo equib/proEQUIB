@@ -82,65 +82,6 @@ function deredden_relflux, wavelength, relflux, m_ext, ext_law=ext_law, rv=rv, f
 ; :History:
 ;     31/08/2012, A. Danehkar, IDL code.
 ;-
-
-;+
-; NAME:
-;     deredden_relflux
-; PURPOSE:
-;     This function dereddens flux intensity relative to Hb=100,  based on the reddening law.
-;
-; CALLING SEQUENCE:
-;     relflux_deredden = deredden_relflux(wavelengths, relflux, m_ext, ext_law=ext_law, rv=rv, fmlaw=fmlaw)
-;
-; INPUTS:
-;     Wavelength  :  in, required, type=float, 
-;                    wavelength in Angstroms
-;     relflux     :  in, required, type=float,     
-;                    flux intensity relative to Hb=100
-;     M_ext       :  in, required, type=float,    
-;                    logarithmic extinction 
-;
-; KEYWORD PARAMETERS:
-;     EXT_LAW :  in, optional, type=string, default='GAL'
-;                extinction law:
-;                ext_law='GAL' for Howarth Galactic
-;                ext_law='GAL2' for Savage and Mathis
-;                ext_law='CCM' for CCM galactic
-;                ext_law='JBK' for Whitford, Seaton, Kaler
-;                ext_law='FM' for Fitxpatrick
-;                ext_law='SMC' for Prevot SMC
-;                ext_law='LMC' for Howarth LMC
-;    RV       :  in, optional, type=float, default=3.1,
-;                the optical total-to-selective extinction ratio, RV = A(V)/E(B-V).
-;    FMLAW    :  in, optional, type=string
-;                the fmlaw keyword is used only in the redlaw_fm function:
-;                fmlaw=''   the default fit parameters for the R-dependent
-;                           Galactic extinction curve from Fitzpatrick & Massa
-;                           (Fitzpatrick, 1999, PASP, 111, 63).
-;                fmlaw='LMC2'  the fit parameters are those determined for
-;                              reddening the LMC2 field (inc. 30 Dor)
-;                              from Misselt et al.  (1999, ApJ, 515, 128).
-;                fmlaw='AVGLMC'   the fit parameters are those determined for
-;                              reddening in the general Large Magellanic Cloud (LMC)
-;                              field by Misselt et al.  (1999, ApJ, 515, 128).
-;
-; OUTPUTS:  This function returns a double as the deredden relative intensity.
-;
-; PROCEDURE: This function calls redlaw.
-;
-; EXAMPLE:
-;     wavelength=6563.0
-;     ext_law='GAL'
-;     R_V=3.1
-;     m_ext=1.0
-;     flux=1.0
-;     flux_deredden=deredden_relflux(wavelength, flux, m_ext, ext_law=ext_law, rv=R_V) ; deredden absolute flux intensity
-;     print, 'dereddened relative flux(6563):', flux_deredden
-;     > dereddened relative flux(6563):       0.47847785
-;     
-; MODIFICATION HISTORY:
-;     IDL code by A. Danehkar, 31/08/2012
-;-  
   if keyword_set(ext_law) then begin
     extlaw=ext_law
   endif else begin

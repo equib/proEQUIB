@@ -49,40 +49,6 @@ function redlaw_lmc, wavelength
 ;     31/08/2012, A. Danehkar, Converted to IDL code.
 ;-
 
-;+
-; NAME:
-;     redlaw_lmc
-; PURPOSE:
-;    This function determines the reddening law function of the line at the given wavelength
-;    for the Large Magellanic Cloud.
-;
-; CALLING SEQUENCE:
-;     Result = redlaw_lmc(Wavelength)
-;
-; INPUTS:
-;     Wavelength[] -  in, required, type=float/array, 
-;               wavelength in Angstroms
-; 
-; OUTPUTS: This function returns a double/array  as the reddening law function 
-;                   value(s) f(lambda) for the given wavelength(s) lambda.
-;
-; PROCEDURE: This function is callsed by redlaw.
-;
-; EXAMPLE:
-;     wavelength=6563.0
-;     fl=redlaw_lmc(wavelength)
-;     print, 'fl(6563)', fl
-;     > fl(6563)     -0.30871187
-; 
-; MODIFICATION HISTORY:
-;     Based on Formulae by Howarth 1983, MNRAS, 203, 301
-;     1983MNRAS.203..301H
-;     Originally from IRAF STSDAS SYNPHOT ebmvlfunc.x, redlaw.x
-;     18/10/1994, R. A. Shaw, Initial IRAF implementation.
-;     14/03/1995, R. A. Shaw, Return A(lambda)/A(V) instead.
-;     31/08/2012, A. Danehkar, Converted to IDL code.
-;-
-
   ; Tabulated inverse wavelengths in microns:
   xtab=[ 0.00,  0.29,  0.45,  0.80,  1.11,  1.43,  1.82 ]
 

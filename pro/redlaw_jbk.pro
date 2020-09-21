@@ -46,39 +46,6 @@ function redlaw_jbk, wavelength
 ;     31/08/2012, A. Danehkar, Converted to IDL code.
 ;-
 
-;+
-; NAME:
-;     redlaw_jbk
-; 
-; PURPOSE:
-;    This function determines the reddening law function for Galactic Whitford1958 + Seaton1977 + Kaler1976.
-;
-; CALLING SEQUENCE:
-;     fl = redlaw_jbk(Wavelength)
-;
-; INPUTS:
-;     Wavelength[] -  in, required, type=float/array, 
-;               wavelength in Angstroms
-;
-; OUTPUTS: This function returns a double/array  as the reddening law function 
-;                   value(s) f(lambda) for the given wavelength(s) lambda.
-;
-; PROCEDURE: This function is callsed by redlaw.
-;
-; EXAMPLE:
-;     wavelength=6563.0
-;     fl=redlaw_jbk(wavelength)
-;     print, 'fl(6563)', fl
-;     > fl(6563)     -0.33113684
-;
-; MODIFICATION HISTORY:
-;     Based on Whitford (1958), extended to the UV by Seaton (1977), 
-;     adapted by Kaler (1976).
-;     Originally from IRAF STSDAS SYNPHOT redlaw.x
-;     13/05/1993, R. A. Shaw, Initial IRAF implementation.
-;     31/08/2012, A. Danehkar, Converted to IDL code.
-;-
-
   ; Tabulated wavelengths, Angstroms:
   refw=[ 1150., 1200., 1250., 1300., 1350., 1400., 1450., 1500., 1550., $
         1600., 1650., 1700., 1750., 1800., 1850., 1900., 1950., 2000., 2050., $

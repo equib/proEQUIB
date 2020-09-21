@@ -52,46 +52,6 @@ function redlaw_gal, wavelength, rv=rv
 ;     31/08/2012, A. Danehkar, Converted to IDL code.
 ;-
 
-;+
-; NAME:
-;     redlaw_gal
-;
-; PURPOSE:
-;    This function determines the reddening law function of the line at the given wavelength
-;    for Galactic Seaton1979+Howarth1983+CCM1983.
-;
-; CALLING SEQUENCE:
-;     Result = redlaw_gal(Wavelength, RV=rv)
-;
-; INPUTS:
-;     Wavelength[] -  in, required, type=float/array, 
-;               wavelength in Angstroms
-; 
-; KEYWORD PARAMETERS:
-;    RV       :  in, optional, type=float, default=3.1, 
-;                the optical total-to-selective extinction ratio, RV = A(V) / E (B - V)
-; 
-; OUTPUTS: This function returns a double/array  as the reddening law function 
-;                   value(s) f(lambda) for the given wavelength(s) lambda.
-;
-; PROCEDURE: This function is callsed by redlaw.
-;
-; EXAMPLE:
-;     wavelength=6563.0
-;     R_V=3.1
-;     fl=redlaw_gal(wavelength, rv=R_V)
-;     print, 'fl(6563)', fl
-;     > fl(6563)     -0.32013816
-; 
-; MODIFICATION HISTORY:
-;     Based on the UV Formulae from Seaton 1979, MNRAS, 187, 73
-;     1979MNRAS.187P..73S, the opt/NIR from Howarth 1983, MNRAS, 203, 301
-;     the FIR from Cardelli, Clayton and Mathis 1989, ApJ, 345, 245
-;     1989ApJ...345..245C
-;     Originally from IRAF STSDAS SYNPHOT ebmvxfunc.x, pyneb.extinction
-;     31/08/2012, A. Danehkar, Converted to IDL code.
-;-
-
   ; Tabulated inverse wavelengths in microns:
   xtable = [ 0.,  1.0, 1.1, 1.2, 1.3, 1.4, 1.5, $
              1.6, 1.7, 1.8, 1.9, 2.0, 2.1, $

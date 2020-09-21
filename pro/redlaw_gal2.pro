@@ -48,40 +48,6 @@ function redlaw_gal2, wavelength
 ;     31/08/2012, A. Danehkar, Converted to IDL code.
 ;-
 
-;+
-; NAME:
-;     redlaw_gal2
-;
-; PURPOSE:
-;    This function determines the reddening law function of the line at the given wavelength
-;    for Galactic Savage & Mathis 1979.
-;
-; CALLING SEQUENCE:
-;     Result = redlaw_gal2(Wavelength)
-;
-; INPUTS:
-;     Wavelength[] -  in, required, type=float/array, 
-;               wavelength in Angstroms
-; 
-; OUTPUTS: This function returns a double/array  as the reddening law function 
-;                   value(s) f(lambda) for the given wavelength(s) lambda.
-;
-; PROCEDURE: This function is callsed by redlaw.
-;
-; EXAMPLE:
-;     wavelength=6563.0
-;     fl=redlaw_gal2(wavelength)
-;     print, 'fl(6563)', fl
-;     > fl(6563)     -0.30925984
-; 
-; MODIFICATION HISTORY:
-;     Based on Savage & Mathis 1979, ARA&A, vol. 17, 73-111
-;     Originally from IRAF STSDAS SYNPHOT ebmvxfunc.x
-;     20/09/1994, R. A. Shaw, Initial IRAF implementation.
-;     04/03/1995, R. A. Shaw, Return A(lambda)/A(V) instead.
-;     31/08/2012, A. Danehkar, Converted to IDL code.
-;-
-
   ; Tabulated inverse wavelengths in microns:
   xtable=[ 0.00,  0.29,  0.45,  0.80,  1.11,  1.43,  1.82, $
 	   2.27,  2.50,  2.91,  3.65,  4.00,  4.17,  4.35,  4.57,  4.76,  5.00, $

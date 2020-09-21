@@ -51,46 +51,6 @@ function redlaw_ccm, wavelength, rv=rv
 ;     
 ;     31/08/2012, A. Danehkar, Converted to IDL code.
 ;-
-
-;+
-; NAME:
-;     redlaw_ccm
-; 
-; PURPOSE:
-;    This function determines the reddening law function of Cardelli, Clayton & Mathis.
-;
-; CALLING SEQUENCE:
-;     fl = redlaw_ccm(Wavelength, RV=rv)
-;
-; INPUTS:
-;     Wavelength[] -  in, required, type=float/array, 
-;               wavelength in Angstroms
-; 
-; KEYWORD PARAMETERS:
-;    RV       :  in, optional, type=float, default=3.1, 
-;                the optical total-to-selective extinction ratio, RV = A(V)/E(B-V).
-; 
-; OUTPUTS: This function returns a double/array  as the reddening law function 
-;                   value(s) f(lambda) for the given wavelength(s) lambda.
-;
-; PROCEDURE: This function is callsed by redlaw.
-;
-; EXAMPLE:
-;     wavelength=6563.0
-;     R_V=3.1
-;     fl=redlaw_ccm(wavelength, rv=R_V)
-;     print, 'fl(6563)', fl
-;     > fl(6563)     -0.29756615
-;
-; MODIFICATION HISTORY:
-;     Based on Formulae by Cardelli, Clayton & Mathis 1989, ApJ 345, 245-256.
-;     1989ApJ...345..245C
-;     Originally from IRAF STSDAS SYNPHOT redlaw.x
-;     18/05/1993, R. A. Shaw, Initial IRAF implementation, based upon CCM module
-;         in onedspec.deredden.
-;     31/08/2012, A. Danehkar, Converted to IDL code.
-;-
-
   temp=  size(wavelength,/DIMENSIONS)
   if temp[0] eq 0 then begin
     npts=1
