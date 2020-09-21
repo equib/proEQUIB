@@ -82,9 +82,9 @@ function calc_emiss_h_beta, temperature=temperature, density=density, h_i_aeff_d
   endfor
   
   ; restrict to the density & temperature ranges to 1995MNRAS.272...41S
-  if (NEh2 lt 1.e2) then NEh2=1.e2
+  if (NEh2 lt 1.1e2) then NEh2=1.1e2
   if (NEh2 gt 1.e14) then NEh2=1.e14
-  if (TEh2 lt 500.) then TEh2=500.
+  if (TEh2 lt 550.) then TEh2=550.
   if (TEh2 gt 30000.) then TEh2=30000.
   
   ; get logarithmic density

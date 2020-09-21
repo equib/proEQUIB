@@ -22,8 +22,8 @@ function _interp_2d,tab_in,x,y,x_tab,y_tab,xlog=xlog,ylog=ylog
    tab_tmp = reform(tab_in,size_tab_in[n_dim_tab+2]/n_x/n_y,n_x,n_y)
    
 ; No extrapolation:
-   if x ge max(x_tab) or x le min(x_tab) or y ge max(y_tab) $
-    or y le min(y_tab) then message,' No extrapollation'
+   if x gt max(x_tab) or x lt min(x_tab) or y gt max(y_tab) $
+    or y lt min(y_tab) then message,' No extrapollation'
    
    i_x =  max(where(x_tab lt x))
    i_y =  max(where(y_tab lt y))
