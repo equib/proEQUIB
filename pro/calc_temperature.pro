@@ -311,7 +311,7 @@ function calc_temperature, line_flux_ratio=line_flux_ratio, density=density, $
       endif
       if level_max gt level_num then begin
         print, "error outside level range"
-        retunr, 0
+        return, 0
       endif
       Omij_T=get_omij_temp(temperature=temperature, omij_data=omij_data, level_num=level_max, irats=irats)
       Nlj=calc_populations(temperature=temperature, density=densi, $

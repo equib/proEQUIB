@@ -87,7 +87,7 @@ function redlaw, wavelength, ext_law=ext_law, rv=rv, fmlaw=fmlaw
      'GAL': fl = redlaw_gal(wavelength, rv=rv)
      'GAL2': fl = redlaw_gal2(wavelength)
      'CCM': fl = redlaw_ccm(wavelength,rv=rv)
-     'JBK': fl = redlaw_jbk(wavelegth)
+     'JBK': fl = redlaw_jbk(wavelength)
      'FM': fl = redlaw_fm(wavelength,rv=rv,fmlaw=fmlaw)
      'SMC': fl = redlaw_smc(wavelength)
      'LMC': fl = redlaw_lmc(wavelength)

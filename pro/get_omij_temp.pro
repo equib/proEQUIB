@@ -88,11 +88,13 @@ function get_omij_temp, temperature=temperature, $
   if keyword_set(irats) eq 0 then begin
     irats=0
   endif else begin
-    if keyword_set(elj_data) eq 0 then begin
-        print,'elj_data is not set. It is required for irats'
-        return, 0
+    if irats ne 0 then begin
+      if keyword_set(elj_data) eq 0 then begin
+          print,'elj_data is not set. It is required for irats'
+          return, 0
+      endif
+      Ej =elj_data.Ej ; Energy Levels (E_j) in cm-1
     endif
-    Ej =elj_data.Ej ; Energy Levels (E_j) in cm-1
   endelse
   T_log = double(alog10(temperature))
   temp=size(omij_data[0].strength,/DIMENSIONS)

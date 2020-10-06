@@ -312,7 +312,7 @@ function calc_density, line_flux_ratio=line_flux_ratio, temperature=temperature,
       endif
       if level_max gt level_num then begin
         print, "error outside level range"
-        retunr, 0
+        return, 0
       endif
       Nlj=calc_populations(temperature=temperature, density=density, $
                            elj_data=elj_data, omij_data=omij_data, $

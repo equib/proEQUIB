@@ -65,7 +65,7 @@ Omij_T=get_omij_temp(temperature=temperature, omij_data=s_ii_omij)
 print, 'Effective Collision Strengths: '
 print, Omij_T
 
-print_ionic, temperature=temperature, density=density, $, $
+print_ionic, temperature=temperature, density=density, $
              elj_data=s_ii_elj, omij_data=s_ii_omij, $
              aij_data=s_ii_aij, h_i_aeff_data=hi_rc_data[0].Aeff
   

@@ -111,7 +111,7 @@ pro print_ionic, temperature=temperature, density=density, $
   c_Speed = 2.99792458e10 ; cm/s
 
   if keyword_set(temperature) eq 1 then begin
-    print,temperature, FORMAT='("Temperature = ", F9.1," K")
+    print,temperature, FORMAT='("Temperature = ", F9.1," K")'
   endif
   if keyword_set(density) eq 1 then begin
     print,density, FORMAT='("Density = ", F9.1, " cm-3")'
@@ -137,10 +137,8 @@ pro print_ionic, temperature=temperature, density=density, $
   if keyword_set(printCritDensity) eq 0 then begin
     printCritDensity=1 ; default
   endif
-  if keyword_set(level_num) eq 0 then begin
-    temp=size(elj_data,/DIMENSIONS)
-    level_num=temp[0]
-  endif
+  temp=size(elj_data,/DIMENSIONS)
+  level_num=temp[0]
   if keyword_set(printPopulations) eq 1 then begin
     if keyword_set(temperature) eq 1 and keyword_set(density) eq 1 then begin
       Nlj=calc_populations(temperature=temperature, density=density, $
@@ -162,9 +160,9 @@ pro print_ionic, temperature=temperature, density=density, $
   print, ''
   if keyword_set(temperature) eq 1 and (keyword_set(printCritDensity) eq 1 or keyword_set(printPopulations) eq 1) then begin
     if keyword_set(density) eq 1 then begin
-      Print, 'Level    Populations   Critical Densities 
+      Print, 'Level    Populations   Critical Densities'
     endif else begin
-      Print, 'Level    Critical Densities 
+      Print, 'Level    Critical Densities'
     endelse
     for I = 1, level_num do begin
       s=""

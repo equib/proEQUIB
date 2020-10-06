@@ -1,6 +1,6 @@
-=======
+========
 proEQUIB
-=======
+========
     
 .. image:: https://travis-ci.org/equib/proEQUIB.svg?branch=master
     :target: https://travis-ci.org/equib/proEQUIB
@@ -28,7 +28,7 @@ proEQUIB
 
 
 Description
-============
+===========
 
 The **proEQUIB** library is a collection of `Interactive Data Language <http://www.harrisgeospatial.com/ProductsandSolutions/GeospatialProducts/IDL.aspx>`_ (IDL)/`GNU Data Language <http://gnudatalanguage.sourceforge.net/>`_ (GDL) programs developed to perform plasma diagnostics and abundance analysis using emission line fluxes measured in ionzed nebulae. It uses the `AtomNeb IDL library <https://github.com/atomneb/AtomNeb-idl>`_ to read collision strengths and transition probabilities for collisionally excited lines (CEL), and recombination coefficients for recombination lines (RL). This IDL package can be used to determine interstellar extinctions, electron temperatures, electron densities, and ionic abundances from the measured fluxes of emission lines. It mainly contains the follwing API functions written purely in IDL/GDL: 
 

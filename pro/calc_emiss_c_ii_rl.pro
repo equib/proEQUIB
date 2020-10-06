@@ -1,7 +1,7 @@
 ; docformat = 'rst'
 
 function calc_emiss_c_ii_rl, temperature=temperature, density=density, $
-                      wavelength=wavelength, line_flux=line_flux, $
+                      wavelength=wavelength, $
                       c_ii_rc_data=c_ii_rc_data
 ;+
 ;     This function calculates the emissivity 
