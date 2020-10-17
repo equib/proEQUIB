@@ -619,7 +619,7 @@ Using **proEQUIB** in a scholarly publication? Please cite this paper:
 
 .. code-block:: bibtex
 
-   @article{Danehkar2019,
+   @article{Danehkar2018,
      author = {{Danehkar}, Ashkbiz},
      title = {proEQUIB: IDL Library for Plasma Diagnostics and Abundance Analysis},
      journal = {Journal of Open Source Software},
