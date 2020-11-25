@@ -617,7 +617,7 @@ References
 Citation
 ========
 
-Using **proEQUIB** in a scholarly publication? Please cite this paper:
+Using **proEQUIB** in a scholarly publication? Please cite these papers:
 
 .. code-block:: bibtex
 
