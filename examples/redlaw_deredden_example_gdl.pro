@@ -50,5 +50,5 @@ flux_deredden=deredden_flux(wavelength, flux, m_ext, ext_law=ext_law, rv=R_V)
 print, 'dereddened flux(6563):', flux_deredden
 
 ; --- End $MAIN$ program. ---------------
-end
+exit
 

@@ -259,7 +259,7 @@ pro recombination::set, atom_ion, new=new, wavelength_list=wavelength_list
                   temp=size(wavelength_list,/DIMENSIONS)
                   n_line=temp[0]
                   if n_line ne -1 then begin
-                    rc_element_template={Wavelength: float(0.0), Aeff:fltarr(7,4)}
+                    rc_element_template={Wavelength: double(0.0), Aeff:dblarr(7,4)}
                     nii_rc_data=replicate(rc_element_template, n_line)
                     for i=0,n_line-1 do  begin
                       wavelength=wavelength_list[i]
@@ -279,7 +279,7 @@ pro recombination::set, atom_ion, new=new, wavelength_list=wavelength_list
                   n_line=temp[0]
                   case1='B' ; O II
                   if n_line ne -1 then begin
-                    rc_element_template={Wavelength: float(0.0), Aeff:fltarr(16,25)}
+                    rc_element_template={Wavelength: double(0.0), Aeff:dblarr(16,25)}
                     oii_rc_data=replicate(rc_element_template, n_line)
                     for i=0,n_line-1 do  begin
                       wavelength=orl_line[i].wavelength
