@@ -18,7 +18,7 @@ proEQUIB
     :target: https://github.com/equib/proEQUIB/blob/master/LICENSE
     :alt: GitHub license
 
-.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.1890337.svg
+.. image:: https://img.shields.io/badge/DOI-10.5281/zenodo.1890337-blue.svg
     :target: https://doi.org/10.5281/zenodo.1890337
     :alt: Zenodo
 
