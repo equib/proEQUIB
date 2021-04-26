@@ -10,7 +10,7 @@ function calc_emiss_h_alpha, temperature=temperature, density=density, h_i_aeff_
 ; :Private:
 ;  
 ; :Returns:
-;    type=double. This function returns the H beta emissivity 4pi j(HBeta 4861)/Np Ne).
+;    type=double. This function returns the H alpha emissivity 4pi j(HAlpha 4861)/Np Ne).
 ;
 ; :Keywords:
 ;     temperature     :   in, required, type=float
@@ -95,10 +95,6 @@ function calc_emiss_h_alpha, temperature=temperature, density=density, h_i_aeff_
   ; Bilinearly interpolate density & temperature
   ; emiss_log =_interp2d(hi_ems1, temp_grid, dens_grid, TEh2, dens_log, [101,101], /cubic, /quintic);, /trigrid) not work on GDL
   ha_emissivity=_interp_2d(h_i_ems[*,*], TEh2, dens_log, temp_grid, dens_grid)
-
-  ;ems_log = alog10(hr_tmp/double(4861.33/1.98648E-08))
-  ;h_beta_emissivity = 10.0^ems_log
-  ;h_beta_emissivity_log=alog10(h_beta_emissivity(temp, density))
   
   return, ha_emissivity
 end

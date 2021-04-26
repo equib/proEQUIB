@@ -1,17 +1,17 @@
 ; docformat = 'rst'
 
-function calc_emiss_h_alpha, temperature=temperature, density=density, h_i_aeff_data=h_i_aeff_data, $
-                             low_level=low_level, high_level=high_level
+function calc_emiss_h_i, temperature=temperature, density=density, h_i_aeff_data=h_i_aeff_data, $
+                         low_level=low_level, high_level=high_level
 ;+
 ;     This function calculates the emissivity for H I
-;     Emis(HAlpha)= 4pi j(HAlpha 6563 A)/Np Ne) for the given temperature and density 
+;     Emis(HAlpha)= 4pi j(H I)/Np Ne) for the given temperature and density 
 ;     by using the hydrogen emissivities from 
 ;     Storey & Hummer, 1995MNRAS.272...41S.
 ;
 ; :Private:
 ;  
 ; :Returns:
-;    type=double. This function returns the H beta emissivity 4pi j(HBeta 4861)/Np Ne).
+;    type=double. This function returns the H I emissivity 4pi j(H I)/Np Ne).
 ;
 ; :Keywords:
 ;     temperature     :   in, required, type=float
@@ -102,10 +102,6 @@ function calc_emiss_h_alpha, temperature=temperature, density=density, h_i_aeff_
   ; Bilinearly interpolate density & temperature
   ; emiss_log =_interp2d(hi_ems1, temp_grid, dens_grid, TEh2, dens_log, [101,101], /cubic, /quintic);, /trigrid) not work on GDL
   h_i_emissivity=_interp_2d(h_i_ems[*,*], TEh2, dens_log, temp_grid, dens_grid)
-
-  ;ems_log = alog10(hr_tmp/double(4861.33/1.98648E-08))
-  ;h_beta_emissivity = 10.0^ems_log
-  ;h_beta_emissivity_log=alog10(h_beta_emissivity(temp, density))
   
   return, h_i_emissivity
 end
