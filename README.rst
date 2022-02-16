@@ -2,8 +2,8 @@
 proEQUIB
 ========
     
-.. image:: https://travis-ci.com/equib/proEQUIB.svg?branch=master
-    :target: https://travis-ci.com/equib/proEQUIB
+.. image:: https://app.travis-ci.com/equib/pyEQUIB.svg?branch=master
+    :target: https://app.travis-ci.com/github/equib/proEQUIB
     :alt: Build Status
 
 .. image:: https://ci.appveyor.com/api/projects/status/ab7ad315c6xejw3c?svg=true
