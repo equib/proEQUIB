@@ -18,8 +18,8 @@ proEQUIB
     :target: https://github.com/equib/proEQUIB/blob/master/LICENSE
     :alt: GitHub license
 
-.. image:: https://img.shields.io/badge/DOI-10.5281/zenodo.1890337-blue.svg
-    :target: https://doi.org/10.5281/zenodo.1890337
+.. image:: https://img.shields.io/badge/DOI-10.5281/zenodo.1890336-blue.svg
+    :target: https://doi.org/10.5281/zenodo.1890336
     :alt: Zenodo
 
 .. image:: http://joss.theoj.org/papers/10.21105/joss.00899/status.svg
@@ -651,6 +651,6 @@ Learn More
 **Repository**      https://github.com/equib/proEQUIB
 **Issues & Ideas**  https://github.com/equib/proEQUIB/issues
 **DOI**             `10.21105/joss.00899 <https://doi.org/10.21105/joss.00899>`_
-**Archive**         `10.5281/zenodo.3313731 <https://doi.org/10.5281/zenodo.3313731>`_
+**Archive**         `10.5281/zenodo.1890336 <https://doi.org/10.5281/zenodo.1890336>`_
 ==================  =============================================
 
