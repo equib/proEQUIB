@@ -1,9 +1,9 @@
 [submodule "externals/astron"]
 	path = externals/astron
-	url = git://github.com/wlandsman/IDLAstro.git
+	url = https://github.com/wlandsman/IDLAstro.git
 [submodule "externals/atomneb"]
 	path = externals/atomneb
-	url = git://github.com/atomneb/AtomNeb-idl.git
+	url = https://github.com/atomneb/AtomNeb-idl.git
 [submodule "externals/idl_emcee"]
 	path = externals/idl_emcee
-	url = git://github.com/mcfit/idl_emcee.git
+	url = https://github.com/mcfit/idl_emcee.git
