@@ -1,0 +1,4 @@
+!PATH=!PATH + ':~/pro/'
+!PATH=!PATH + ':~/externals/misc/'
+!PATH=!PATH + ':~/externals/astron/pro/'
+!PATH=!PATH + ':~/externals/atomneb/pro/'
