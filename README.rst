@@ -568,7 +568,7 @@ The Documentation of the IDL functions provides in detail in the *API Documentat
       
         fl(6563):     -0.30871187
 
-    - *Dereddening Absolute Flux*::
+    - *Dereddening Relative Flux*::
 
         ext=obj_new('reddening')
         wavelength=6563.0
@@ -583,7 +583,7 @@ The Documentation of the IDL functions provides in detail in the *API Documentat
       
         dereddened flux(6563)       0.47847785
 
-    - *Dereddening Relative Flux*::
+    - *Dereddening Absolute Flux*::
 
         ext=obj_new('reddening')
         wavelength=6563.0
