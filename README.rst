@@ -26,6 +26,8 @@ proEQUIB
     :target: https://doi.org/10.21105/joss.00899
     :alt: JOSS
 
+.. image:: https://mybinder.org/badge_logo.svg
+ :target: https://mybinder.org/v2/gh/equib/proEQUIB/HEAD?labpath=Notebooks.ipynb
 
 Description
 ===========
@@ -104,7 +106,16 @@ Installation in GDL
 How to Use
 ==========
 
-The Documentation of the IDL functions provides in detail in the *API Documentation* (`equib.github.io/proEQUIB/doc <https://equib.github.io/proEQUIB/doc>`_). There are three main object units:
+The Documentation of the IDL functions provides in detail in the *API Documentation* (`equib.github.io/proEQUIB/doc <https://equib.github.io/proEQUIB/doc>`_). 
+
+See *Jupyter Notebooks*: `Notebooks.ipynb <https://github.com/equib/proEQUIB/blob/master/Notebooks.ipynb>`_
+
+Run *Jupyter Notebooks* on `Binder <https://mybinder.org/v2/gh/equib/proEQUIB/HEAD?labpath=Notebooks.ipynb>`_:
+
+.. image:: https://mybinder.org/badge_logo.svg
+ :target: https://mybinder.org/v2/gh/equib/proEQUIB/HEAD?labpath=Notebooks.ipynb
+
+There are three main object units:
 
 * **Collision Unit** has the API functions for plasma diagnostics and abundance analysis of collisionally excited lines. Here are some examples of using *Collision* Unit:
 
