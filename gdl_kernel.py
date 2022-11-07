@@ -123,7 +123,7 @@ class GDLKernel(Kernel):
 	    endif else begin
                 if !D.NAME eq 'Z' then begin
                     device
-                    if (total(tvrd()) ne 0.0) then begin
+                    if !inline and (total(tvrd()) ne 0.0) then begin
                         i_KEv8eW6E=0
                         outfile_c5BXq4dV = '%(plot_dir)s/__fig'+strtrim(i_KEv8eW6E,2)+'.png'
                         ii_rsApk4JS = snapshot(outfile_c5BXq4dV)
