@@ -109,16 +109,28 @@ class GDLKernel(Kernel):
         plot_format = 'png'
 
         postcall = """
-            device,window_state=winds_arefgij
-            if !inline and total(winds_arefgij) ne 0 then begin
-                w_CcjqL6MA = where(winds_arefgij ne 0,nw_CcjqL6MA)
-                for i_KEv8eW6E=0,nw_CcjqL6MA-1 do begin
-                    wset, w_CcjqL6MA[i_KEv8eW6E]
-                    outfile_c5BXq4dV = '%(plot_dir)s/__fig'+strtrim(i_KEv8eW6E,2)+'.png'
-                    ii_rsApk4JS = snapshot(outfile_c5BXq4dV)
-                    wdelete
-                endfor
-	    endif
+            if !D.NAME eq 'X' then begin
+                device,window_state=winds_arefgij
+                if !inline and total(winds_arefgij) ne 0 then begin
+                    w_CcjqL6MA = where(winds_arefgij ne 0,nw_CcjqL6MA)
+                    for i_KEv8eW6E=0,nw_CcjqL6MA-1 do begin
+                        wset, w_CcjqL6MA[i_KEv8eW6E]
+                        outfile_c5BXq4dV = '%(plot_dir)s/__fig'+strtrim(i_KEv8eW6E,2)+'.png'
+                        ii_rsApk4JS = snapshot(outfile_c5BXq4dV)
+                        wdelete
+                    endfor
+	        endif
+	    endif else begin
+                if !D.NAME eq 'Z' then begin
+                    device
+                    if (total(tvrd()) ne 0.0) then begin
+                        i_KEv8eW6E=0
+                        outfile_c5BXq4dV = '%(plot_dir)s/__fig'+strtrim(i_KEv8eW6E,2)+'.png'
+                        ii_rsApk4JS = snapshot(outfile_c5BXq4dV)
+                        erase
+	            endif
+	        endif
+	    endelse
         end
         """ % locals()
 
