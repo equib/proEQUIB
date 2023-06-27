@@ -705,20 +705,9 @@ References
 Citation
 ========
 
-Using **proEQUIB** in a scholarly publication? Please cite these papers:
+Using the **proEQUIB** IDL library in a scholarly publication? Please cite these papers:
 
 .. code-block:: bibtex
-
-   @article{Danehkar2020,
-     author = {{Danehkar}, Ashkbiz},
-     title = {pyEQUIB Python Package, an addendum to proEQUIB: IDL Library for Plasma Diagnostics and Abundance Analysis},
-     journal = {Journal of Open Source Software},
-     volume = {5},
-     number = {55},
-     pages = {2798},
-     year = {2020},
-     doi = {10.21105/joss.02798}
-   }
 
    @article{Danehkar2018,
      author = {{Danehkar}, Ashkbiz},
@@ -730,6 +719,23 @@ Using **proEQUIB** in a scholarly publication? Please cite these papers:
      year = {2018},
      doi = {10.21105/joss.00899}
    }
+
+and if you use the `pyEQUIB <https://github.com/equib/pyEQUIB>`_ Python package:
+
+.. code-block:: bibtex
+
+   @article{Danehkar2020,
+     author = {{Danehkar}, Ashkbiz},
+     title = {pyEQUIB Python Package, an addendum to proEQUIB: IDL Library 
+              for Plasma Diagnostics and Abundance Analysis},
+     journal = {Journal of Open Source Software},
+     volume = {5},
+     number = {55},
+     pages = {2798},
+     year = {2020},
+     doi = {10.21105/joss.02798}
+   }
+
 
 Learn More
 ==========
