@@ -144,6 +144,11 @@ function calc_abundance, temperature=temperature, density=density, $
 ;                         The A values have a different format for IBIG=.
 ; 
 ;     2006, B.Ercolano,   Converted to F90.
+;
+;     2009, B.Wesson,     Misc updates and improvements. 
+;                         Converted to F90. Version written only for    
+;                         calculating ionic abundances. Takes arguments
+;                         from the command line.
 ;-
 
   AHB=double(0)

@@ -133,6 +133,11 @@ function calc_populations, temperature=temperature, density=density, $
 ;                         The A values have a different format for IBIG=.
 ;
 ;     2006, B.Ercolano,   Converted to F90.
+;
+;     2009, B.Wesson,     Misc updates and improvements. 
+;                         Converted to F90. Version written only for    
+;                         calculating ionic abundances. Takes arguments
+;                         from the command line.
 ;-
   
   h_Planck = 4.13566766225D-15 ; eV.s ;6.62606957e-27 ; erg.s

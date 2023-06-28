@@ -256,6 +256,11 @@
 ;                         The A values have a different format for IBIG=.
 ;
 ;     2006, B.Ercolano,   Converted to F90.
+;
+;     2009, B.Wesson,     Misc updates and improvements. 
+;                         Converted to F90. Version written only for    
+;                         calculating ionic abundances. Takes arguments
+;                         from the command line.
 ;-
 function collision::init
    self.data_dir = 'externals/atomneb/atomic-data/chianti70'
@@ -444,6 +449,11 @@ function collision::calc_temperature, line_flux_ratio=line_flux_ratio, density=d
 ;                         The A values have a different format for IBIG=.
 ;
 ;     2006, B.Ercolano,   Converted to F90.
+;
+;     2009, B.Wesson,     Misc updates and improvements. 
+;                         Converted to F90. Version written only for    
+;                         calculating ionic abundances. Takes arguments
+;                         from the command line.
 ;-
    value=calc_temperature(line_flux_ratio=line_flux_ratio, density=density, $
                           upper_levels=upper_levels, lower_levels=lower_levels, $
@@ -590,6 +600,11 @@ function collision::calc_density, line_flux_ratio=line_flux_ratio, temperature=t
 ;                         The A values have a different format for IBIG=.
 ;
 ;     2006, B.Ercolano,   Converted to F90.
+;
+;     2009, B.Wesson,     Misc updates and improvements. 
+;                         Converted to F90. Version written only for    
+;                         calculating ionic abundances. Takes arguments
+;                         from the command line.
 ;-
     value=calc_density(line_flux_ratio=line_flux_ratio, temperature=temperature, $
                        upper_levels=upper_levels, lower_levels=lower_levels, $
@@ -719,6 +734,11 @@ function collision::calc_populations, temperature=temperature, density=density, 
 ;                         The A values have a different format for IBIG=.
 ;
 ;     2006, B.Ercolano,   Converted to F90.
+;
+;     2009, B.Wesson,     Misc updates and improvements. 
+;                         Converted to F90. Version written only for    
+;                         calculating ionic abundances. Takes arguments
+;                         from the command line.
 ;-
 
   value=calc_populations(temperature=temperature, density=density, $
@@ -844,6 +864,11 @@ function collision::calc_crit_density, temperature=temperature, $
 ;                         The A values have a different format for IBIG=.
 ;
 ;     2006, B.Ercolano,   Converted to F90.
+;
+;     2009, B.Wesson,     Misc updates and improvements. 
+;                         Converted to F90. Version written only for    
+;                         calculating ionic abundances. Takes arguments
+;                         from the command line.
 ;-
   value=calc_crit_density(temperature=temperature, $
                          elj_data=*(self.data_elj), omij_data=*(self.data_omij), $
@@ -973,6 +998,11 @@ function collision::calc_emissivity, temperature=temperature, density=density, $
 ;                         The A values have a different format for IBIG=.
 ;
 ;     2006, B.Ercolano,   Converted to F90.
+;
+;     2009, B.Wesson,     Misc updates and improvements. 
+;                         Converted to F90. Version written only for    
+;                         calculating ionic abundances. Takes arguments
+;                         from the command line.
 ;-
   value=calc_emissivity(temperature=temperature, density=density, $
                         atomic_levels=atomic_levels, $
@@ -1104,6 +1134,11 @@ function collision::calc_abundance, temperature=temperature, density=density, $
 ;                         The A values have a different format for IBIG=.
 ;
 ;     2006, B.Ercolano,   Converted to F90.
+;
+;     2009, B.Wesson,     Misc updates and improvements. 
+;                         Converted to F90. Version written only for    
+;                         calculating ionic abundances. Takes arguments
+;                         from the command line.
 ;-
 
   value=calc_abundance(temperature=temperature, density=density, $
