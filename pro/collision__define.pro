@@ -257,7 +257,7 @@
 ;
 ;     2006, B.Ercolano,   Converted to F90.
 ;
-;     2009, B.Wesson,     Misc updates and improvements. 
+;     2009, R.Wesson,     Misc updates and improvements. 
 ;                         Converted to F90. Version written only for    
 ;                         calculating ionic abundances. Takes arguments
 ;                         from the command line.
@@ -450,7 +450,7 @@ function collision::calc_temperature, line_flux_ratio=line_flux_ratio, density=d
 ;
 ;     2006, B.Ercolano,   Converted to F90.
 ;
-;     2009, B.Wesson,     Misc updates and improvements. 
+;     2009, R.Wesson,     Misc updates and improvements. 
 ;                         Converted to F90. Version written only for    
 ;                         calculating ionic abundances. Takes arguments
 ;                         from the command line.
@@ -601,7 +601,7 @@ function collision::calc_density, line_flux_ratio=line_flux_ratio, temperature=t
 ;
 ;     2006, B.Ercolano,   Converted to F90.
 ;
-;     2009, B.Wesson,     Misc updates and improvements. 
+;     2009, R.Wesson,     Misc updates and improvements. 
 ;                         Converted to F90. Version written only for    
 ;                         calculating ionic abundances. Takes arguments
 ;                         from the command line.
@@ -735,7 +735,7 @@ function collision::calc_populations, temperature=temperature, density=density, 
 ;
 ;     2006, B.Ercolano,   Converted to F90.
 ;
-;     2009, B.Wesson,     Misc updates and improvements. 
+;     2009, R.Wesson,     Misc updates and improvements. 
 ;                         Converted to F90. Version written only for    
 ;                         calculating ionic abundances. Takes arguments
 ;                         from the command line.
@@ -865,7 +865,7 @@ function collision::calc_crit_density, temperature=temperature, $
 ;
 ;     2006, B.Ercolano,   Converted to F90.
 ;
-;     2009, B.Wesson,     Misc updates and improvements. 
+;     2009, R.Wesson,     Misc updates and improvements. 
 ;                         Converted to F90. Version written only for    
 ;                         calculating ionic abundances. Takes arguments
 ;                         from the command line.
@@ -999,7 +999,7 @@ function collision::calc_emissivity, temperature=temperature, density=density, $
 ;
 ;     2006, B.Ercolano,   Converted to F90.
 ;
-;     2009, B.Wesson,     Misc updates and improvements. 
+;     2009, R.Wesson,     Misc updates and improvements. 
 ;                         Converted to F90. Version written only for    
 ;                         calculating ionic abundances. Takes arguments
 ;                         from the command line.
@@ -1135,7 +1135,7 @@ function collision::calc_abundance, temperature=temperature, density=density, $
 ;
 ;     2006, B.Ercolano,   Converted to F90.
 ;
-;     2009, B.Wesson,     Misc updates and improvements. 
+;     2009, R.Wesson,     Misc updates and improvements. 
 ;                         Converted to F90. Version written only for    
 ;                         calculating ionic abundances. Takes arguments
 ;                         from the command line.

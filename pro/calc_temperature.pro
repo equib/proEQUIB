@@ -149,7 +149,7 @@ function calc_temperature, line_flux_ratio=line_flux_ratio, density=density, $
 ;
 ;     2006, B.Ercolano,   Converted to F90.
 ;
-;     2009, B.Wesson,     Misc updates and improvements. 
+;     2009, R.Wesson,     Misc updates and improvements. 
 ;                         Converted to F90. Version written only for    
 ;                         calculating ionic abundances. Takes arguments
 ;                         from the command line.
